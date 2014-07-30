@@ -1,0 +1,31 @@
+# Site settings
+title: saltfactory's series
+email: saltfactory@gmail.com
+# description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+description: ""
+
+baseurl: "http://saltfactory.net/series"
+url: ""
+
+twitter_username: saltfactory
+github_username:  saltfactory
+facebook_username: salthub
+
+disqus_shortname: saltfactoryblog
+
+# Build settings
+# redcarpet:
+#   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data"]
+markdown: redcarpet
+# kramdown:
+#   input: GFM
+
+
+permalink: none
+pygments: true
+safe: true # if using alias is safe:false
+lsi: false
+
+gems:
+  - jekyll-redirect-from
+  - jemoji

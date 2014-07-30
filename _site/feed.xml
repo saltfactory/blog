@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>saltfactory&#39;s article series</title>
+    <description></description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 30 Jul 2014 11:06:21 +0900</pubDate>
+    <lastBuildDate>Wed, 30 Jul 2014 11:06:21 +0900</lastBuildDate>
+    <generator>Jekyll v1.5.1</generator>
+    
+      <item>
+        <title>PhoneGap(Cordova) 앱 푸시 (Push Notification) 알람서비스 APN, GCM 구현</title>
+        <description>&lt;p&gt;&lt;img src=&quot;http://cfile8.uf.tistory.com/image/276B443353A1528A2F8CBA&quot; alt=&quot;phonegap&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;하이브리드 앱 개발은 웹 리소스와 네이티브 리소스를 함께 사용하는 개발 방법이다. 하이브리드 앱은 보통 UI를 웹 리소스로 만들기 때문에 디바이스가 가지는 특정한 기능을 핸들링하지 못한다. PhoneGap(Cordova)는 plugin을 사용해서 웹 리소스와 네이티브 리소스간 서로 통신하여 사용할 수 있도록 설계되어 있고 이 plugin을 사용해서 디바이스가 가지는 특정하는 기능을 웹 리소스에서 핸들링할 수 있다. 이번 포스팅에서는 모바일 앱 개발을 할 때 복잡하고 어렵지만 반드시 필요한 기능중에 하나인 알림 서비스를 PhoneGap(Cordova)에서 어떻게 구현할 수 있는지를 소개한다.&lt;/p&gt;
+
+&lt;h2&gt;PhoneGap(Cordova) 프로젝트 생성하기&lt;/h2&gt;
+
+&lt;p&gt;우선 알림(푸시)서비스를 테스트하기 위해서 PhoneGap이나 Cordova 프로젝트를 생성한다. PhoneGap이나 Cordova는 동일한 plugin을 함께 사용할 수 있기 때문에 어떤 프로젝트로 만들어도 상관없다. PhoneGap 프로젝트를 만드는 것은 이 글을 참조하면 된다. (http://blog.saltfactory.net/228)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;phonegap create sf-phonegap-demo -n SF-PhoneGap-Demo -i net.saltfactory.tutorial.phonegapdemo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;PushPlugin 플러그인 사용하기&lt;/h2&gt;
+
+&lt;p&gt;PhoneGap(Cordova)에는 공식적으로 지원하는 plugin 들이 있고 이것들은 cordova 리파지토리에서 &lt;code&gt;phonegap plugin add&lt;/code&gt; 명령으로 바로 다운받아서 PhoneGap 프로젝트에서 설치해서 사용할 수 있다. 예를 들어, &lt;strong&gt;&lt;em&gt;org.apache.cordova.device&lt;/em&gt;&lt;/strong&gt; 플러그인을 설치하기 위해서는 다음과 같이 하면 된다.
+&lt;code&gt;
+phonegap local plugin add org.apache.cordova.device
+&lt;/code&gt;
+하지만 third party 플러그인이나 cordova 리파지토리에 저장되지 않은 플러그인은 URI(플러그인 위치)를 지정하여 설치할 수 있다. PhoneGap 플러그인 설치는 다음 글을 참조하면 된다. (http://blog.saltfactory.net/233). 직접 plugin을 개발하여 프로젝트에 설치할 때는 다음 글을 참조하면 된다. (http://blog.saltfactory.net/235, http://blog.saltfactory.net/236)&lt;/p&gt;
+
+&lt;p&gt;PhoneGap은 하이브리드 앱 개발 플랫폼이고 웹 리소스와 네이티브 리소스간 서로 통신을 하기 위해서 plugin을 만들어서 사용하는데, 알림(푸시)에 관한 plugin은 &lt;a href=&quot;https://github.com/phonegap-build/PushPlugin&quot;&gt;PushPlugin&lt;/a&gt;으로 제공하고 있다. 이 플러그인은 Android, iOS, WP8, Amazon Fire OS 의 알림을 모두 지원한다. 우리는 그 중에서 iOS와 Android에서 사용하는 방법을 살펴볼 것이다. 우선 &lt;strong&gt;&lt;em&gt;com.phonegap.plugins.PushPlugin&lt;/em&gt;&lt;/strong&gt;을 설치하자. PhoneGap 프로젝트를 설치한 디렉토리 안에서 다음 명령어를 실행하자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;phonegap local plugin add https://github.com/phonegap-build/PushPlugin.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://cfile1.uf.tistory.com/image/2159184053A243712F4536&quot; alt=&quot;install push plugin&quot;&gt;
+위 명령어를 실행하고 난 다음에 plugins 디렉토리에 &lt;strong&gt;&lt;em&gt;com.phonegap.plugins.PushPlugin&lt;/em&gt;&lt;/strong&gt;이 설치 되는 것을 확인할 수 있을 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://cfile9.uf.tistory.com/image/270E354053A24406049781&quot; alt=&quot;pluugins list&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;PhoneGap iOS 플랫폼 PushPlugin 사용하기&lt;/h2&gt;
+
+&lt;p&gt;다음은 iOS 플랫폼을 추가해보자. cordova를 이용하면 다음과 같이 추가할 수 있다.
+&lt;code&gt;
+cordova platform add ios
+&lt;/code&gt;
+phonegap을 이용하면 다음과 같이 추가할 수 있다.
+&lt;code&gt;
+phonegap build ios
+&lt;/code&gt;
+&lt;img src=&quot;http://cfile21.uf.tistory.com/image/2643B74653A2459F0A6CAC&quot; alt=&quot;create ios platform&quot;&gt;
+PhoneGap 프로젝트에 iOS 플랫폼이 추가되면 위와 같이 &lt;strong&gt;&lt;em&gt;platforms/&lt;/em&gt;&lt;/strong&gt; 디렉토리 밑에 &lt;strong&gt;&lt;em&gt;ios/&lt;/em&gt;&lt;/strong&gt; 디렉토리가 만들어지고 Xcode 프로젝트가 생성되는 것을 확인할 수 있다. Xcode 프로젝트를 열어보자 그리고 애플 개발자 사이트에서 프로비저닝 파일을 만들고 Xcode 프로젝트의 Code Sign을 변경해준다. 자세한 설명은 다음 글을 참조하자. (http://blog.saltfactory.net/215)&lt;/p&gt;
+
+&lt;p&gt;PushPlugin을 사용하기 위해서는 &lt;strong&gt;&lt;em&gt;config.xml&lt;/em&gt;&lt;/strong&gt;에 &lt;code&gt;feature&lt;/code&gt;를 추가해야한다. 다음과 같이 config.xml을 수정하자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;xml language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&amp;#39;1.0&amp;#39; encoding=&amp;#39;utf-8&amp;#39;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;widget&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.tutorial.phonegapdemo&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;1.0.0&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.w3.org/ns/widgets&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:gap=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://phonegap.com/ns/1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;SF-PhoneGap-Demo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;
+        Hello World sample application that responds to the deviceready event.
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;author&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;email=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;saltfactory@gmail.com&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://blog.saltfactory.net&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        SungKwang Song
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/author&amp;gt;&lt;/span&gt;
+... (생략) ...
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;access&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;origin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;*&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;feature&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;PushPlugin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ios-package&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;PushPlugin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/feature&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/widget&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;변경된 사항을 플랫폼 프로젝트에 반영되게 &lt;code&gt;cordova prepare&lt;/code&gt;를 사용하여 업데이트한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;cordova prepare
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음은 index.html 에 JavaScript 코드를 다음과 같이 추가하자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;html language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!--&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;    Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    you may not use this file except in compliance with the License.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    You may obtain a copy of the License at&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;    http://www.apache.org/licenses/LICENSE-2.0&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;    Unless required by applicable law or agreed to in writing, software&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    See the License for the specific language governing permissions and&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    limitations under the License.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;--&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;format-detection&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;telephone=no&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;stylesheet&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/css&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;css/index.css&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Hello World&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;app&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;PhoneGap&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;deviceready&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;blink&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;event listening&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Connecting to Device&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;event received&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Device is Ready&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;phonegap.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!--&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;js/index.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;--&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// app.initialize();&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * tokenHandler&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param result&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 디바이스 토큰핸들러 콜백함수.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 푸시 서비스를 활성화 하였을 때, window.plugins.pushNotification.register 메소드가 실행되면서 디바이스 토큰을 가져와서 출력한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 만약에 푸시 서버로 디바이스 토큰을 보내야할 경우 이 함수 안에서 서버로 디바이스 토큰을 전송하면 된다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tokenHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;deviceToken:&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * errorHandler&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param err&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 에러 핸들러 콜백 함수.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error:&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * successHandler&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param result&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 디바이스로 푸시 메세지를 받았을 때 뱃지처리 이후 호출하는 콜백함수&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;successHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;result:&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * onNotificationAPN&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param event&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 디바이스로 푸시 메세지를 받을 때 호출되는 콜백함수 window.plugins.pushNotification.register 옵션 설정에서 ecb의 이름에 매칭된다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onNotificationAPN&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지에 alert 값이 있을 경우&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;navigator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+              &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지에 sound 값이 있을 경우&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;snd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Media&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;snd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;play&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+              &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지에 bage 값이 있을 경우&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;badge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pushNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setApplicationIconBadgeNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;successHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;badge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;// 디바이스가 ready가 될때 실행될 수 있도록 이벤트 리스너에 등록한다.&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;deviceready&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+
+              &lt;span class=&quot;c1&quot;&gt;// PushPlugin을 설치했다면 window.plugins.pushNotification.register를 이용해서 iOS 푸시 서비스를 등록한다.&lt;/span&gt;
+              &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pushNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tokenHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;s2&quot;&gt;&amp;quot;badge&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 뱃지 기능을 사용한다.&lt;/span&gt;
+                &lt;span class=&quot;s2&quot;&gt;&amp;quot;sound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 사운드를 사용한다.&lt;/span&gt;
+                &lt;span class=&quot;s2&quot;&gt;&amp;quot;alert&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// alert를 사용한다.&lt;/span&gt;
+                &lt;span class=&quot;s2&quot;&gt;&amp;quot;ecb&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;onNotificationAPN&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 디바이스로 푸시가 오면 onNotificationAPN 함수를 실행할 수 있도록 ecb(event callback)에 등록한다.&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;index.html을 수정하고 플랫폼에 적용하기 위해서는 &lt;code&gt;corodva prepare&lt;/code&gt; 나 &lt;code&gt;phonegap build&lt;/code&gt;를 사용해서 웹 리소스를 플랫폼 프로젝트에 반영한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;phonegap build ios
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 아이폰 디바이스를 USB로 연결하고 phonegap run을 실행시켜서 아이폰에 앱을 실행시켜보자. 푸시서비스는 디바이스 토큰을 획득해야하기 때문에 simulator에서는 테스트할 수 없다. 반드시 디바이스를 연결해서 실행시켜야한다.
+&lt;code&gt;
+phonegap run ios
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;만약 console.log를 확인하고 싶을 때, phonegap run을 실행시키면 console.log를 터미널에서 확인할 수 없다. 이럴 경우는 PhoneGap 프로젝트 안에 있는 platforms/ios 안에 있는 Xcode 프로젝트를 열어서 Xcode에서 빌드하고 실행하면 된다. 그리고 console.log를 Xcode의 로그 화면에서 출력하기 위해서는 웹 리소스의 console.log를 터미널로 로깅하기 위해서 wrapping한 &lt;strong&gt;&lt;em&gt;org.apache.cordova.console&lt;/em&gt;&lt;/strong&gt; 플러그인을 설치해야한다.
+&lt;code&gt;
+phonegap local plugin add org.apache.cordova.console
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 Xcode 에서 아이폰 디바이스를 빌드하고 실행시켜보자. 최초 앱이 실행하면 앱에서 푸시서비스를 허용 할 것인지 물어보게 되는데 푸시서비스를 허용하도록 OK를 선택한다. 만약 빌드하는데 aps_entitlement 에러가 만나게 되면 code sign이 제대로 매칭되지 않았기 때문이기 때문에 provisioning 파일을 잘 생성해서 적용하고 있는지 확인할 필요가 있다.
+&lt;img src=&quot;http://cfile8.uf.tistory.com/image/22095F4B53A2A6A22E8CAC&quot; alt=&quot;아이폰 푸시허용 {width:320px}&quot; title=&quot;아이폰 푸시 허용&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;푸시 서비스를 허용하고 난 다음에는 우리가 index.html에 작성한 readydevice 이벤트 리스너가 동작하게 된다. 우리는 여기서 &lt;strong&gt;&lt;em&gt;window.plugins.pushnotification.register&lt;/em&gt;&lt;/strong&gt;를 실행하게 만들었고 이 메소드가 동작하면 디바이스 토큰을 획득해서 console.log를 출력하게 하였다. Xcode에서 실행한 결과는 다음 그림과 같다. 아래 그림을 확대해서 보면 deviceToken에 아이폰 디바이스 토큰 값이 출력되는 것을 확인할 수 있다. 푸시서버에서 아이폰으로 푸시 메세지를 보내기 위해서는 이 디바이스 토큰 값을 푸시 서버로 전송해야한다.
+&lt;img src=&quot;http://cfile21.uf.tistory.com/image/264D6A3353A38838310AC4&quot; alt=&quot;디바이스토큰 획득&quot; title=&quot;디바이스 토큰 획득&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;푸시서버로 디바이스토큰을 저장했다고 가정하고 푸시 서비스에서 푸시 메세지를 보내는 코드를 작성해보자. Node.js로 푸시 서비스를 구현하는 방법은 다음 글에 자세하게 설명하고 있다. (http://blog.saltfactory.net/215)
+간단하게 다시 설명하면 Node.js로 푸시 서비스를 구현하기 위해서는 &lt;strong&gt;&lt;em&gt;node-apn&lt;/em&gt;&lt;/strong&gt; 모듈을 사용하면 애플 푸시 프로바이더를 쉽게 구현할 수 있다. 먼저 node-apn 모듈을 npm으로 설치하자.
+&lt;code&gt;
+npm install apn
+&lt;/code&gt;
+그리고 apn에서 푸시 프로바이더로 애플 푸시 서버로 푸시 메세지를 전송하기 위해서 필요한 aps_development.cer 파일과 Certifiacates.p12 파일을 만든다. 이 파일을 만드는 방법은 (http://blog.saltfactory.net/215) 글을 참조하기 바란다.
+두 파일을 apn 모듈에서 사용하기 위해서는 .pem 파일로 변경해야하는데 다음과 같이 openssl 명령어로 만들 수 있다. 이 방법 또한 위에서 링크한 글을 참조하면 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;openssl x509 -in aps_development.cer -inform DER -outform PEM -out aps_development.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;openssl pkcs12 -in Certificates.p12 -out Certificates-dev.pem -nodes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;인증 파일도 모두 준비가 되었고 이제 푸시를 보내는 코드를 다음과 같이 만든다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;javascript language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Created by saltfactory on 6/20/14.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * filename : ios_pushprovider.js&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;apn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;apn&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;apn&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;production&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;gateway&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;gateway.sandbox.push.apple.com&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;cert&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;../keys/phonegapdemo/aps_development.pem&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// aps_development.cert 파일을 .pem 파일로 변경한 경로&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;../keys/phonegapdemo/Certificates-dev.pem&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Certificates.p12 파일을 .pem 파일로 변경한 경로&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;passphrase&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;secret&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;apnConnection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;apn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;deviceToken&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;21a1efbdc6ccf6d6e1...02e1300c9&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 디바이스토큰 문자열&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;myDevice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;apn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Device&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;deviceToken&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;note&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;apn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;note&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;expiry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3600&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Expires 1 hour from now.&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;note&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;badge&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//note.sound = &amp;quot;ping.aiff&amp;quot;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;note&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;PhoneGap 푸시 테스트&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//note.payload = {&amp;#39;messageFrom&amp;#39;: &amp;#39;Caroline&amp;#39;};&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;apnConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pushNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;note&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;myDevice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Node.js로 만든 간단한 ios push provider 코드이다. 이 코드를 실행시켜보자. 잠시 후 다음 그림과 같이 아이폰으로 푸시 메세지가 전송된 것을 확인할 수 있다.
+&lt;img src=&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot; alt=&quot;아이폰 백그라운드 푸시 {width:320px}&quot; title=&quot;아이폰 백그라운드 푸시&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://cfile26.uf.tistory.com/image/243FAE4153A39171120092&quot; alt=&quot;아이폰 슬립모드 푸시 {width:320px}&quot; title=&quot;아이폰 슬립모드 푸시&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://cfile3.uf.tistory.com/image/263A3E4153A39171194A95&quot; alt=&quot;아이폰 노티피케이션 센터 {width:320px}&quot; title=&quot;아이폰 노티피케이션 센터&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;푸시 프로바이더에서 badge 값을 3으로 지정하여 푸시 메세지를 보냈다. 우리는 PhoneGap 프로젝트에서 PushPlugin을 설정하면서 onNotificationAPN에 뱃지값을 어플리케이션에 반영할 수 있도록 코드를 작성하였기 때문에 뱃지가 앱에 표현되는 것을 확인할 수 있다. 위 결과는 앱이 백그라운드로 실행되고 있을 때나 앱이 실행되지 않았을 때 푸시 메세지가 왔을 때의 결과이다. 만약 앱이 실행되고 있을 때 푸시 메세지가 오면 onNotificationAPN에서 지정한 callback을 화면에서 실행할 것이다. index.html 코드에서 앱이 실행되고 있을 때 푸시 메세지에서 alert 값이 있을 경우에 &lt;strong&gt;&lt;em&gt;navigator.notification.alert&lt;/em&gt;&lt;/strong&gt;를 실행하라고 했는데 이것은 PhoneGap의 &lt;strong&gt;&lt;em&gt;org.apache.cordova.dialogs&lt;/em&gt;&lt;/strong&gt; 플러그인을 설치하고 alert dialog를 보이게 하는 메소드를 호출하는 것이다. PhoneGap 프로젝트에 &lt;strong&gt;&lt;em&gt;org.apache.cordova.dialogs&lt;/em&gt;&lt;/strong&gt; 플러그인을 설치하자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;phonegap local plugin add org.apache.cordova.dialogs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;그리고 PhoneGap 프로젝트에 플러그인 리소스들이 적용될 수 있게 다시 &lt;code&gt;cordova prepare&lt;/code&gt; 나 &lt;code&gt;phonegap build&lt;/code&gt;를 다시 실행한다.
+&lt;code&gt;
+phonegap build ios
+&lt;/code&gt;
+다시 디바이스에 앱을 빌드해서 실행시켜보자. 앱이 백그라운드가 아니라 실행되고 있을 때 우리가 작성한 푸시 프로바이더에서 다시 푸시 메세지를 보내어보자. 그러면 다음 그림과 같이 앱이 실행되고 있을 때, 푸시 메세지가 왔을 경우 alert dialog가 보여지는 것을 확인할 수 있다.
+&lt;img src=&quot;http://cfile2.uf.tistory.com/image/2242CE4A53A393A71B2F6F&quot; alt=&quot;안드로이드 푸시 알림 {width:320px}&quot; title=&quot;안드로이드 푸시 알림&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;PhoneGap android PushPlugin 사용하기&lt;/h2&gt;
+
+&lt;p&gt;위에서 iOS 플랫폼에서 PushPlugin을 사용해서 푸시 서비스를 구현하는 방법을 살펴봤는데 이번에는 android 플랫폼에서 PushPlugin을 사용해서 푸시 서비스를 구현하는 방법을 살펴보자.&lt;/p&gt;
+
+&lt;p&gt;애플에서 푸시를 위해서 provisioning 파일을 생성한것 같이 구글의 GCM을 이용해서 알림 서비스를 구현하기 위해서는 Google Console에서 구글 GCM 서비스를 하기 위한 프로젝트를 생성해야한다. 자세한 방법은 다음 글을 참조한다. (http://blog.saltfactory.net/216)&lt;/p&gt;
+
+&lt;p&gt;먼저 PhoneGap 프로젝트에서 안드로이드 플랫폼을 추가한다.
+&lt;code&gt;
+phonegap build android
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;만약 cordova 프로젝트라면 다음과 같이 안드로이드 플랫폼을 추가한다.
+&lt;code&gt;
+cordova platform add android
+&lt;/code&gt;
+가장 먼저 해야할 것은 iOS에서 설정과 동일하게 config.xml에 다음과 같이 feature를 추가한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;xml language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&amp;#39;1.0&amp;#39; encoding=&amp;#39;utf-8&amp;#39;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;widget&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.tutorial.phonegapdemo&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;1.0.0&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://www.w3.org/ns/widgets&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:gap=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://phonegap.com/ns/1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;SF-PhoneGap-Demo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;
+        Hello World sample application that responds to the deviceready event.
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;author&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;email=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;saltfactory@gmail.com&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://blog.saltfactory.net&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        SungKwang Song
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/author&amp;gt;&lt;/span&gt;
+
+... (생략) ...
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;access&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;origin=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;*&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;feature&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;PushPlugin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ios-package&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;PushPlugin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android-package&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.plugin.gcm.PushPlugin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/feature&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/widget&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;하이브리드 앱은 하나의 웹 자원으로 여러가지 플랫폼에 사용을 한다. 그래서 index.html에 작성한 JavaScript 코드에 다음을 추가한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;html language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;&amp;lt;!--&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;    Licensed under the Apache License, Version 2.0 (the &amp;quot;License&amp;quot;);&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    you may not use this file except in compliance with the License.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    You may obtain a copy of the License at&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;    http://www.apache.org/licenses/LICENSE-2.0&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;    Unless required by applicable law or agreed to in writing, software&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    distributed under the License is distributed on an &amp;quot;AS IS&amp;quot; BASIS,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    See the License for the specific language governing permissions and&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;    limitations under the License.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;--&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;format-detection&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;telephone=no&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;stylesheet&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/css&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;css/index.css&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Hello World&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;app&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;PhoneGap&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;deviceready&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;blink&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;event listening&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Connecting to Device&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;event received&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Device is Ready&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;phonegap.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!--&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;js/index.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;--&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// app.initialize();&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * tokenHandler&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param result&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 디바이스 토큰핸들러 콜백함수.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 푸시 서비스를 활성화 하였을 때, window.plugins.pushNotification.register 메소드가 실행되면서 디바이스 토큰을 가져와서 출력한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 만약에 푸시 서버로 디바이스 토큰을 보내야할 경우 이 함수 안에서 서버로 디바이스 토큰을 전송하면 된다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tokenHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;deviceToken:&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * errorHandler&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param err&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 에러 핸들러 콜백 함수.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error:&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * successHandler&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param result&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 디바이스로 푸시 메세지를 받았을 때 뱃지처리 이후 호출하는 콜백함수&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;successHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;result:&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * onNotificationAPN&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param event&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * iOS 디바이스로 푸시 메세지를 받을 때 호출되는 콜백함수, window.plugins.pushNotification.register 옵션 설정에서 ecb의 이름에 매칭된다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onNotificationAPN&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지에 alert 값이 있을 경우&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;navigator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+              &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지에 sound 값이 있을 경우&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;snd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Media&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;snd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;play&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+              &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지에 bage 값이 있을 경우&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;badge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pushNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setApplicationIconBadgeNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;successHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;badge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * onNotificationGCM&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param e&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 안드로이드 디바이스로 푸시 메세지를 받을 때 호출되는 함수, window.plugins.pushNotification.register 옵션에 설정에서 ecb의 이름에 매칭된다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onNotificationGCM&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;registered&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 안드로이드 디바이스의 registerID를 획득하는 event 중 registerd 일 경우 호출된다.&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;registerID:&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;regid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;message&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 안드로이드 디바이스에 푸시 메세지가 오면 호출된다.&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;foreground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지가 왔을 때 앱이 실행되고 있을 경우&lt;/span&gt;
+                    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;soundfile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;soundname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;my_media&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Media&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;/android_asset/www/&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;soundfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;nx&quot;&gt;my_media&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;play&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지가 왔을 때 앱이 백그라운드로 실행되거나 실행되지 않을 경우&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;coldstart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지가 왔을 때 푸시를 선택하여 앱이 열렸을 경우&lt;/span&gt;
+                      &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;알림 왔을 때 앱이 열리고 난 다음에 실행 될때&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지가 왔을 때 앱이 백그라운드로 사용되고 있을 경우&lt;/span&gt;
+                      &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;앱이 백그라운드로 실행될 때&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+                  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+                  &lt;span class=&quot;nx&quot;&gt;navigator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;error&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 푸시 메세지 처리에 에러가 발생하면 호출한다.&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error:&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+              &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;알수 없는 이벤트&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;// 디바이스가 ready가 될때 실행될 수 있도록 이벤트 리스너에 등록한다.&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;deviceready&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+              &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;device&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+              &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;device&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toUpperCase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ANDROID&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+                &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pushNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;successHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&amp;quot;senderID&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;45219...&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Google GCM 서비스에서 생성한 Project Number를 입력한다.&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&amp;quot;ecb&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;onNotificationGCM&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 디바이스로 푸시가 오면 onNotificationGCM 함수를 실행할 수 있도록 ecb(event callback)에 등록한다.&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// PushPlugin을 설치했다면 window.plugins.pushNotification.register를 이용해서 iOS 푸시 서비스를 등록한다.&lt;/span&gt;
+                &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pushNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tokenHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&amp;quot;badge&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 뱃지 기능을 사용한다.&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&amp;quot;sound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 사운드를 사용한다.&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&amp;quot;alert&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// alert를 사용한다.&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&amp;quot;ecb&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;onNotificationAPN&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 디바이스로 푸시가 오면 onNotificationAPN 함수를 실행할 수 있도록 ecb(event callback)에 등록한다.&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;PhoneGap  프로젝트에서 디바이스의 플랫폼을 알기 위해서는 org.apache.cordova.device 플러그인이 필요하다. 이 플러그인을 설치하자.
+&lt;code&gt;
+phonegap local plugin add org.apache.cordova.device
+&lt;/code&gt;
+그리고 Media를 사용하기 위해서는 org.apache.cordova.media 플러그인이 필요하다.
+&lt;code&gt;
+phonegap local plugin add org.apache.cordova.media
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;PhoneGap 프로젝트에서 android 앱에 푸시 서비스를 구현하기 위한 준비는 모두 끝났다.
+모든 자원을 안드로이드 플랫폼에 적용하기 위해서 cordova prepare를 실행하던지 &lt;code&gt;phonegap build&lt;/code&gt;를 실행한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;phonegap build android
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;안드로이드 디바이스를 연결하고 eclipse나 IntelliJ를 이용하여 PhoneGap의 안드로이드 프로젝트를 열어서 실행해보자. 안드로이드 디바이스로 빌드하고 실행하면 우리가 앞에서 window.plugin.pushnotification.register에 안드로이드 senderID를 등록한 것을 가지고 GCM에 사용할 수 있는 디바이스의 유일한 registerID를 획득한 것을 확인할 수 있다.
+&lt;img src=&quot;http://cfile27.uf.tistory.com/image/211DC43453A3B5CC3648F7&quot; alt=&quot;registerID&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 안드로이드 디바이스로 푸시를 보낼 GCM 서버를 Node.js로 만들어보자. GCM 서버에 필요한 인증절차와 구축 방법은 다음 글을 참조하면 된다.(http://blog.saltfactory.net/216). 이 포스팅에서는 간단하게 GCM 서버로 안드로이드 디바이스로 푸시를 전송하는 예제를 설명한다. GCM 서버를 구축하기 위해서는 Google Console에서 안드로이드 GCM 프로젝트를 만들고 server API key를 만들어서 사용한다. 그리고 Node.js로 GCM 서버를 만들기 위해서는 &lt;strong&gt;&lt;em&gt;node-gcm&lt;/em&gt;&lt;/strong&gt; 모듈을 사용한다. server API key 를 만드는 방법은 (http://blog.saltfactory.net/216)글을 참조한다. node-gcm 모듈을 npm으로 설치하자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;npm install node-gcm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음은 android&lt;em&gt;gcm&lt;/em&gt;provider.js 파일을 다음과 같이 만들어서 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;javascript language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Created by saltfactory on 6/20/14.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * filename : android_gcm_provider.js&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;node-gcm&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// create a message with default values&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// or with object values&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;collapseKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;PhoneGapDemo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;delayWhileIdle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;timeToLive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;PhoneGap 푸시 테스트&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;PhoneGap 푸시 메세지&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;msgcnt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;AIzaSyBH...&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 구글 프로젝트에 등록한 GCM 서비스에서 만든 server API key를 입력한다.&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;registrationIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;registrationIds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;APA91...&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// PhoneGap 프로젝트의 안드로이드 프로젝트에서 획득한 registerID를 입력한다. 이 registerID를 이용하여 안드로이드 디바이스에 푸시를 전송한다.&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Params: message-literal, registrationIds-array, No. of retries, callback-function&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; **/&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;registrationIds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;node-gcm 모듈로 Node.js 기반의 안드로이드 GCM 서버를 간단히 만들 수 있다. 위 코드를 실행하면 안드로이드 다음 그림과 같이 디바이스로 푸시가 전송 되는 것을 확인할 수 있다.
+&lt;img src=&quot;http://cfile26.uf.tistory.com/image/24628B3C53A3B84E3039C1&quot; alt=&quot;안드로이드 백그라운 알림 {width:320px;}&quot; title=&quot;안드로이드 백그라운 알림&quot;&gt;
+&lt;img src=&quot;http://cfile25.uf.tistory.com/image/217DF53C53A3B850073864&quot; alt=&quot;안드로이드 대시보드 {width:320px;}&quot; title=&quot;안드로이드 대시보드&quot;&gt;
+&lt;img src=&quot;http://cfile1.uf.tistory.com/image/27688D3C53A3B85128CD8D&quot; alt=&quot;안드로이드 알림 {width:320px;}&quot; title=&quot;안드로이드 알림&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;최근 모바일 앱 개발에서 푸시(알림)서비스는 반드시 필요한 기능중에 하나이다. 고객들은 푸시 서비스를 지원하는 앱을 사용하길 원하고 있다. 하이브리드 앱은 웹 리소스와 네이티브 리소스를 함께 사용하여 단일 웹 리소스로 여러 디바이스에 동일한 기능을 구현할 수 있다. PhoneGap에서는 웹 리소스로 네이티브 기능을 제어하기 위해서 plugin을 만들어서 사용하는데 모바일의 푸시 서비스 구현하기 위해 네이티브 자원을 사용할 수 있도록 &lt;strong&gt;&lt;em&gt;PushPlugin&lt;/em&gt;&lt;/strong&gt;을 만들어서 배포하고 있다. PushPlugin을 사용하면 웹 리소스를 이용하여 디바이스의 토큰 정보나 registerID를 획득할 수 있고, 푸시 메세지가 디바이스로 전송되었을 때, 웹 리소스를 이용하여 푸시 받은 정보를 디바이스에 적용할 수 있다. 만약에 PushPlugin을 사용하지 않는다면 각 플랫폼마다 웹 리소스가 네이티브 리소스를 제어하기 위해서 복잡한 코드를 어렵게 작성해야하지만 PhoneGap(Cordova)의 PushPlugin을 사용하면 간단하게 푸시 서비스를 지원하는 하이브리드 앱을 만들 수 있다.&lt;/p&gt;
+
+&lt;p&gt;그리고 Node.js의 &lt;strong&gt;&lt;em&gt;node-apn&lt;/em&gt;&lt;/strong&gt;과 &lt;strong&gt;&lt;em&gt;node-gcm&lt;/em&gt;&lt;/strong&gt; 모듈을 사용해서 PhoneGap(Cordova)에서 획득한 디바이스 정보를 가지고 쉽게 푸시를 발송할 수 있는 프로바이더 서버를 쉽게 만들 수 있는 것도 확인했다. 이제 하이브리드 앱을 만들때 더이상 푸시서비스를 어떻게 만들어야할지 걱정할 필요가 없을 것이다. 좀 더 네이티브에 가까운 서비스를 웹 리소스로 제어할 수 있으니 UI를 담당하는 웹 리소스를 가지고 푸시 서비스를 쉽게 만들 수 있을 것이다.&lt;/p&gt;
+
+&lt;h1&gt;연구원 소개&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;프로필 : http://about.me/saltfactory&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : https://facebook.com/salthub&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 20 Jun 2014 00:00:00 +0900</pubDate>
+        <link>/hybridapp/create-hybird-app-push-notification-apn-gcm.html</link>
+        <guid isPermaLink="true">/hybridapp/create-hybird-app-push-notification-apn-gcm.html</guid>
+        
+        
+        <category>hybridapp</category>
+        
+      </item>
+    
+  </channel>
+</rss>
