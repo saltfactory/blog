@@ -6,6 +6,8 @@
   padding: 0;
 }
 
+
+
 html, body { height: 100%; }
 
 body {
@@ -147,7 +149,13 @@ a:visited { color: #205caa; }
 
 .home h1 { margin-bottom: 25px; }
 
-.posts { list-style-type: none; }
+.categories, .posts { list-style-type: none; }
+.categories h2 {
+  text-transform: capitalize;
+}
+.categories ul li {
+  margin:10px;
+}
 
 .posts li { margin-bottom: 30px; }
 
@@ -248,6 +256,10 @@ a:visited { color: #205caa; }
   border: 0;
   padding-right: 0;
   padding-left: 0;
+}
+
+.post-content img {
+  width:100%
 }
 
 /* terminal */
