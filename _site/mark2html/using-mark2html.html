@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>mark2html을 이용하여 Markdown 파일을 HTML 파일로 변환</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/mark2html/using-mark2html.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>mark2html을 이용하여 Markdown 파일을 HTML 파일로 변환</h1>
+    <p class="meta">Jul 28, 2014</p>
+  </header>
+
+  <article class="post-content">
+  <h1 id="toc_0">mark2html 소개</h1>
+
+<p><a href="http://saltfactory.net/mark2html/">mark2html</a>는 Markdown 파일을 html 파일로 변환시켜주는 모듈이자 작은 프로그램이다. makr2html을 사용하여 HTML으로 변화할 때 Markdown에 포함된 이미지 파일을 HTML 파일의 경로에 함께 복하하거나 이미지를 datauri로 변환시켜 포함시켜주는 기능을 가지고 있다. mark2html은  Node.js 프로그램에 상용할 수 있는 모듈과 명령어로 사용할 수 있게 CLI 설치가 가능하다. HTML 입력을 요구하는 블로그에 Markdown 파일을 포스팅할 때 mark2html을 유용하게 사용할 수 있다.</p>
+
+<h2 id="toc_1">mark2html 개발 배경</h2>
+
+<p><strong><em>makr2html</em></strong>를 개발하게 된 이유는 개인적으로 진행하고 있는 <strong><em>Markdown으로 Tistory 블로그 포스팅하기</em></strong> 를 위해서 만들어졌다. github를 사용할 일이 많아지면서 Markdown 문서를 작성할 일이 많아졌는데 그러면서 Markdown이 문서를 작성하는데 정말 편리한 포멧이라는 것을 알게 되었다.
+그래서 Markdown을 사용하여 Tistory에 글을 작성하려고 하는데 몇가지 문제점 때문에 단순하게 사용할수는 없다는 결론을 내렸다.</p>
+
+<p>Tistory에서 Markdown을 작성하면 다음과 같은 문제를 겪게 된다.</p>
+
+<ol>
+<li><p><strong>Markdown 에디터가 없다</strong> : <a href="http://tumblr.com">Tumblr</a>에서는 웹에서 글을 작성할 때 Markdown 에디터를 통해서 글을 작성할 수 있다.
+그렇기 때문에 사용자는 웹에서 HTML를 변경하지 않고 Markdown 마커를 가지고 바로 글을 작성할 수 있다.
+하지만 Tistory는 WYSIWYG 에디터를 사용하기 때문에 HTML 입력을 사용한다.
+이러한 이유 때문에 Markdown을 WYSIWYG이 아닌 HTML 모드로 입력을 하게되면 일반 plan text로 저장이 되어 버린다.</p></li>
+<li><p><strong>Client-side JavaScript Markdown rendering Library 필요</strong> : Tistory는 Daum editor를 사용하고 있는데 Markdown 문서를 WYSIWYG이 아닌 html 모드로 입력하게 되면 화면에 나타날때 Markdown 문서가 HTML으로 변환되지 않은 plan text가 바로 나타나버리게 된다. 그래서 서버가 아닌 브라우저에서 나타날때 HTML 코드로 변화시키는 client-side javascript markdown rendering library가 필요하다. 예를 들어 <a href="https://github.com/chjj/marked">marked</a> 와 같은 라이브러리를 사용해야한다. 이것은 네트워크로 JavaScript 라이브러리 덩어리를 다운받게 해야한다.</p></li>
+<li><p><strong>preloaded meta open graph property</strong> : Tistory는 <a href="http://ogp.me/">open graph</a> 지원을 위해서 웹 페이지가 열릴 때 해당 글의 내용을 미리 <code>&lt;meta name=&quot;og:&quot;&gt;</code>로 만들고 웹 페이지를 렌더링하는데 이러한 이유 때문에 html 모드에서 Markdown 형식으로 글을 작성하고 Client-side에서 HTML 문서로 렌더링을 하게되면 open graph에 사용하는 meta 정보들이 Markdown의 마커들이 붙어 있는채 만들어져 버리는 문제가 발생한다.</p></li>
+<li><p><strong>HTML 모드로 작성하면 파일 업로드를 할 수 없다</strong> : Tistory에서 Markdown으로 글을 작성해서 올리려면 html 모드로 글을 작성해야하는데 이 모드에서는 파일 업로드를 할 수 없는 문제가 있다. Tistory에서는 Daum editor를 사용해야지만 사진을 올릴 수 있기 때문에 Markdown에 필요한 이미지들은 모두 외부링크로 해야하는 문제가 있다.</p></li>
+</ol>
+
+<p>이러한 이유 때문에 Markdown을 사용해서 Tistory에 글을 올리려고 한다면 로컬에서 Markdown을 HTML으로 변화시키고 변화시킨 HTML 코드를 포스팅해야 한다는 결론을 내렸다. 하지만 기존의  Makrkdown 렌더링 모듈은 일반적인 기능만 가지고 있었다. Tistory에 Markdown으로 글을 작성할때는 html 모드로 작성해야하고 HTML 모드로 작성하면 이미지를 업로드할 수 없기 때문에 문서 안의 이미지들을 파일이 아닌 datauri로 변경해서 렌더링하는 기능이 필요했는데 이런 기능을 가지고 있는 모듈은 없어서 <strong><em>mark2html</em></strong> 모듈을 직접 만들기로 했다.</p>
+
+<h2 id="toc_2">mark2html 특징</h2>
+
+<p>mark2html은 다음과 같은 특징이 있다.</p>
+
+<ol>
+<li>Markdown 파일을 HTML 파일로 변환한다.</li>
+<li>파일 변환할 때 파일 안에 포함되어 있는 이미지 파일을 HTML 파일이 만들어지는 곳으로 복사한다.</li>
+<li>파일을 변환할 때 파일 안에 포함되어 있는 이미지 파일을 HTML 파일을 만들 때 datauri로 변환해서 만든다.</li>
+<li>Markdown 파일 안에 포함되어 있는 이미지 파일을 datauri로 변환해서 적용된 Markdown 파일을 HTML 파일이 만들어지는 곳에 함께 복사본을 만든다.</li>
+<li>Node.js 모듈과 CLI(Command Line Interface)를 지원한다.</li>
+</ol>
+
+<h2 id="toc_3">mark2html 내부 모듈</h2>
+
+<p>가장 처음 한 일은 Markdown 렌더링할 때 필요한 모듈을 찾는 것이였다. Markdown parser 모듈을 찾을 때 <a href="https://help.github.com/articles/github-flavored-markdown">Github Flavored Markdown</a>을 지원하는 모듈을 찾았다. GFM(Github Flavoed Markdown)은 기존의 Markdown의 부족한 포멧을 github에서 지원하는 문법인데 사용하는 대부분의 Markdown 문서들이 GFM를 사용하고 있기 때문이였다.</p>
+
+<ol>
+<li><a href="https://github.com/chjj/marked">marked</a>:  Markdown parser와 compiler 모듈이다. 이 모듈은 다른 markdown과 달리 lexer 인터페이스를 제공한다. 실제 mark2html에서 이 모듈을 사용해 custom 하게 HTML 코드를 만드는 모듈을 따로 만들었다.</li>
+<li><a href="https://github.com/rvagg/node-pygmentize-bundled">pygmentize-bundle</a>: GMF의 syntax highlight를 렌더링하기 위한 모듈이다. github에서는 <a href="http://pygments.org">pygments</a>를 사용해서 Markdown 안에 있는 code block을 코드를 syntax highlighing을 적용하는데 Node.js 모듈 중에서 pygments를 사용할 수 있게 wrapping한 것이 이 모듈이다.</li>
+<li><a href="http://highlightjs.org">highight.js</a>: Node.js의 강점이 JavaScript 라이브러리를 사용할 수 있는 것이데, 좀 더 화려한 syntax highlighting style을 사용하기 위해서 pygments 뿐만아니라 highight.js를 사용할 수 있게 이 모듈을 사용했다.</li>
+</ol>
+
+<h2 id="toc_4">mark2html 사용방법</h2>
+
+<p>mark2html은 크게 Node.js 모듈로 사용하는 방법과 CLI로 사용하는 방법이 있다.</p>
+
+<h3 id="toc_5">Node.js 모듈로 사용하기</h3>
+
+<p>mark2html을 사용하려는 프로젝트 안에서 <code>npm</code>으로 설치한다.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">npm install mark2html
+</code></pre></div>
+<p>설치가 완료되면 <code>require</code>를 사용해서 모듈을  로드하고 mark2html에 필요한 옵션을 지정해서 <code>mark2html.convert(options)</code>를 한다.</p>
+<div class="highlight"><pre><code class="javascript language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">mark2html</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mark2html&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">src</span><span class="o">:</span> <span class="s2">&quot;/Users/saltfactory/Dropbox/Blog/posts/2014-07-28-test-mark2html.md&quot;</span><span class="p">,</span> <span class="c1">//Markdown 파일경로</span>
+    <span class="nx">destDir</span><span class="o">:</span> <span class="s2">&quot;/Users/saltfactory/Dropbox/Blog/output&quot;</span><span class="p">,</span> <span class="c1">//HTML 파일이 복사되는 디렉토리 경로</span>
+    <span class="nx">imageCopy</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">//Makrkdown 파일에 포함된 이미지를 destDir에 복사</span>
+    <span class="nx">datauri</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>  <span class="c1">//HTML을 생성할 때 Markdown 파일 안의 이미지를 datauri로 변환해서 생성</span>
+    <span class="nx">markdownCopy</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">//Markdown 파일도 destDir에 함께 복사</span>
+    <span class="nx">markdownDatauri</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>  <span class="c1">//Markdown 파일을 복사할 때 파일안의 이미지를 datauri로 변환해서 복사</span>
+    <span class="nx">highlight</span><span class="o">:</span> <span class="mi">1</span>    <span class="c1">//pygments로 syntax highlighting, 1:pygments, 2:hightlight.js</span>
+<span class="p">};</span>
+
+<span class="nx">mark2html</span><span class="p">.</span><span class="nx">convert</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="toc_6">CLI 사용하기</h3>
+
+<p>mark2html을 CLI로 사용하기 위해서는 <code>npm install -g</code>로 설치를 하고 터미널에서 <code>mark2html</code> 명령어를 사용하면 된다. <code>mark2html</code> 명령어를 사용할 때도 옵션을 지정할 수 있다. 자세한 옵션은 <a href="https://github.com/saltfactory/mark2html#mark2html-%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%98%B5%EC%85%98">명령어 옵션</a>을 참조하면 된다.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">npm install -g mark2html
+</code></pre></div><div class="highlight"><pre><code class="text language-text" data-lang="text">mark2html -s /Users/saltfactory/Dropbox/Blog/posts/2014-07-28-test-mark2html.md \
+-d /Users/saltfactory/Dropbox/Blog/output \
+-img -md -datauri -mdatauri -code 1
+</code></pre></div>
+<h3 id="toc_7">글로벌 옵션 설정</h3>
+
+<p>mark2html은 옵션을 사용해서 Markdown 파일을 HTML으로 변환 시킨다. 하지만 매번 같은 옵션을 사용하려고 옵션 값을 변수에 지정하거나 명령어 옵션을 사용하면 불편함을 느낄 것이다. 그래서 컴퓨터에서 사용할 수 있는 글로벌 옵션 설정 파일을 만들어서 기본적인 옵션을 추가해 두면 된다.</p>
+
+<p>글로벌 옵션 설정 파일은 <code>$HOME/.mark2html.json</code> 에 다음과 같이 저장할 수 있다.</p>
+<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&quot;destDir&quot;</span><span class="p">:</span> <span class="s2">&quot;/Users/saltfactory/Dropbox/Blog/output&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;subDir&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;imageCopy&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;datauri&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;markdownCopy&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;markdownDatauri&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;highlight&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>글로벌 옵션 설정 파일을 만들어둔 상태에서 옵션을 추가적으로 사용할 수 있다. 만약 글로벌 옵션 설정 파일이 있는데 추가적으로 옵션을 사용하게 되면 없는 옵션은 추가가 될 것이고, 파일에 존재하는 옵션이 있다면 추가적으로 사용한 옵션값이 적용이 될 것이다.</p>
+
+<h2 id="toc_8">결론</h2>
+
+<p>mark2html은 Markdown 파일을 HTML 파일로 만들어주는 모듈이다. <code>npm</code> 글로벌 설치를 하면 <code>mark2html</code> 명령어를 사용할 수 있다. mark2html은 단순히 Markdown 파일을 HTML으로 변환 시키는 것 뿐만 아니라 Markdown 파일안에 포함되어 있는 이미지를 처리할 수 있는 기능이 가지고 있다. 파일 안에 존재하는 이미지를 destDir에 복사하거나 이미지 파일을 사용하지 못하는 사이트에 datauri로 변환 시키는 기능도 포함하고 있다.
+지금 이 글도 mark2html을 사용해서 Markdown으로 작성된 문서를 HTML으로 변환시켜 포스팅 될 것이다. Tistory에 글을 작성할 때 Markdown을 사용하기 위해서는 HTML 모드로 편집기를 사용해야하는데, 이때 이미지를 첨부할 수 없는 문제가 있다. 이때 mark2html을 사용해서 HTML으로 변환할 때 이미지를 datauri로 만들어서 HTML 파일 안에 포함시키면 된다. mark2html은 아직 개발단계이지만 Markdown을 사용해서 Tistory나  HTML 입력 모드를 지원하는 블로그에 글을 포스팅하고 싶을때 사용하면 유용할 것으로 생각된다.</p>
+
+<h1 id="toc_9">연구원 소개</h1>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>프로필 : <a href="http://about.me/saltfactory">http://about.me/saltfactory</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          <svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+
+        </span>
+        <span class="username">salthub</span>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>

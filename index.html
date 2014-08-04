@@ -12,8 +12,9 @@ layout: default
             {% for posts in category %}
               {% for post in posts %}
               <li>
-                <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+
                 <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+                <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
               </li>
               {% endfor %}
             {% endfor %}
