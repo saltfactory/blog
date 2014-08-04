@@ -446,7 +446,7 @@ Node.js에서는 프로그램을 정말 간결하게 만들어줄 수 있는 획
 패스워드 인증부터 OAuth 1.0, 1.0a 그리고 2.0 까지 거의 모든 인증방법을 추상화하여 만들어 두었다. 그리고 서비스의 인증는 서비스마다 조금씩 다르기 때문에 <code>Strategy</code>를 사용하는 개념으로 만들어서
 여러가지 다른 서비스의 <code>Strategy</code>를 사용하여 인증할 수 있게 만들어 두었다. 그래서 <code>passport</code>를 사용하는 <code>Strategy</code>가 약 140개가 넘는다.</p>
 
-<p>Tistory 역시 오픈 API를 사용하기 위해서 OAuth 2.0 인증을 처리해야하는데 <code>passport</code>를 사용하여 인증할 수 있는 Strategy를 <code>[passport-tistory](https://github.com/saltfactory/passport-tistory)</code>라는 이름으로 구현하였다.
+<p>Tistory 역시 오픈 API를 사용하기 위해서 OAuth 2.0 인증을 처리해야하는데 <code>passport</code>를 사용하여 인증할 수 있는 Strategy를 <a href="https://github.com/saltfactory/passport-tistory">passport-tistory</a>라는 이름으로 구현하였다.
 그리고 <code>passport-tistory</code>는 express로 웹서비스를 개발할 때 미들웨어로 사용하여 인증 과정을 간단하게 처리할 수 있다는 것을 이번 포스팅에서 소개했다.
 <code>passport-tistory</code> 는 현재 <code>0.1.0</code> 버전이지만 꽤 안정적이고 앞으로도 지속적으로 업데이트를 할 예정이다. Node.js로 Tistory 어플리케이션을 만들거나,
 Tistory의 오픈 API를 사용하기 위해서 OAuth 2.0 인증 후 access_token을 획득하고자 하는 개발자와 연구원들에게 도움이 되길 바란다.</p>
