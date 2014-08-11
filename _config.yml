@@ -18,14 +18,11 @@ markdown: redcarpet
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables"]
 
-# kramdown:
-#   input: GFM
-
-
+highlighter: pygments
 permalink: none
-pygments: true
+
 safe: true # if using alias is safe:false
-lsi: false
+lsi: true
 
 gems:
   - jekyll-redirect-from
