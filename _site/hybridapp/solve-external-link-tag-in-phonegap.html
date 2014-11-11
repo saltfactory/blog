@@ -46,6 +46,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </nav>
 
@@ -64,7 +78,7 @@
   </header>
 
   <article class="post-content">
-  <p><img src="http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png" alt="phonegap"></p>
+  <p><img src="http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png" alt="phonegap"/></p>
 
 <p><a href="http://phonegap.com">PhoneGap</a> (<a href="http://cordova.apache.org">Cordova</a>) 는 <strong>하이브리드 앱 개발 플랫폼</strong>이다. 모바일 앱 개발을 할 때 하이브리드 앱이라고 하면 통상 웹 자원과 네이티브 자원을 함께 사용해서 앱을 개발하는 것을 의미한다. PhoneGap은 UI 및 사용자의 이벤트를 HTML 나 JavaScript로 처리를 한다. 이 말은 다시말하면 PhoneGap은 내장 <strong><em>WebView</em></strong>를 사용하고 WebView 안에 웹 자원을 사용하여 개발을 한다는 것이다. PhoneGap에서 웹 자원은 로컬 HTML, CSS, 그리고 JavaScript를 사용한다. 웹뷰에서 HTML으로 UI를 만들때 페이지 전환을 링크를 사용한다. 이 때 앱 안에 링크를 사용할 때 다음과 같은 문제를 가진다.</p>
 
@@ -75,66 +89,82 @@
 <p>다시 말해서 앱 안에 <code>&lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;blog&lt;/a&gt;</code> 라는 링크가 앱 안에 있을 때 이 링크를 누르는 순간 새로운 창이 나나타는 것이 아니라 동작하던 앱의 화면은 사라지고 WebView는 블로그 페이지로 가득차버리는 문제가 발생한다. 예제로 PhoneGap 프로젝트를 만들어보자.</p>
 
 <p>프로젝트 이름은 <strong>sf-phonegap-demo</strong>라고 만들어보자. 처음 PhoneGap으로 프로젝트를 만든다면 <a href="http://blog.saltfactory.net/228">[PhoneGap 하이브리드 앱 개발] #1. PhoneGap과 Node.js로 하이브리드 앱 개발환경 구축하기</a> 글을 참조하여 만든다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap create sf-phonegap-demo -n Sf-PhoneGap-Demo -i net.saltfactory.tutorial.phonegapdemo
-</code></pre></div>
+
+<pre><code>phonegap create sf-phonegap-demo -n Sf-PhoneGap-Demo -i net.saltfactory.tutorial.phonegapdemo
+</code></pre>
+
 <p>우리는 UI를 <a href="http://ionicframework.com">Ionic Framework</a>를 이용해서 만들것이다. PhoneGap은 <code>build</code>를 할 경우 자동으로 www 디렉토리 안에 있는 웹 자원을 각 플랫폼으로 복사하기 때문에 우리가 사용할 라이브러리를 <code>www/lib</code> 로 넣어둘 것이다. 우리는 웹 라이브러리를 <a href="http://bower.io">bower</a>를 이용해서 설치할 것이다. 컴퓨터에 <code>bower</code> 명령어가 설치되지 않았으면 <code>npm</code>을 이용해서 bower를 설치한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install -g bower
-</code></pre></div>
+
+<pre><code>npm install -g bower
+</code></pre>
+
 <p><code>bower</code>를 설치하고 난 이후 bower의 컴포넌트 들의 설치 디렉토리를 <code>www/lib</code>로 지정하기 위해서 다음과 같이 <code>.bowerrc</code>를 만든다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">vi .bowerrc
-</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">{
+
+<pre><code>vi .bowerrc
+</code></pre>
+
+<pre><code>{
   &quot;directory&quot;: &quot;www/lib&quot;
 }
-</code></pre></div>
+</code></pre>
+
 <p>이제 bower를 이용하여 ionic을 설치해보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bower install driftyco/ionic-bower
-</code></pre></div>
+
+<pre><code>bower install driftyco/ionic-bower
+</code></pre>
+
 <p>bower로 설치가 끝나면 <code>www/lib</code> 안에 다음과 같이 라이브러리들이 설치된 것을 확인할 수 있다.</p>
 
-<p><img src="http://cfile7.uf.tistory.com/image/247CDC4D53993C3032203E" alt="after install ionic using bower"></p>
+<p><img src="http://cfile7.uf.tistory.com/image/247CDC4D53993C3032203E" alt="after install ionic using bower"/></p>
 
 <p>이제 테스트를 위해서 www/index.html 파일을 다음과 같이 수정한다.</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-    <span class="nt">&lt;head&gt;</span>
-        <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width&quot;</span><span class="nt">&gt;</span>
 
-        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;lib/ionic/css/ionic.css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;lib/ionic/js/dist/js/ionic.bundle.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-        <span class="nt">&lt;script&gt;</span>
-          <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;SFApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ionic&#39;</span><span class="p">])</span>
-        <span class="nt">&lt;/script&gt;</span>
-        <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width&quot;&gt;
 
-    <span class="nt">&lt;/head&gt;</span>
-    <span class="nt">&lt;body</span> <span class="na">ng-app=</span><span class="s">&quot;SFApp&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;bar bar-header bar-positive&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;</span>a link demo<span class="nt">&lt;/h1&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
+        &lt;link href=&quot;lib/ionic/css/ionic.css&quot; rel=&quot;stylesheet&quot;&gt;
+        &lt;script src=&quot;lib/ionic/js/dist/js/ionic.bundle.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
+          angular.module(&#39;SFApp&#39;, [&#39;ionic&#39;])
+        &lt;/script&gt;
+        &lt;title&gt;&lt;/title&gt;
 
-      <span class="nt">&lt;ion-content</span> <span class="na">class=</span><span class="s">&quot;has-header&quot;</span> <span class="na">padding=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://blog.saltfactory.net&quot;</span><span class="nt">&gt;</span>Go saltfactor&#39;s blog<span class="nt">&lt;/a&gt;</span>
-      <span class="nt">&lt;/ion-content&gt;</span>
+    &lt;/head&gt;
+    &lt;body ng-app=&quot;SFApp&quot;&gt;
+&lt;div class=&quot;bar bar-header bar-positive&quot;&gt;
+        &lt;h1 class=&quot;title&quot;&gt;a link demo&lt;/h1&gt;
+      &lt;/div&gt;
 
-    <span class="nt">&lt;/body&gt;</span>
+      &lt;ion-content class=&quot;has-header&quot; padding=&quot;true&quot;&gt;
+        &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;Go saltfactor&#39;s blog&lt;/a&gt;
+      &lt;/ion-content&gt;
 
-<span class="nt">&lt;/html&gt;</span>
-</code></pre></div>
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
 <p>프로젝트를 만들고 ios 플랫폼을 만들어보자</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap build ios
-</code></pre></div>
+
+<pre><code>phonegap build ios
+</code></pre>
+
 <p>그리고 테스트를 위해 작성한 앱을 iOS 시뮬레이터로 실행해보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap run ios
-</code></pre></div>
+
+<pre><code>phonegap run ios
+</code></pre>
+
 <p>실행을 해보면 아래 그림과 같이 ionic framework 안에 링크가 하나 있는 앱이 실행이 될 것이다. 이젠 링크를 클릭해보자. 어떻게 되는가? </p>
 
 <blockquote>
 <p>a 링크는 우리가 만든 앱을 사라지게 만들어버리고 a 링크가 가지고 있는 URL로 화면이 변경되어 버려 PhoneGap으로 만든 앱이 사라져 버리고 WebView에 새로운 사이트가 가득차 버리게 되는 문제가 발생한다.</p>
 </blockquote>
 
-<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page with in a link {width:320px;}">
-<img src="http://cfile8.uf.tistory.com/image/252BC94553993D3B2A7414" alt="change new page after click link {width:320px;}"></p>
+<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page with in a link " style="{width:320px;}"/>
+<img src="http://cfile8.uf.tistory.com/image/252BC94553993D3B2A7414" alt="change new page after click link " style="{width:320px;}"/></p>
 
 <p>그럼 PhoneGap 으로 하이브리드 앱을 만들때 컨텐츠 안에 a 링크가 있을 경우 어떻게 대처해야할까? </p>
 
@@ -145,46 +175,55 @@
 <h2 id="inappbrowser-플러그인을-사용">InAppBrowser 플러그인을 사용</h2>
 
 <p>PhoneGap에서 새로운 브라우저를 열기 위해서는 <a href="https://github.com/apache/cordova-plugin-inappbrowser">InAppBrowser</a> 플러그인이 필요하다. 다음과 같이 inappbrowser 플러그인을 설치한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap plugin add org.apache.cordova.inappbrowser
-</code></pre></div>
+
+<pre><code>phonegap plugin add org.apache.cordova.inappbrowser
+</code></pre>
+
 <p>inappbrowser로 외부링크를 브라우저로 열기 위해서는 HTML 코드 안에 a 링크에 다음과 같이 target이 반드시 필요하다. 그리고 <code>target</code>은 <code>_system</code>으로 한다. 위 HTML 코드를 다음과 같이 수정하자.</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-    <span class="nt">&lt;head&gt;</span>
-        <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width&quot;</span><span class="nt">&gt;</span>
 
-        <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;lib/ionic/css/ionic.css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;lib/ionic/js/dist/js/ionic.bundle.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;cordova.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-        <span class="nt">&lt;script&gt;</span>
-          <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;SFApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ionic&#39;</span><span class="p">])</span>
-        <span class="nt">&lt;/script&gt;</span>
-        <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width&quot;&gt;
 
-    <span class="nt">&lt;/head&gt;</span>
-    <span class="nt">&lt;body</span> <span class="na">ng-app=</span><span class="s">&quot;SFApp&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;bar bar-header bar-positive&quot;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;h1</span> <span class="na">class=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;</span>a link demo<span class="nt">&lt;/h1&gt;</span>
-      <span class="nt">&lt;/div&gt;</span>
+        &lt;link href=&quot;lib/ionic/css/ionic.css&quot; rel=&quot;stylesheet&quot;&gt;
+        &lt;script src=&quot;lib/ionic/js/dist/js/ionic.bundle.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;cordova.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
+          angular.module(&#39;SFApp&#39;, [&#39;ionic&#39;])
+        &lt;/script&gt;
+        &lt;title&gt;&lt;/title&gt;
 
-      <span class="nt">&lt;ion-content</span> <span class="na">class=</span><span class="s">&quot;has-header&quot;</span> <span class="na">padding=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
-        <span class="c">&lt;!-- &lt;a href=&quot;http://blog.saltfactory.net&quot; target=&quot;_system&quot;&gt;Go saltfactor&#39;s blog&lt;/a&gt; --&gt;</span>
-        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">onclick=</span><span class="s">&quot;window.open(&#39;http://blog.saltfactory.net&#39;, &#39;_system&#39;);&quot;</span><span class="nt">&gt;</span>Go saltfactor&#39;s blog<span class="nt">&lt;/a&gt;</span>
-      <span class="nt">&lt;/ion-content&gt;</span>
+    &lt;/head&gt;
+    &lt;body ng-app=&quot;SFApp&quot;&gt;
+      &lt;div class=&quot;bar bar-header bar-positive&quot;&gt;
+        &lt;h1 class=&quot;title&quot;&gt;a link demo&lt;/h1&gt;
+      &lt;/div&gt;
 
-    <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
-</code></pre></div>
+      &lt;ion-content class=&quot;has-header&quot; padding=&quot;true&quot;&gt;
+        &lt;!-- &lt;a href=&quot;http://blog.saltfactory.net&quot; target=&quot;_system&quot;&gt;Go saltfactor&#39;s blog&lt;/a&gt; --&gt;
+        &lt;a href=&quot;#&quot; onclick=&quot;window.open(&#39;http://blog.saltfactory.net&#39;, &#39;_system&#39;);&quot;&gt;Go saltfactor&#39;s blog&lt;/a&gt;
+      &lt;/ion-content&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre>
+
 <p>다시 ios 플랫폼에 코드를 적용해서 실행해보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap run ios
-</code></pre></div>
+
+<pre><code>phonegap run ios
+</code></pre>
+
 <p>앱이 실행되면 다시 a 링크를 클릭해보자. 아래 그림과 같이 이전과는 다르게 모바일 사파리 브라우저로 열리는 것을 확인할 수 있다. 위 코드는 iOS에서 사용할 경우 <code>window.open</code> 에 <code>target</code>을 <code>_system</code>으로 사용하면 되는 예제를 보여주고 있다. 안드로이드일 경우에는 다음과 같이 <code>navigator.app.loadUrl</code>과 <code>openExtenral:true</code>를 사용해야한다.</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">onclick=</span><span class="s">&quot;navigator.app.loadUrl(&#39;http://blog.saltfactory.net&#39;, {openExternal:true});&quot;</span><span class="nt">&gt;</span>Go saltfactor&#39;s blog<span class="nt">&lt;/a&gt;</span>
-</code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="open safari browser {width:320px;}">
-<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="backgroud navigation ios {width:320px;}">
-<img src="http://cfile5.uf.tistory.com/image/237C8C34539943C12FC75C" alt="background navigation ios {width:320px;}"></p>
+
+<pre><code class="html">&lt;a href=&quot;#&quot; onclick=&quot;navigator.app.loadUrl(&#39;http://blog.saltfactory.net&#39;, {openExternal:true});&quot;&gt;Go saltfactor&#39;s blog&lt;/a&gt;
+</code></pre>
+
+<p><img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="open safari browser " style="{width:320px;}"/>
+<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="backgroud navigation ios " style="{width:320px;}"/>
+<img src="http://cfile5.uf.tistory.com/image/237C8C34539943C12FC75C" alt="background navigation ios " style="{width:320px;}"/></p>
 
 <p>하지만 이 방법을 사용하기 위해서는 a 링크의 href를 분석해서 inappbrower를 사용해서 링크를 열수 있는 JavaScript 코드로 변경을 해줘야한다. </p>
 
@@ -201,158 +240,172 @@
 </blockquote>
 
 <p>우리는 PhoneGap 프로젝트를 iOS 플랫폼을 추가해서 만들었는데 iOS 플랫폼 디렉토리에 들어가서 <code>MainViewController.m</code> 파일을 열어보자. 그리고 scheme를 분석해서 http와 https일 경우는 모바일 브라우저로 링크를 열게 다음과 같이 코드를 추가한다.</p>
-<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">...</span> <span class="p">(</span><span class="err">생략</span><span class="p">)</span> <span class="p">...</span>
 
-<span class="cp">#pragma mark UIWebDelegate implementation</span>
+<pre><code class="objective-c">... (생략) ...
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">webViewDidFinishLoad</span><span class="p">:(</span><span class="bp">UIWebView</span><span class="o">*</span><span class="p">)</span><span class="n">theWebView</span>
-<span class="p">{</span>
-    <span class="c1">// Black base color for background matches the native apps</span>
-    <span class="n">theWebView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">blackColor</span><span class="p">];</span>
+#pragma mark UIWebDelegate implementation
 
-    <span class="k">return</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">webViewDidFinishLoad</span><span class="p">:</span><span class="n">theWebView</span><span class="p">];</span>
-<span class="p">}</span>
+- (void)webViewDidFinishLoad:(UIWebView*)theWebView
+{
+    // Black base color for background matches the native apps
+    theWebView.backgroundColor = [UIColor blackColor];
 
-<span class="cm">/* Comment out the block below to over-ride */</span>
+    return [super webViewDidFinishLoad:theWebView];
+}
 
-<span class="cm">/*</span>
+/* Comment out the block below to over-ride */
 
-<span class="cm">- (void) webViewDidStartLoad:(UIWebView*)theWebView</span>
-<span class="cm">{</span>
-<span class="cm">    return [super webViewDidStartLoad:theWebView];</span>
-<span class="cm">}</span>
+/*
 
-<span class="cm">- (void) webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error</span>
-<span class="cm">{</span>
-<span class="cm">    return [super webView:theWebView didFailLoadWithError:error];</span>
-<span class="cm">}</span>
+- (void) webViewDidStartLoad:(UIWebView*)theWebView
+{
+    return [super webViewDidStartLoad:theWebView];
+}
 
-<span class="cm">- (BOOL) webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType</span>
-<span class="cm">{</span>
-<span class="cm">    return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];</span>
-<span class="cm">}</span>
-<span class="cm">*/</span>
+- (void) webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
+{
+    return [super webView:theWebView didFailLoadWithError:error];
+}
+
+- (BOOL) webView:(UIWebView*)theWebView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    return [super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
+}
+*/
 
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">webView</span><span class="p">:(</span><span class="bp">UIWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">theWebView</span> <span class="nl">shouldStartLoadWithRequest</span><span class="p">:(</span><span class="bp">NSURLRequest</span> <span class="o">*</span><span class="p">)</span><span class="n">request</span> <span class="nl">navigationType</span><span class="p">:(</span><span class="n">UIWebViewNavigationType</span><span class="p">)</span><span class="n">navigationType</span>
-<span class="p">{</span>
-    <span class="bp">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">request</span> <span class="n">URL</span><span class="p">];</span>
+- (BOOL)webView:(UIWebView *)theWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    NSURL *url = [request URL];
 
-    <span class="c1">// Intercept the external http requests and forward to Safari.app</span>
-    <span class="c1">// Otherwise forward to the PhoneGap WebView</span>
-    <span class="k">if</span> <span class="p">([[</span><span class="n">url</span> <span class="n">scheme</span><span class="p">]</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;http&quot;</span><span class="p">]</span> <span class="o">||</span> <span class="p">[[</span><span class="n">url</span> <span class="n">scheme</span><span class="p">]</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;https&quot;</span><span class="p">])</span> <span class="p">{</span>
-<span class="p">[[</span><span class="bp">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span> <span class="nl">openURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
-<span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="p">[</span> <span class="nb">super</span> <span class="nl">webView</span><span class="p">:</span><span class="n">theWebView</span> <span class="nl">shouldStartLoadWithRequest</span><span class="p">:</span><span class="n">request</span> <span class="nl">navigationType</span><span class="p">:</span><span class="n">navigationType</span> <span class="p">];</span>
-    <span class="p">}</span>
+    // Intercept the external http requests and forward to Safari.app
+    // Otherwise forward to the PhoneGap WebView
+    if ([[url scheme] isEqualToString:@&quot;http&quot;] || [[url scheme] isEqualToString:@&quot;https&quot;]) {
+[[UIApplication sharedApplication] openURL:url];
+return NO;
+    }
+    else {
+        return [ super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType ];
+    }
 
-<span class="p">}</span>
+}
 
-<span class="k">@end</span>
-<span class="p">...</span> <span class="p">(</span><span class="err">생략</span><span class="p">)...</span>
-</code></pre></div>
+@end
+... (생략)...
+</code></pre>
+
 <p>그리고 <strong>InAppBrowser</strong>를 더이상 사용하지 않기 위해서 플러그인을 삭제한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap plugin remove org.apache.cordova.inappbrowser
-</code></pre></div>
+
+<pre><code>phonegap plugin remove org.apache.cordova.inappbrowser
+</code></pre>
+
 <p>마지막으로 HTML 코드도 InAppBrowser를 더이상 사용하지 않을 것이기 때문에 최초 a 링크 html 코드로 변경한다.</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://blog.saltfactory.net&quot;</span><span class="nt">&gt;</span>Go saltfactor&#39;s blog<span class="nt">&lt;/a&gt;</span>
-</code></pre></div>
+
+<pre><code class="html">&lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;Go saltfactor&#39;s blog&lt;/a&gt;
+</code></pre>
+
 <p>다시 phonegap으로 ios 시뮬레이터를 실행해보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap run ios
-</code></pre></div>
+
+<pre><code>phonegap run ios
+</code></pre>
+
 <p>앱을 실행한 후 링크를 클릭하면 다음 그림과 같이 모바일 브라우저로 링크가 열리게 되는 것을 확인할 수 있다.이 방법은 기존의 HTML에 들어있는 a 링크를 InAppB    rowser 플러그인을 사용해서 열도록 코드를 분석해서 태그를 변경하지 않아도 되는 장점이 있다. </p>
 
-<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page within a link {width:320px;}">
-<img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="view safari new page from a link {width:320px;}">
-<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="ios background navigator {width:320px;}"></p>
+<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page within a link " style="{width:320px;}"/>
+<img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="view safari new page from a link " style="{width:320px;}"/>
+<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="ios background navigator " style="{width:320px;}"/></p>
 
 <h2 id="네이티브코드-변경---android">네이티브코드 변경 - Android</h2>
 
 <p>위에서 우리는 iOS에서 네이티브 코드를 변경해서 <strong><em>WebView</em></strong>의 이벤트를 핸들링하여 처리하였는데 그러면 Android에서는 어떻게 할 수 있을까? 원리는 동일하다. iOS에서 WebView에서 링크를 클릭하였을 경우 <code>shouldStartLoadWithRequest</code>에서 URL을 인터셉트하여 URL scheme를 분석한 것 같이 Android에서는 <code>shouldOverrideUrlLoading</code> 안에서 URL scheme를 분석하여 처리하면 가능하다.</p>
 
 <p>먼저 안드로이드 PhoneGap 프로젝트에서 플랫폼을 추가하자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap build android
-</code></pre></div>
+
+<pre><code>phonegap build android
+</code></pre>
+
 <p>이렇게 안드로이드 플랫폼을 추가하면 자동으로 안드로이드 프로젝트 파일이 생성이 되는데 앱이 시작할때 열리는 Activity를 열어보자. 우리는 PhoneGap 프로젝트 이름을 SfPhoneGapDemo로 만들었기 때문에 Activity의 이름이 <code>SfPhoneGapDemo.java</code>로 만들어졌을 것이다. Activity 파일을 열어서 다음과 같이 수정한다.</p>
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="cm">/*</span>
-<span class="cm">       Licensed to the Apache Software Foundation (ASF) under one</span>
-<span class="cm">       or more contributor license agreements.  See the NOTICE file</span>
-<span class="cm">       distributed with this work for additional information</span>
-<span class="cm">       regarding copyright ownership.  The ASF licenses this file</span>
-<span class="cm">       to you under the Apache License, Version 2.0 (the</span>
-<span class="cm">       &quot;License&quot;); you may not use this file except in compliance</span>
-<span class="cm">       with the License.  You may obtain a copy of the License at</span>
 
-<span class="cm">         http://www.apache.org/licenses/LICENSE-2.0</span>
+<pre><code class="java">/*
+       Licensed to the Apache Software Foundation (ASF) under one
+       or more contributor license agreements.  See the NOTICE file
+       distributed with this work for additional information
+       regarding copyright ownership.  The ASF licenses this file
+       to you under the Apache License, Version 2.0 (the
+       &quot;License&quot;); you may not use this file except in compliance
+       with the License.  You may obtain a copy of the License at
 
-<span class="cm">       Unless required by applicable law or agreed to in writing,</span>
-<span class="cm">       software distributed under the License is distributed on an</span>
-<span class="cm">       &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
-<span class="cm">       KIND, either express or implied.  See the License for the</span>
-<span class="cm">       specific language governing permissions and limitations</span>
-<span class="cm">       under the License.</span>
-<span class="cm"> */</span>
+         http://www.apache.org/licenses/LICENSE-2.0
 
-<span class="kn">package</span> <span class="n">net</span><span class="o">.</span><span class="na">saltfactory</span><span class="o">.</span><span class="na">tutorial</span><span class="o">.</span><span class="na">phonegapdemo</span><span class="o">;</span>
+       Unless required by applicable law or agreed to in writing,
+       software distributed under the License is distributed on an
+       &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+       KIND, either express or implied.  See the License for the
+       specific language governing permissions and limitations
+       under the License.
+ */
 
-<span class="kn">import</span> <span class="nn">android.content.Intent</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">android.graphics.Bitmap</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">android.net.Uri</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">android.webkit.WebView</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.apache.cordova.*</span><span class="o">;</span>
+package net.saltfactory.tutorial.phonegapdemo;
 
-<span class="kn">import</span> <span class="nn">java.net.MalformedURLException</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.webkit.WebView;
+import org.apache.cordova.*;
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SfPhoneGapDemo</span> <span class="kd">extends</span> <span class="n">CordovaActivity</span>
-<span class="o">{</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+import java.net.MalformedURLException;
+import java.net.URL;
 
-        <span class="c1">// Set by &lt;content src=&quot;index.html&quot; /&gt; in config.xml</span>
+public class SfPhoneGapDemo extends CordovaActivity
+{
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-        <span class="kd">super</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+        // Set by &lt;content src=&quot;index.html&quot; /&gt; in config.xml
 
-        <span class="k">this</span><span class="o">.</span><span class="na">appView</span><span class="o">.</span><span class="na">setWebViewClient</span><span class="o">(</span><span class="k">new</span> <span class="nf">CordovaWebViewClient</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">appView</span><span class="o">)</span> <span class="o">{</span>
-<span class="nd">@Override</span>
-            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">shouldOverrideUrlLoading</span><span class="o">(</span><span class="n">WebView</span> <span class="n">view</span><span class="o">,</span> <span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+        super.init();
 
-                <span class="n">Uri</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">Uri</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">url</span><span class="o">);</span>
+        this.appView.setWebViewClient(new CordovaWebViewClient(this, this.appView) {
+@Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-                <span class="k">if</span> <span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;http&quot;</span><span class="o">)</span> <span class="o">||</span> <span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;https&quot;</span><span class="o">)){</span>
-                    <span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Intent</span><span class="o">(</span><span class="n">Intent</span><span class="o">.</span><span class="na">ACTION_VIEW</span><span class="o">);</span>
-                    <span class="n">intent</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="n">uri</span><span class="o">);</span>
-                    <span class="n">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
-                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                    <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">shouldOverrideUrlLoading</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="n">url</span><span class="o">);</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
+                Uri uri = Uri.parse(url);
 
-        <span class="o">});</span>
+                if (uri.getScheme().equals(&quot;http&quot;) || uri.getScheme().equals(&quot;https&quot;)){
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    return true;
+                } else {
+                    return super.shouldOverrideUrlLoading(view, url);
+                }
+            }
+
+        });
 
 
-        <span class="kd">super</span><span class="o">.</span><span class="na">loadUrl</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getStartUrl</span><span class="o">());</span>
-        <span class="c1">//super.loadUrl(&quot;file:///android_asset/www/index.html&quot;);</span>
-    <span class="o">}</span>
+        super.loadUrl(Config.getStartUrl());
+        //super.loadUrl(&quot;file:///android_asset/www/index.html&quot;);
+    }
 
-<span class="o">}</span>
-</code></pre></div>
+}
+</code></pre>
+
 <p>이제 앱을 실행시켜보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">phonegap run android
-</code></pre></div>
+
+<pre><code>phonegap run android
+</code></pre>
+
 <p>앱을 실행시켜서 a 링크를 클릭해보자. 그러면 안드로이드 디바이스의 디폴트 브라우저로 링크가 열리는 것을 확인할 수 있다.
 이렇게 네이티브 코드를 수정하여 사용하면 InAppBrowser에서 새 창을 브라우저에서 열기 위해서 여러가지 HTML 코드를 다시 프로그램으로 수정할 필요 없이 기존의 HTML 코드의 a 링크를 그대로 사용하면서 새로운 브라우저에 열 수 있게 할 수 있다.</p>
 
-<p><img src="http://cfile9.uf.tistory.com/image/26261A3A5399749C0808A6" alt="android simple page within a link {width:320px;}">
-<img src="http://cfile21.uf.tistory.com/image/210D153A5399749D2E5630" alt="android default brwoser new page {width:320px;}">
-<img src="http://cfile10.uf.tistory.com/image/2407753A5399749D23F2F4" alt="android backgroud navigator {width:320px;}"></p>
+<p><img src="http://cfile9.uf.tistory.com/image/26261A3A5399749C0808A6" alt="android simple page within a link " style="{width:320px;}"/>
+<img src="http://cfile21.uf.tistory.com/image/210D153A5399749D2E5630" alt="android default brwoser new page " style="{width:320px;}"/>
+<img src="http://cfile10.uf.tistory.com/image/2407753A5399749D23F2F4" alt="android backgroud navigator " style="{width:320px;}"/></p>
 
 <h2 id="결론">결론</h2>
 
