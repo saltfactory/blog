@@ -27,3 +27,4 @@ lsi: true
 gems:
   - jekyll-redirect-from
   - jemoji
+  - jekyll-img-converter
