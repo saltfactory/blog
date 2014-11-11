@@ -5,12 +5,12 @@
     <description></description>
     <link>http://saltfactory.net/series/</link>
     <atom:link href="http://saltfactory.net/series/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 11 Nov 2014 16:44:12 +0900</pubDate>
-    <lastBuildDate>Tue, 11 Nov 2014 16:44:12 +0900</lastBuildDate>
+    <pubDate>Tue, 11 Nov 2014 16:46:34 +0900</pubDate>
+    <lastBuildDate>Tue, 11 Nov 2014 16:46:34 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
-        <title>mark2html을 이용하여 Markdown 파일을 HTML 파일로 변환</title>
+        <title>Jekyll Markdown 파일의 front matter를 제외하고 HTML변환하기</title>
         <description>&lt;h2 id=&quot;mark2html@v.0.0.5&quot;&gt;&lt;a href=&quot;mailto:mark2html@v.0.0.5&quot;&gt;mark2html@v.0.0.5&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/saltfactory/mark2html&quot;&gt;mark2html&lt;/a&gt; &lt;strong&gt;&lt;em&gt;0.0.5&lt;/em&gt;&lt;/strong&gt; 버전은 &lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;의 &lt;a href=&quot;http://jekyllrb.com/docs/frontmatter/&quot;&gt;front matter&lt;/a&gt; 가 포함된 Markdown 파일에서 front matter를 skip하고 렌더링 할 수 있는 옵션 &lt;code&gt;-skip-front-matter&lt;/code&gt;를 추가 하였다.&lt;/p&gt;
@@ -98,6 +98,16 @@ Markdown 파일에 front matter가 포함되어 있다면 &lt;code&gt;mark2html&
         <pubDate>Tue, 05 Aug 2014 00:00:00 +0900</pubDate>
         <link>http://saltfactory.net/series/mark2html/mark2html-v.0.0.5-upgrade.html</link>
         <guid isPermaLink="true">http://saltfactory.net/series/mark2html/mark2html-v.0.0.5-upgrade.html</guid>
+        
+        <category>markdown</category>
+        
+        <category>jekyll</category>
+        
+        <category>mark2html</category>
+        
+        <category>front matter</category>
+        
+        <category>html</category>
         
         
         <category>mark2html</category>
