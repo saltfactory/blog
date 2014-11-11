@@ -46,20 +46,6 @@
         
           
         
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
       </div>
     </nav>
 
@@ -105,40 +91,30 @@
 - <strong><em>title</em></strong> : 이미지에 마우스를 올리면 나타나는 이미지의 타이틀 값이다.</p>
 
 <p>Markdown에서 위의 이미지 속성을 표현하기 위해서는 다음과 같은 문법을 따른다.</p>
-
-<pre><code>![아이폰화면 이미지](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
-</code></pre>
-
+<div class="highlight"><pre><code class="language-text" data-lang="text">![아이폰화면 이미지](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
+</code></pre></div>
 <p>이 문법은 HTML 코드로 변환되면 다음과 같이 변환이 된다.</p>
-
-<pre><code class="html">&lt;img src=&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot; alt=&quot;아이폰화면 이미지&quot; title=&quot;아이폰화면&quot;&gt;
-</code></pre>
-
-<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" title="아이폰화면"/></p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">&gt;</span>
+</code></pre></div>
+<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" title="아이폰화면"></p>
 
 <p><code>img</code> 속성중에 <code>alt</code> 값은 이미지가 나타나는한 화면에 나타나지 않고 이미지를 설명하는 값이다. 그래서 Markdown을 작성할 때 <code>alt</code> 값에 <code>style</code> 값을 넣어서 사용하기로 했다.</p>
 
 <h3 id="alt-값에-style-속성-추가하기">ALT 값에 style 속성 추가하기</h3>
 
 <p>위에 나타나는 이미지는 아이폰5에서 캡쳐한 사진의 실제 크기이다. 그럼 <code>img</code>의 <code>alt</code>값을 넣고 표현해보자. 다음과 같이 Markdown의 이미지의 <code>alt</code>를 표현하는 공간에 <code>{}</code>를 사용해서 style 값을 지정했다.</p>
-
-<pre><code>![아이폰화면 이미지 {max-width:320px;}](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
-</code></pre>
-
+<div class="highlight"><pre><code class="language-text" data-lang="text">![아이폰화면 이미지 {max-width:320px;}](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
+</code></pre></div>
 <p><strong><em><a href="http://saltfactory.net/mark2html">mark2html</a>@0.0.4</em></strong> 버전에서는 <code>-imageStyle</code> 옵션값이 추가되었다. 명령어 옵션은 <code>-style</code>이다. 다음과 같이 옵션 값에 <code>imageStyle</code>을
 추가하거나 command 라인에 <code>-style</code>옵션을 추가하면 ALT에 포함된 스타일 값을 가지고 렌더링을 한다.</p>
-
-<pre><code class="javascript">var options = {
-    imageStyle:true
-}
-</code></pre>
-
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">imageStyle</span><span class="o">:</span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>그러면 다음과 같이 HTML 코드로 변환이 된다.</p>
-
-<pre><code class="html">&lt;img src=&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot; style=&quot;width:320px;&quot; alt=&quot;아이폰화면 이미지&quot; title=&quot;아이폰화면&quot;/&gt;
-</code></pre>
-
-<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지 " style="{max-width:320px;}" title="아이폰화면"/></p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">style=</span><span class="s">&quot;width:320px;&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">/&gt;</span>
+</code></pre></div>
+<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지 {max-width:320px;}" title="아이폰화면"></p>
 
 <h2 id="결론">결론</h2>
 
