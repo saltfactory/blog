@@ -21,7 +21,7 @@ redcarpet:
 highlighter: pygments
 permalink: none
 
-safe: false # if using alias is safe:false
+safe: true # if using alias is safe:false
 lsi: true
 
 gems:
