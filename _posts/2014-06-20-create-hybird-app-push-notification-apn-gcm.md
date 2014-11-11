@@ -2,7 +2,8 @@
 layout: post
 title: PhoneGap(Cordova) 앱 푸시 (Push Notification) 알람서비스 APN, GCM 구현
 category: hybridapp
-comments: false
+comments: true
+redirect_from: /245/
 ---
 
 ![phonegap](http://cfile8.uf.tistory.com/image/276B443353A1528A2F8CBA)

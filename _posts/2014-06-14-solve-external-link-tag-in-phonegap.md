@@ -2,7 +2,8 @@
 layout: post
 title: PhoneGap(Cordova) 외부 링크(a link) 새창으로 열기
 category: hybridapp
-comments: false
+comments: true
+redirect_from: /243/
 ---
 
 ![phonegap](http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png)

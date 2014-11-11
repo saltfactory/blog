@@ -3,6 +3,7 @@ layout: post
 title: passport-tistory와 express를 사용하여 Tistory 인증 구현
 category: passport-tistory
 comments: true
+redirect_from: /251/
 ---
 
 > *[passport-tistory](https://github.com/saltfactory/passport-tistory)를 사용하여 Node.js 로 Tistory 오픈 API를 사용하는 방법을 소개한다. passport-tistory는 Node.js로 만들어진 Tistory 오픈 API 인증모듈이다.*
