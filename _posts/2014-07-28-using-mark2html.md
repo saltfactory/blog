@@ -2,7 +2,7 @@
 layout: post
 title: mark2html을 이용하여 Markdown 파일을 HTML 파일로 변환
 category: mark2html
-comments: false
+comments: true
 redirect_from: /252/
 ---
 
