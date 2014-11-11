@@ -7,10 +7,10 @@
     <title>Markdown 파일을 HTML 파일로 변환할 때 IMG 사이즈 변환</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/mark2html/mark2html-v.0.0.4-upgrade.html">
+    <link rel="canonical" href="http://saltfactory.net/series/mark2html/mark2html-v.0.0.4-upgrade.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="http://saltfactory.net/series/assets/css/main.css">
     <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
 
     
@@ -23,7 +23,7 @@
 
   <div class="wrap">
 
-    <a class="site-title" href="/">saltfactory's series</a>
+    <a class="site-title" href="http://saltfactory.net/series/">saltfactory's series</a>
 
     <nav class="site-nav">
       <a href="#" class="menu-icon">
@@ -64,13 +64,13 @@
   </header>
 
   <article class="post-content">
-  <h2 id="toc_0"><a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a></h2>
+  <h2 id="mark2html@0.0.4"><a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a></h2>
 
 <p>mark2html을 <strong><em>0.0.4</em></strong>버전으로 업그레이드 했다. 이번 업데이트에는 Makrdown에서 HTML으로 변환할 때 이미지의 크기 등 style을 적용할 수 있는 기능이 추가 되었다.</p>
 
 <p><a href="http://saltfactory.net/mark2html">mark2html</a>은 현재 개발되고 있는 사이드 프로젝트이다. Markdown을 사용하여 Tistory 블로그에 포스팅을 하기 위해서 시작된 이 프로젝트는 틈틈히 업데이트를 하고 있다. 이전 블로그들은 모두 스타일이 적용된 HTML으로 되어 있기 때문에 Markdown의 속성을 사용할 수도 없고, 다른 곳에 이전할 때도 기존의 HTML으로 작성된 포스팅과 Markdown을 사용하여 포스팅하는 글의 이질감을 느껴야한다. 그래서 시간이 날 때마다 Markdown으로 작성하지 않은 포스팅을 Markdown으로 변환해서 저장하는 작업을 하고 있다.</p>
 
-<h2 id="toc_1">기존 HTML 문서를 Markdown으로 변환할때 문제점</h2>
+<h2 id="기존-html-문서를-markdown으로-변환할때-문제점">기존 HTML 문서를 Markdown으로 변환할때 문제점</h2>
 
 <p>Markdown을 사용해서 HTML 문서를 만들어내지 않은 기존의 HTML 문서를 가지고 Markdown으로 변환하는데는 몇가지 문제점이 있다.</p>
 
@@ -79,11 +79,11 @@
 <li><strong><em>Markdown은 이미지 사이즈를 정할 수 없다</em></strong> : Markdown은 이미지의 <code>src</code>,<code>alt</code>,<code>title</code> 속성만 지정할 수 있기 때문에 기존에 포스팅에 이미지가 특별한 사이즈로 지정했을때 이것을 Markdown으로 변경하면 이미지 사이즈를 특별하게 지정할 수 없게 된다. 반대로 Markdonw에서 이미지를 나타낼때 특정 사이즈로 변경하고 싶을 경우 css로 global하게 지정할 수 밖에 없다.</li>
 </ol>
 
-<h2 id="toc_2">IMG style 지정 필요</h2>
+<h2 id="img-style-지정-필요">IMG style 지정 필요</h2>
 
 <p>Markdown을 사용해서 이미지를 표현하려고 하는데 Markdown이 이미지 사이즈를 지정할 수 없기 때문에 큰 이미지를 그대로 HTML에 나타나서 어려움이 발생했다. <strong>Retina MacBook Pro</strong>를 사용하고 있는데 레티나에서 스크린 캡쳐를 하게되면 보통 이미지보다 2배가 커진다. 레티나 아이폰도 마찬가지 이다. <code>320px</code>로 표현하면 충분한데 캡쳐 받은 이미지가 <code>640px</code>이기 때문에 컨텐츠에 엄청 크게 이미지가 나타나버린다. 그래서 Markdown에서 이미지를 표현할 때 Markdown 문법에 틀리지 않으면서 style을 추가하면 좋겠다는 생각이 들었다.</p>
 
-<h2 id="toc_3">IMG 속성</h2>
+<h2 id="img-속성">IMG 속성</h2>
 
 <p>HTML의 <code>IMG</code> 태그의 속성은 <code>src</code>, <code>alt</code>, <code>title</code>을 가지고 있다.
 - <strong><em>src</em></strong> : 이미지의 URI 소스 값이다.
@@ -91,36 +91,36 @@
 - <strong><em>title</em></strong> : 이미지에 마우스를 올리면 나타나는 이미지의 타이틀 값이다.</p>
 
 <p>Markdown에서 위의 이미지 속성을 표현하기 위해서는 다음과 같은 문법을 따른다.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">![아이폰화면 이미지](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
+<div class="highlight"><pre><code class="language-text" data-lang="text">![아이폰화면 이미지](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
 </code></pre></div>
 <p>이 문법은 HTML 코드로 변환되면 다음과 같이 변환이 된다.</p>
-<div class="highlight"><pre><code class="html language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">&gt;</span>
 </code></pre></div>
 <p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" title="아이폰화면"></p>
 
 <p><code>img</code> 속성중에 <code>alt</code> 값은 이미지가 나타나는한 화면에 나타나지 않고 이미지를 설명하는 값이다. 그래서 Markdown을 작성할 때 <code>alt</code> 값에 <code>style</code> 값을 넣어서 사용하기로 했다.</p>
 
-<h3 id="toc_4">ALT 값에 style 속성 추가하기</h3>
+<h3 id="alt-값에-style-속성-추가하기">ALT 값에 style 속성 추가하기</h3>
 
 <p>위에 나타나는 이미지는 아이폰5에서 캡쳐한 사진의 실제 크기이다. 그럼 <code>img</code>의 <code>alt</code>값을 넣고 표현해보자. 다음과 같이 Markdown의 이미지의 <code>alt</code>를 표현하는 공간에 <code>{}</code>를 사용해서 style 값을 지정했다.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">![아이폰화면 이미지 {width:320px;}](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
+<div class="highlight"><pre><code class="language-text" data-lang="text">![아이폰화면 이미지 {width:320px;}](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
 </code></pre></div>
 <p><strong><em><a href="http://saltfactory.net/mark2html">mark2html</a>@0.0.4</em></strong> 버전에서는 <code>-imageStyle</code> 옵션값이 추가되었다. 명령어 옵션은 <code>-style</code>이다. 다음과 같이 옵션 값에 <code>imageStyle</code>을
 추가하거나 command 라인에 <code>-style</code>옵션을 추가하면 ALT에 포함된 스타일 값을 가지고 렌더링을 한다.</p>
-<div class="highlight"><pre><code class="javascript language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">imageStyle</span><span class="o">:</span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>그러면 다음과 같이 HTML 코드로 변환이 된다.</p>
-<div class="highlight"><pre><code class="html language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">style=</span><span class="s">&quot;width:320px;&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">style=</span><span class="s">&quot;width:320px;&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">/&gt;</span>
 </code></pre></div>
 <p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지 {width:320px;}" title="아이폰화면"></p>
 
-<h2 id="toc_5">결론</h2>
+<h2 id="결론">결론</h2>
 
 <p><code>IMG</code>에서 &#39;alt&#39; 속성은 화면에 이미지가 나타나지 않을 경우 이미지를 설명하는 속성이다. 이 이미지의 속성에 이미지의 <code>style</code>에 관한 설명을 추가하는 것은 의미적으로도 이미지를 더욱 잘 설명하는 것이라 생각했다. 그리고 Markdown에는 이미지에 대한 설명이 있고 HTML으로 변환이 되었을때 이미지에 스타일이 적용되면서 alt는 속성을 제외한 문자열만 나타나도록 했다. Markdown을 HTML으로 변환하는데 크게 불편함은 없지만 현재 Retina Display를 사용하는 경우 이미지의 크기 때문에 문제가 발생해서 <a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a> 버전에서는 <code>-imageStyle</code> 옵션을 추가하게 되었다.</p>
 
-<h1 id="toc_6">연구원 소개</h1>
+<h1 id="연구원-소개">연구원 소개</h1>
 
 <ul>
 <li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
