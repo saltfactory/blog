@@ -3,10 +3,10 @@
   <channel>
     <title>saltfactory&#39;s series</title>
     <description></description>
-    <link>http://saltfactory.net/series/</link>
-    <atom:link href="http://saltfactory.net/series/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 12 Nov 2014 12:03:08 +0900</pubDate>
-    <lastBuildDate>Wed, 12 Nov 2014 12:03:08 +0900</lastBuildDate>
+    <link>/series/</link>
+    <atom:link href="/series/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 12 Nov 2014 14:40:11 +0900</pubDate>
+    <lastBuildDate>Wed, 12 Nov 2014 14:40:11 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -96,8 +96,8 @@ Markdown 파일에 front matter가 포함되어 있다면 &lt;code&gt;mark2html&
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 05 Aug 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/mark2html/mark2html-v.0.0.5-upgrade.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/mark2html/mark2html-v.0.0.5-upgrade.html</guid>
+        <link>/series/mark2html/mark2html-v.0.0.5-upgrade.html</link>
+        <guid isPermaLink="true">/series/mark2html/mark2html-v.0.0.5-upgrade.html</guid>
         
         <category>markdown</category>
         
@@ -185,8 +185,8 @@ Markdown 파일에 front matter가 포함되어 있다면 &lt;code&gt;mark2html&
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 29 Jul 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/mark2html/mark2html-v.0.0.4-upgrade.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/mark2html/mark2html-v.0.0.4-upgrade.html</guid>
+        <link>/series/mark2html/mark2html-v.0.0.4-upgrade.html</link>
+        <guid isPermaLink="true">/series/mark2html/mark2html-v.0.0.4-upgrade.html</guid>
         
         
         <category>mark2html</category>
@@ -306,8 +306,8 @@ Markdown 파일에 front matter가 포함되어 있다면 &lt;code&gt;mark2html&
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 28 Jul 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/mark2html/using-mark2html.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/mark2html/using-mark2html.html</guid>
+        <link>/series/mark2html/using-mark2html.html</link>
+        <guid isPermaLink="true">/series/mark2html/using-mark2html.html</guid>
         
         
         <category>mark2html</category>
@@ -726,8 +726,8 @@ Tistory의 오픈 API를 사용하기 위해서 OAuth 2.0 인증 후 access_toke
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 16 Jul 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/passport-tistory/using-passport-tistory-in-express.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/passport-tistory/using-passport-tistory-in-express.html</guid>
+        <link>/series/passport-tistory/using-passport-tistory-in-express.html</link>
+        <guid isPermaLink="true">/series/passport-tistory/using-passport-tistory-in-express.html</guid>
         
         
         <category>passport-tistory</category>
@@ -1090,8 +1090,8 @@ strategy의 인증처리가 끝나면 인증후 획득한 access_key를 가지�
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 16 Jul 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/passport-tistory/create-passport-tistory.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/passport-tistory/create-passport-tistory.html</guid>
+        <link>/series/passport-tistory/create-passport-tistory.html</link>
+        <guid isPermaLink="true">/series/passport-tistory/create-passport-tistory.html</guid>
         
         
         <category>passport-tistory</category>
@@ -1635,8 +1635,8 @@ phonegap local plugin add org.apache.cordova.media
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 20 Jun 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/hybridapp/create-hybird-app-push-notification-apn-gcm.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/hybridapp/create-hybird-app-push-notification-apn-gcm.html</guid>
+        <link>/series/hybridapp/create-hybird-app-push-notification-apn-gcm.html</link>
+        <guid isPermaLink="true">/series/hybridapp/create-hybird-app-push-notification-apn-gcm.html</guid>
         
         
         <category>hybridapp</category>
@@ -1962,8 +1962,8 @@ phonegap local plugin add org.apache.cordova.media
 &lt;/ul&gt;
 </description>
         <pubDate>Sat, 14 Jun 2014 00:00:00 +0900</pubDate>
-        <link>http://saltfactory.net/series/hybridapp/solve-external-link-tag-in-phonegap.html</link>
-        <guid isPermaLink="true">http://saltfactory.net/series/hybridapp/solve-external-link-tag-in-phonegap.html</guid>
+        <link>/series/hybridapp/solve-external-link-tag-in-phonegap.html</link>
+        <guid isPermaLink="true">/series/hybridapp/solve-external-link-tag-in-phonegap.html</guid>
         
         
         <category>hybridapp</category>
