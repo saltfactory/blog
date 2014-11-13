@@ -6,7 +6,7 @@ tags: [jekyll, ruby, markdown, plugin]
 comments: true
 ---
 
-> ***jekyll-img-converter***는 [Markdown](http://daringfireball.net/projects/markdown/syntax)의 이미지  문법(syntax)를 HTML으로 변환 시킬 때  이미지의 사이즈를 inline style로 추가해서 변환 시키는 [Jekyll](http://jekyllrb.com)의 플러그인이다.
+> [jekyll-img-converter](https://github.com/saltfactory/jekyll-img-converter)는 [Markdown](http://daringfireball.net/projects/markdown/syntax)의 이미지  문법(syntax)를 HTML으로 변환 시킬 때  이미지의 사이즈를 inline style로 추가해서 변환 시키는 [Jekyll](http://jekyllrb.com)의 플러그인이다.
 
 ## Jekyll과 Markdown
 
