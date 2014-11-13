@@ -5,9 +5,136 @@
     <description></description>
     <link>/series/</link>
     <atom:link href="/series/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 12 Nov 2014 15:08:08 +0900</pubDate>
-    <lastBuildDate>Wed, 12 Nov 2014 15:08:08 +0900</lastBuildDate>
+    <pubDate>Thu, 13 Nov 2014 13:54:02 +0900</pubDate>
+    <lastBuildDate>Thu, 13 Nov 2014 13:54:02 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>jekyll-img-converter 플러그인 소개</title>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;jekyll-img-converter&lt;/em&gt;&lt;/strong&gt;는 &lt;a href=&quot;http://daringfireball.net/projects/markdown/syntax&quot;&gt;Markdown&lt;/a&gt;의 이미지  문법(syntax)를 HTML으로 변환 시킬 때  이미지의 사이즈를 inline style로 추가해서 변환 시키는 &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt;의 플러그인이다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;jekyll과-markdown&quot;&gt;Jekyll과 Markdown&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Jekyll&lt;/strong&gt;은 정적 웹사이트를 제작할 수 있는 Ruby 기반 &lt;a href=&quot;http://en.wikipedia.org/wiki/Static_web_page&quot;&gt;static web page generator&lt;/a&gt; 프레임워크이다. 정적 웹 사이트는 동적 웹 사이트와 달리 데이터베이스가 필요하지 않고 호스트 비용을 절감하면서 빠르게 개발할 수 있기 때문에 개발자들 사이에서 큰 인기를 가지고 있는데 Jekyll은 정적 웹 사이트 생성도구 중에서 가장 많은 관심을 받고 있다. Jekyll을 사용하면 &lt;a href=&quot;https://pages.github.com&quot;&gt;Github Pages&lt;/a&gt;에 쉽게 개인 웹 사이트 및 블로그를 생성할 수 있기 때문에 Jekyll의 인기는 더욱 높아지고 있다. 웹 사이트를 만들기 위해서는 웹 서버가 필요한데 Github pages를 이용해서 Github의 서버로 비용없이 개인 웹 페이지를 만들 수 있기 때문이다. 보다 자세한 내용은 &lt;a href=&quot;http://blog.saltfactory.net/256&quot;&gt;Jekyll을 사용하여 GitHub Pages 만들기&lt;/a&gt; 글을 참조하면 된다. Jekyll의 또 다른 인기는 &lt;strong&gt;Markdown&lt;/strong&gt;으로 생성한 문서를 웹 페이지로 자동으로 만들어주기 때문이다. Markdown은 문서를 제작하는데 집중할 수 있게 쉽게 문서를 제작할 수 있고 제작된 문서는 다양한 포멧으로 변경되거나 스타일을 적용할 수 있기 때문에 연구자나 개발자들에게 큰 인기를 갖게 되었다. &lt;strong&gt;Jekyll&lt;/strong&gt;의 장점은 이미 많은 개발자들이 사용하고 있기 때문에 다양한 개발자들이 Jekyll을 사용하면서 필요한 &lt;strong&gt;플러그인&lt;/strong&gt;을 개발하여 공개하고 Jekyll은 쉽게 플러그인을 설치하여 Jekyll의 기능을 확장시킬 수 있다. &lt;a href=&quot;http://jekyllrb.com/docs/plugins/&quot;&gt;Jekyll Plugins&lt;/a&gt;에서 Jekyll의 플러그인을 만드는 방법과 이미 만들어져있는 플러그인들의 목록을 살펴볼 수 있다. 뿐만 아니라 Github에서 Jekyll에 관련된 플러그인들을 많이 찾아볼 수 있고 Ruby의 패키지 관리 툴인 &lt;a href=&quot;https://rubygems.org&quot;&gt;gem&lt;/a&gt;을 사용해서 쉽게 플러그인을 설치할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;markdown-syntax&quot;&gt;Markdown Syntax&lt;/h2&gt;
+
+&lt;p&gt;Markdown의 문법은 문서를 작성하는데 집중하기 위해서 스타일을 적용하는 문법이 없이 간단한 표기법을 사용한다. &lt;a href=&quot;http://daringfireball.net/projects/markdown/syntax&quot;&gt;Markdown의 Syntax&lt;/a&gt;에 관련된 글을 살펴보면 스타일에 관련된 내용이 없다는 것을 확인할 수 있을 것이다. 하지만 &lt;a href=&quot;http://daringfireball.net/projects/markdown/syntax#html&quot;&gt;inline HTML&lt;/a&gt;을 사용할 수 있기도 하다. 우리는 Markdown을 가지고 문서를 작성하고 이것을 Jekyll을 사용해서 정적 웹 사이트를 제작한다고 생각해보자. Markdown에서 이미지를 삽입하기 위해서는 다음과 같은 문법을 사용한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;![이미지alt](./images/test.png &amp;quot;이미지title&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위의 Markdown 문법으로 삽입된 이미지는 HTML 문서에서 다음과 같이 변환이 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;img&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;./images/test.png&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;alt=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;이미지alt&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;title=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;이미지title&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 예제를 보면 Markdown 문법에서는 이미지의 사이즈를 지정하는 곳이 없다. Markdown 변환기 중에서는 Markdown의 문법을 확장시켜서 이미지 사이즈를 지정하거나 문법에 스타일을 지정할 수 있도록 지원하는 변환기도 있지만 이것은 Markdown 변환기를 다르게 사용하면 Markdown의 syntax 오류가 발생해버린다. 우리는 그래서 Markdown의 문법을 손상시키지 않는 방법에서 이미지의 사이즈를 변경하거나 스타일을 적용하는 방법을 연구했다. 우리는 이미 Node.js를 이용한 &lt;a href=&quot;https://github.com/saltfactory/mark2html&quot;&gt;mark2html&lt;/a&gt; 변환기를 만들었는데 &lt;strong&gt;0.0.4&lt;/strong&gt; 업데이트에 Markdown에 포함된 이미지의 사이즈를 지정하는 방법을 제공했다. &lt;strong&gt;mark2html&lt;/strong&gt;를 이용하는 방법은 &lt;a href=&quot;http://blog.saltfactory.net/253&quot;&gt;Markdown으로 HTML 변환시 이미지 IMG 사이즈 지정하기&lt;/a&gt; 글을 참조하면 된다.&lt;/p&gt;
+
+&lt;p&gt;원리는 다음과 같다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Markdown 표준 문법인 &lt;strong&gt;ALT&lt;/strong&gt; 속성을 만든는 표기법 안에 &lt;strong&gt;inline style&lt;/strong&gt;을 지정하고 Markdown에서 HTML을 변환할 때, ALT에 포함된 inline style을 HTML의 &lt;strong&gt;IMG&lt;/strong&gt; 태그의 &lt;strong&gt;style&lt;/strong&gt; 속성으로  지정하는 거싱다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;이와 같은 방법으로 처리하기 위해서는 Markdown을 HTML으로 변환하는 메소드 중에 IMG 태그를 변환하는 메소드를 &lt;strong&gt;Override&lt;/strong&gt; 해야한다. Node.js로 위 방법을 구현할 때는 &lt;a href=&quot;https://github.com/chjj/marked&quot;&gt;marked&lt;/a&gt; 변환기를 사용하여 처리했다. 동일한 방법으로 Jekyll의 Markdown 변환기를 Override 하면 가능할 것 같다는 생각을 가지고 Jekyll Plugin을 만들기로 했다.&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyll-plugin-제작&quot;&gt;Jekyll Plugin 제작&lt;/h2&gt;
+
+&lt;p&gt;Jekyll은 공식으로 플러그인을 만들 수 있는 &lt;a href=&quot;http://jekyllrb.com/docs/plugins/#generators&quot;&gt;Generator&lt;/a&gt;, &lt;a href=&quot;http://jekyllrb.com/docs/plugins/#converters&quot;&gt;Conveter&lt;/a&gt;, &lt;a href=&quot;http://jekyllrb.com/docs/plugins/#command&quot;&gt;Command&lt;/a&gt;, &lt;a href=&quot;http://jekyllrb.com/docs/plugins/#tags&quot;&gt;Tags&lt;/a&gt; 그리고 &lt;a href=&quot;http://jekyllrb.com/docs/plugins/#liquid-filters&quot;&gt;Filters&lt;/a&gt; 모듈을 만들어 두었다. &lt;strong&gt;jekyll-img-converter&lt;/strong&gt;에서 사용한 모듈은 &lt;strong&gt;Converter&lt;/strong&gt;이다. 다른 모듈에 대한 설명은 앞으로 기회가 있을 때 다시 소개하고 Converter를 이용해서 플러그인을 제작하는 방법을 소개한다.&lt;/p&gt;
+
+&lt;p&gt;우리는 Jekyll 프로젝트와 달리 모듈을 만들고 테스트를 하는 방법을 가지고 싶었다. 그래서 우리는 &lt;a href=&quot;https://www.ruby-lang.org/en/&quot;&gt;Ruby&lt;/a&gt;, &lt;a href=&quot;https://rubygems.org&quot;&gt;gem&lt;/a&gt; 그리고 &lt;a href=&quot;http://ruby-doc.org/core-1.9.3/doc/rake/rakefile_rdoc.html&quot;&gt;Rakefile&lt;/a&gt;를 사용하여 플로그인을 개발하는 환경을 만들었다.&lt;/p&gt;
+
+&lt;h3 id=&quot;jekyll-img-converter.gemspec&quot;&gt;jekyll-img-converter.gemspec&lt;/h3&gt;
+
+&lt;p&gt;우선 우리는  &lt;strong&gt;jekyll-img-converter&lt;/strong&gt;를 &lt;strong&gt;gem&lt;/strong&gt;을 상요해서 배포할 것이기 때문에 &lt;code&gt;.gemspec&lt;/code&gt; 파일을 생성하였다. 이 파일에 포함된 내용은 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;name&lt;/strong&gt; : 플러그인 이름&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;summary&lt;/strong&gt; : 플러그인의 간략한 내용&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;description&lt;/strong&gt; : 플러그인의 설명&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;version&lt;/strong&gt; : 플러그인의 버전, 이 버전에 따라서 나중에 &lt;strong&gt;gem&lt;/strong&gt; 버전 파일이 생성이 된다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;authors&lt;/strong&gt; : 개발자&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;email&lt;/strong&gt; : 개발자 이메일&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;homepage&lt;/strong&gt; : 플러그인 사이트&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;license&lt;/strong&gt; : 라이센스&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;files&lt;/strong&gt; : &lt;strong&gt;gem&lt;/strong&gt;을 사용하여 배포할 파일을 지정&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;add_dependency&lt;/strong&gt; : 플러그인이 설치되었을 때 필요한 모듈의 의존성을 지정&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;add_development_dependency&lt;/strong&gt; : 플러그인을 개발할 때 필요한 모듈을 지정 &lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Gem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Specification&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;        &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;jekyll-img-converter&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Jekyll IMG tag conveter in markdown using with Redcarpet&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;jekyll-img-converter is support to convert IMG tag with inline style from markdown using with Redcarpet&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.1.4&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;authors&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;SungKwang Song&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;saltfactory@gmail.com&amp;quot;&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;homepage&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;https://github.com/saltfactory/jekyll-img-converter&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;licenses&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;MIT&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;lib/jekyll-img-converter.rb&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_dependency&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;jekyll&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 2.0&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_development_dependency&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;html-pipeline&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 1.9&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_development_dependency&lt;/span&gt;  &lt;span class=&quot;s1&quot;&gt;&amp;#39;rake&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 10.3&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_development_dependency&lt;/span&gt;  &lt;span class=&quot;s1&quot;&gt;&amp;#39;rdoc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 4.1&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_development_dependency&lt;/span&gt;  &lt;span class=&quot;s1&quot;&gt;&amp;#39;shoulda&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 3.5&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_development_dependency&lt;/span&gt;  &lt;span class=&quot;s1&quot;&gt;&amp;#39;minitest&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 5.4&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_development_dependency&lt;/span&gt;  &lt;span class=&quot;s1&quot;&gt;&amp;#39;redcarpet&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;~&amp;gt; 3.2&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;gemfile&quot;&gt;Gemfile&lt;/h3&gt;
+
+&lt;p&gt;Ruby로 프로젝트를 진행할 때 필요한 라이브러리를 기술하고 다운받아서 사용하기 위해서 &lt;code&gt;Gemfile&lt;/code&gt;을 작성하고 &lt;strong&gt;gem&lt;/strong&gt; 으로 설치를 한다. 이것은 Node.js의 &lt;code&gt;package.json&lt;/code&gt;을 기술해서 사용하는 원리와 비슷하다. 우리는 &lt;code&gt;.gemspec&lt;/code&gt; 파일에 이미 필요한 라이브러리를 지정했기 때문에 &lt;code&gt;Gemfile&lt;/code&gt;에서는 &lt;strong&gt;gemspec&lt;/strong&gt;을 참조하라고 기술 하면 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;source &amp;quot;https://rubygems.org&amp;quot;
+
+gemspec
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;Gemfile&lt;/code&gt;을 생성하면 &lt;code&gt;bundle install&lt;/code&gt; 명령을 사용하여 필요한 라이브러리를 모두 다운 받아 설치할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;bundle install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;jekyll-img-converter.rb&quot;&gt;jekyll-img-converter.rb&lt;/h3&gt;
+
+&lt;p&gt;필요한 라이브러리르 모두 다운받아서 설치하면 플러그인을 개발할 준비를 모두 마친것이다. 우리는 &lt;strong&gt;Jekyll&lt;/strong&gt;의 플러그인 모듈 중에서 &lt;strong&gt;Converter&lt;/strong&gt; 클래스를  상속받아서 사용할 것이다.&lt;/p&gt;
+
+&lt;p&gt;가장 먼저 해야할 일은 &lt;strong&gt;Converter&lt;/strong&gt; 클래스를 상속 받는 것이다. 아래 코드를 살펴보면 Converter 클래스 중에 다음 메소드를 오버라이드 하여 사용할 것이다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;matches()&lt;/strong&gt; : Jekyll에서 해당되는 확장자의 파일에만 적용할 수 있게 확장자를 매칭하는 메소드이다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;output_ext()&lt;/strong&gt; : 플러그인이 모두 동작하고 결과물을 만들 때의 확장자를 지정하는 메소드이다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;convert()&lt;/strong&gt; : &lt;strong&gt;Converter&lt;/strong&gt; 클래스가 가지는 가장 중요한 메소드로 convert를 실행하는 메소드이다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;inintialize()&lt;/strong&gt; : 이 클래스가 만들어질 때 자동으로 호출되는 생성자 메소드이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SFMarkdownConverter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Converter&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;matches&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;output_ext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;convert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        <pubDate>Wed, 12 Nov 2014 00:00:00 +0900</pubDate>
+        <link>/series/jekyll/introduce-jekyll-img-converter.html</link>
+        <guid isPermaLink="true">/series/jekyll/introduce-jekyll-img-converter.html</guid>
+        
+        <category>jekyll</category>
+        
+        <category>ruby</category>
+        
+        <category>markdown</category>
+        
+        <category>plugin</category>
+        
+        
+        <category>jekyll</category>
+        
+      </item>
     
       <item>
         <title>Jekyll Markdown 파일의 front matter를 제외하고 HTML변환하기</title>

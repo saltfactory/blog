@@ -28,6 +28,6 @@ gems:
   - jekyll-redirect-from
   - jemoji
   - jekyll-img-converter
-  - jekyll-coffeescript
+  # - jekyll-coffeescript
 
 exclude: [Rakefile]
