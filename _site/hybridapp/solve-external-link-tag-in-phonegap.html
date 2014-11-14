@@ -46,6 +46,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </nav>
 
@@ -64,7 +78,7 @@
   </header>
 
   <article class="post-content">
-  <p><img src="http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png" alt="phonegap"></p>
+  <p><img src="http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png" alt="phonegap"/></p>
 
 <p><a href="http://phonegap.com">PhoneGap</a> (<a href="http://cordova.apache.org">Cordova</a>) 는 <strong>하이브리드 앱 개발 플랫폼</strong>이다. 모바일 앱 개발을 할 때 하이브리드 앱이라고 하면 통상 웹 자원과 네이티브 자원을 함께 사용해서 앱을 개발하는 것을 의미한다. PhoneGap은 UI 및 사용자의 이벤트를 HTML 나 JavaScript로 처리를 한다. 이 말은 다시말하면 PhoneGap은 내장 <strong><em>WebView</em></strong>를 사용하고 WebView 안에 웹 자원을 사용하여 개발을 한다는 것이다. PhoneGap에서 웹 자원은 로컬 HTML, CSS, 그리고 JavaScript를 사용한다. 웹뷰에서 HTML으로 UI를 만들때 페이지 전환을 링크를 사용한다. 이 때 앱 안에 링크를 사용할 때 다음과 같은 문제를 가진다.</p>
 
@@ -91,7 +105,7 @@
 </code></pre></div>
 <p>bower로 설치가 끝나면 <code>www/lib</code> 안에 다음과 같이 라이브러리들이 설치된 것을 확인할 수 있다.</p>
 
-<p><img src="http://cfile7.uf.tistory.com/image/247CDC4D53993C3032203E" alt="after install ionic using bower"></p>
+<p><img src="http://cfile7.uf.tistory.com/image/247CDC4D53993C3032203E" alt="after install ionic using bower"/></p>
 
 <p>이제 테스트를 위해서 www/index.html 파일을 다음과 같이 수정한다.</p>
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
@@ -133,8 +147,8 @@
 <p>a 링크는 우리가 만든 앱을 사라지게 만들어버리고 a 링크가 가지고 있는 URL로 화면이 변경되어 버려 PhoneGap으로 만든 앱이 사라져 버리고 WebView에 새로운 사이트가 가득차 버리게 되는 문제가 발생한다.</p>
 </blockquote>
 
-<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page with in a link {width:320px;}">
-<img src="http://cfile8.uf.tistory.com/image/252BC94553993D3B2A7414" alt="change new page after click link {width:320px;}"></p>
+<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page with in a link" style="width:320px;"/>
+<img src="http://cfile8.uf.tistory.com/image/252BC94553993D3B2A7414" alt="change new page after click link" style="width:320px;"/></p>
 
 <p>그럼 PhoneGap 으로 하이브리드 앱을 만들때 컨텐츠 안에 a 링크가 있을 경우 어떻게 대처해야할까? </p>
 
@@ -182,9 +196,9 @@
 <p>앱이 실행되면 다시 a 링크를 클릭해보자. 아래 그림과 같이 이전과는 다르게 모바일 사파리 브라우저로 열리는 것을 확인할 수 있다. 위 코드는 iOS에서 사용할 경우 <code>window.open</code> 에 <code>target</code>을 <code>_system</code>으로 사용하면 되는 예제를 보여주고 있다. 안드로이드일 경우에는 다음과 같이 <code>navigator.app.loadUrl</code>과 <code>openExtenral:true</code>를 사용해야한다.</p>
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">onclick=</span><span class="s">&quot;navigator.app.loadUrl(&#39;http://blog.saltfactory.net&#39;, {openExternal:true});&quot;</span><span class="nt">&gt;</span>Go saltfactor&#39;s blog<span class="nt">&lt;/a&gt;</span>
 </code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="open safari browser {width:320px;}">
-<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="backgroud navigation ios {width:320px;}">
-<img src="http://cfile5.uf.tistory.com/image/237C8C34539943C12FC75C" alt="background navigation ios {width:320px;}"></p>
+<p><img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="open safari browser" style="width:320px;"/>
+<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="backgroud navigation ios" style="width:320px;"/>
+<img src="http://cfile5.uf.tistory.com/image/237C8C34539943C12FC75C" alt="background navigation ios" style="width:320px;"/></p>
 
 <p>하지만 이 방법을 사용하기 위해서는 a 링크의 href를 분석해서 inappbrower를 사용해서 링크를 열수 있는 JavaScript 코드로 변경을 해줘야한다. </p>
 
@@ -264,9 +278,9 @@
 </code></pre></div>
 <p>앱을 실행한 후 링크를 클릭하면 다음 그림과 같이 모바일 브라우저로 링크가 열리게 되는 것을 확인할 수 있다.이 방법은 기존의 HTML에 들어있는 a 링크를 InAppB    rowser 플러그인을 사용해서 열도록 코드를 분석해서 태그를 변경하지 않아도 되는 장점이 있다. </p>
 
-<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page within a link {width:320px;}">
-<img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="view safari new page from a link {width:320px;}">
-<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="ios background navigator {width:320px;}"></p>
+<p><img src="http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B" alt="simple page within a link" style="width:320px;"/>
+<img src="http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA" alt="view safari new page from a link" style="width:320px;"/>
+<img src="http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C" alt="ios background navigator" style="width:320px;"/></p>
 
 <h2 id="네이티브코드-변경---android">네이티브코드 변경 - Android</h2>
 
@@ -350,9 +364,9 @@
 <p>앱을 실행시켜서 a 링크를 클릭해보자. 그러면 안드로이드 디바이스의 디폴트 브라우저로 링크가 열리는 것을 확인할 수 있다.
 이렇게 네이티브 코드를 수정하여 사용하면 InAppBrowser에서 새 창을 브라우저에서 열기 위해서 여러가지 HTML 코드를 다시 프로그램으로 수정할 필요 없이 기존의 HTML 코드의 a 링크를 그대로 사용하면서 새로운 브라우저에 열 수 있게 할 수 있다.</p>
 
-<p><img src="http://cfile9.uf.tistory.com/image/26261A3A5399749C0808A6" alt="android simple page within a link {width:320px;}">
-<img src="http://cfile21.uf.tistory.com/image/210D153A5399749D2E5630" alt="android default brwoser new page {width:320px;}">
-<img src="http://cfile10.uf.tistory.com/image/2407753A5399749D23F2F4" alt="android backgroud navigator {width:320px;}"></p>
+<p><img src="http://cfile9.uf.tistory.com/image/26261A3A5399749C0808A6" alt="android simple page within a link" style="width:320px;"/>
+<img src="http://cfile21.uf.tistory.com/image/210D153A5399749D2E5630" alt="android default brwoser new page" style="width:320px;"/>
+<img src="http://cfile10.uf.tistory.com/image/2407753A5399749D23F2F4" alt="android backgroud navigator" style="width:320px;"/></p>
 
 <h2 id="결론">결론</h2>
 
@@ -487,6 +501,6 @@
 </footer>
 
 
-	<script src="/series/javascripts/jekyll-img-converter.js"></script>
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
     </body>
 </html>

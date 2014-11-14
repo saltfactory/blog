@@ -21,13 +21,12 @@ redcarpet:
 highlighter: pygments
 permalink: none
 
-safe: true # if using alias is safe:false
+# safe: false # if using alias is safe:false
 lsi: true
 
 gems:
+  - jekyll-sitemap    
   - jekyll-redirect-from
   - jemoji
   - jekyll-img-converter
   # - jekyll-coffeescript
-
-exclude: [Rakefile]
