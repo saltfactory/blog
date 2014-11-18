@@ -456,3 +456,8 @@ a:visited { color: #205caa; }
   background-color: #fff; }
 .post-content table tr:nth-child(2n) {
   background-color: #f8f8f8; }
+
+.post img {
+  text-align:center;
+  display: block; margin: 0 auto;
+}

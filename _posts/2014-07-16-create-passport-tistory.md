@@ -3,7 +3,7 @@ layout: post
 title: Tistory 오픈 API 인증 모듈 passport-tistory 소개
 category: passport-tistory
 comments: true
-redirect_from: /249/_
+redirect_from: /249/
 ---
 
 passport-tistory
