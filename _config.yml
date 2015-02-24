@@ -5,7 +5,7 @@ email: saltfactory@gmail.com
 description: ""
 
 baseurl: "/series"
-url: ""
+#url: ""
 
 twitter_username: saltfactory
 github_username:  saltfactory
@@ -25,7 +25,7 @@ permalink: none
 lsi: true
 
 gems:
-  - jekyll-sitemap    
+  - jekyll-sitemap
   - jekyll-redirect-from
   - jemoji
   - jekyll-img-converter
