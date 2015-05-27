@@ -3,9 +3,11 @@ title: saltfactory's series
 email: saltfactory@gmail.com
 # description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
 description: ""
+excerpt_separator : <!--more-->
 
 baseurl: "/series"
 #url: ""
+paginate: 5
 
 twitter_username: saltfactory
 github_username:  saltfactory
@@ -28,5 +30,5 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jemoji
-  - jekyll-img-converter
+  # - jekyll-img-converter
   # - jekyll-coffeescript

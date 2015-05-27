@@ -6,9 +6,12 @@ comments: true
 redirect_from: /245/
 ---
 
+## 서론
+
 ![phonegap](http://cfile8.uf.tistory.com/image/276B443353A1528A2F8CBA)
 
 하이브리드 앱 개발은 웹 리소스와 네이티브 리소스를 함께 사용하는 개발 방법이다. 하이브리드 앱은 보통 UI를 웹 리소스로 만들기 때문에 디바이스가 가지는 특정한 기능을 핸들링하지 못한다. PhoneGap(Cordova)는 plugin을 사용해서 웹 리소스와 네이티브 리소스간 서로 통신하여 사용할 수 있도록 설계되어 있고 이 plugin을 사용해서 디바이스가 가지는 특정하는 기능을 웹 리소스에서 핸들링할 수 있다. 이번 포스팅에서는 모바일 앱 개발을 할 때 복잡하고 어렵지만 반드시 필요한 기능중에 하나인 알림 서비스를 PhoneGap(Cordova)에서 어떻게 구현할 수 있는지를 소개한다.
+<!--more-->
 
 ## PhoneGap(Cordova) 프로젝트 생성하기
 

@@ -185,6 +185,9 @@ a:visited { color: #205caa; }
   color: #818181;
 }
 
+.home .posts .excerpt {
+  padding: 4px 0;
+}
 
 /* Post styles */
 /* ----------------------------------------------------------*/
@@ -287,6 +290,10 @@ a:visited { color: #205caa; }
 }
 
 .post pre.terminal code { background-color: #333; }
+
+.pagination {
+  margin-bottom: 30px;
+}
 
 /* Syntax highlighting styles */
 /* ----------------------------------------------------------*/

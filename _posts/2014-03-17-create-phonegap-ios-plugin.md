@@ -11,13 +11,15 @@ redirect : /235/
 
 [PhoneGap](http://phonegap.com)은 멀티 플랫폼 하이브리드 앱 개발 프레임워크이다. 하이브리드 앱이라는 말은 웹의 기술과 네이티브앱의 기술을 융합해서 사용하여 만든 앱이다. 웹에서 접근할 수 없는 네이티브 자원을 네이티브 코드로 만들고 웹에서 접근할 수 있는 인터페이스를 이용해서 웹과 네이티브의 자원을 함께 사용할 수 있는 것을 또는 반대의 개발 방법을 적용하여 앱을 만들 수 있는 것을  말한다. PhoneGap에서는 이런 일련의 과정을 Plugins이라는 것을 사용해서 구현할 수 있다. **Appspresso**에서는 **PDK**를 이용해서 Plugins를 만들수 있지만 **PhoneGap**에서는 PDK와 같은 Plugin Development Kit은 없지만 PhoneGap에서 Plugins을 만들 수 있는 네이티브 클래스를 상속받고 웹에서 접근할 수 있는 JavaScript 인터페이스를 제공하고 있다. 이번 포스팅에서는 iOS 용 앱을 개발을 할 때 네이티브 코드를 사용하는 Plugins을 만들어서 PhoneGap 프로젝트에서 웹과 네이티브 자원을 서로 사용할 수 있는 방법을 소개한다. 이전 포스팅(http://blog.saltfactory.net/233)에서는 PhoneGap의 Plugins 저장소에서 Plugins을 설치하는 방법을 살펴보았다. 이번 포스팅에서는 PhoneGap 프로젝트에 Plugins 저장소에서 가져와서 설치하는 것이 아니라 직접 만든 Plugins을 프로젝트에 설치하는 방법도 함께 소개한다.
 
+<!--more-->
+
 ## PhoneGap Plugins 프로젝트 생성
 
 Plugins을 만들기 위해서 먼저 PhoneGap CLI로 PhoneGap 프로젝트를 생성한다.
 
 ```
 phonegap create sf-phonegap-plugin-demo -i net.saltfactory.tutorial.phonegap.plugindemo -n SF-PhoneGap-Plugin-Demo
-```	
+```
 
 ![phonegap create {max-width:600px;}](http://cfile27.uf.tistory.com/image/27686B3C531FE7302375E4)
 
@@ -370,16 +372,16 @@ phonegap local install ios
 
 - (void)getMessage:(CDVInvokedUrlCommand *)command
 {
-    
+
     [self.commandDelegate runInBackground:^{
-        
+
         NSDictionary *jsonInfo = @{@"name": @"iOS에서 만든 메세지"};
-        
+
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: jsonInfo];
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-    
+
 }
 @end
 ```
@@ -541,16 +543,16 @@ phonegap local install ios
 
 - (void)getMessage:(CDVInvokedUrlCommand *)command
 {
-    
+
     [self.commandDelegate runInBackground:^{
-        
+
         NSDictionary *jsonInfo = @{@"name": @"iOS에서 만든 메세지"};
-        
+
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: jsonInfo];
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-    
+
 }
 
 - (void)runJavasScriptFuncion:(CDVInvokedUrlCommand *)command
@@ -560,19 +562,19 @@ phonegap local install ios
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonInfo options:NSJSONWritingPrettyPrinted error:&error];
     CDVPluginResult *pluginResult = nil;
-    
+
     if (!error) {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         NSString *javaScriptString = [NSString stringWithFormat:@"print_message(%@)", jsonString];
 
         [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
     }
 
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];     
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 
 }
 
@@ -690,7 +692,7 @@ phonegap local install ios
 
 ![ios simulator {max-width:320px;}](http://cfile4.uf.tistory.com/image/231DFD3E5326A9561A50B5)
 
-위와 같이 iOS 네이티브 코드에서 JavaScript의 `print_message()` 함수를 호출한 것을 확인할 수 있다. 
+위와 같이 iOS 네이티브 코드에서 JavaScript의 `print_message()` 함수를 호출한 것을 확인할 수 있다.
 
 ### [self.commandDelegate evalJs:] 로 네이티브에서 JavaScript 함수 호출하기
 
@@ -718,16 +720,16 @@ phonegap local install ios
 
 - (void)getMessage:(CDVInvokedUrlCommand *)command
 {
-    
+
     [self.commandDelegate runInBackground:^{
-        
+
         NSDictionary *jsonInfo = @{@"name": @"iOS에서 만든 메세지"};
-        
+
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: jsonInfo];
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-    
+
 }
 
 - (void)runJavasScriptFuncion:(CDVInvokedUrlCommand *)command
@@ -738,39 +740,39 @@ phonegap local install ios
 //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonInfo options:NSJSONWritingPrettyPrinted error:&error];
 //
 //    CDVPluginResult *pluginResult = nil;
-//    
+//
 //    if (!error) {
 //        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 //        NSString *javaScriptString = [NSString stringWithFormat:@"print_message(%@)", jsonString];
 //        [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
-//        
+//
 //        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 //    } else {
 //        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
 //    }
 //
 //    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    
+
     [self.commandDelegate runInBackground:^{
         NSDictionary *jsonInfo = @{@"name": @"iOS에서 자바스크립트 print_message 실행"};
-        
+
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonInfo options:NSJSONWritingPrettyPrinted error:&error];
-        
+
         CDVPluginResult *pluginResult = nil;
-        
+
         if (!error) {
             NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             NSString *javaScriptString = [NSString stringWithFormat:@"print_message(%@)", jsonString];
-            
+
 //            [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
             [self.commandDelegate evalJs:javaScriptString];
-            
+
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         }
-        
+
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }
@@ -897,7 +899,7 @@ module.exports = new SFPluginEcho();
 
 이제 다른 PhoneGap 프로젝트에서 우리가 만든 Plugins을 사용할 준비를 모두 마쳤다. 이제 다른 PhoneGap 프로젝트에서 우리가 만든 Plugins을 설치해보자.
 
-## PhoneGap 프로젝트에 생성한 Plugins을 설치하기 
+## PhoneGap 프로젝트에 생성한 Plugins을 설치하기
 
 우리는 앞에서 **SF-PhoneGap-Demo** 프로젝트를 생성해보았다. 그 프로젝트 디렉토리에 들어가서 우리가 PhoneGap CLI로 Plugins를 설치하는 명령어에 생성한 SF-PhoneGap-Plugin-Demo를 설치하면 된다.
 
@@ -975,7 +977,7 @@ module.exports = [
         ]
     }
 ];
-module.exports.metadata = 
+module.exports.metadata =
 // TOP OF METADATA
 {
     "net.saltfactory.tutorial.phonegap.plugindemo": "0.0.1"

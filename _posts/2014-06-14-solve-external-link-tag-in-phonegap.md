@@ -6,6 +6,11 @@ comments: true
 redirect_from: /243/
 ---
 
+## 서론
+
+PhoneGap을 사용하여 크로스플랫폼 하이브리드 앱을 개발할 때, PhoneGap은 SDK의 **WebView** 기반으로 동작하는 어플리케이션으로 WebView 에 링크가 있을 경우 PhoneGap 내부의 URL은 해당 페이지를 이동하지만, 만약 외부 URL이 포함된 경우 링크를 터치하면 PhoneGap 하이브리드 앱에서 외부링크로 location이 변경되어 버린다. 이 문제를 해결하기 위해 PhoneGap 내부에서 외부 링크가 포함되었을 때 처리하는 방법에 대해서 소개한다.
+<!--more-->
+
 ![phonegap](http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png)
 
 [PhoneGap](http://phonegap.com) ([Cordova](http://cordova.apache.org)) 는 **하이브리드 앱 개발 플랫폼**이다. 모바일 앱 개발을 할 때 하이브리드 앱이라고 하면 통상 웹 자원과 네이티브 자원을 함께 사용해서 앱을 개발하는 것을 의미한다. PhoneGap은 UI 및 사용자의 이벤트를 HTML 나 JavaScript로 처리를 한다. 이 말은 다시말하면 PhoneGap은 내장 ***WebView***를 사용하고 WebView 안에 웹 자원을 사용하여 개발을 한다는 것이다. PhoneGap에서 웹 자원은 로컬 HTML, CSS, 그리고 JavaScript를 사용한다. 웹뷰에서 HTML으로 UI를 만들때 페이지 전환을 링크를 사용한다. 이 때 앱 안에 링크를 사용할 때 다음과 같은 문제를 가진다.
@@ -75,7 +80,7 @@ bower로 설치가 끝나면 `www/lib` 안에 다음과 같이 라이브러리�
       </ion-content>
 
     </body>
-      
+
 </html>
 ```
 
@@ -91,14 +96,14 @@ phonegap build ios
 phonegap run ios
 ```
 
-실행을 해보면 아래 그림과 같이 ionic framework 안에 링크가 하나 있는 앱이 실행이 될 것이다. 이젠 링크를 클릭해보자. 어떻게 되는가? 
+실행을 해보면 아래 그림과 같이 ionic framework 안에 링크가 하나 있는 앱이 실행이 될 것이다. 이젠 링크를 클릭해보자. 어떻게 되는가?
 
 > a 링크는 우리가 만든 앱을 사라지게 만들어버리고 a 링크가 가지고 있는 URL로 화면이 변경되어 버려 PhoneGap으로 만든 앱이 사라져 버리고 WebView에 새로운 사이트가 가득차 버리게 되는 문제가 발생한다.
 
 ![simple page with in a link {width:320px;}](http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B)
 ![change new page after click link {width:320px;}](http://cfile8.uf.tistory.com/image/252BC94553993D3B2A7414)
 
-그럼 PhoneGap 으로 하이브리드 앱을 만들때 컨텐츠 안에 a 링크가 있을 경우 어떻게 대처해야할까? 
+그럼 PhoneGap 으로 하이브리드 앱을 만들때 컨텐츠 안에 a 링크가 있을 경우 어떻게 대처해야할까?
 
 > 보통 a 링크는 다른 사이트로 이동을 시키기 위해서 많이 사용하기 때문에 링크를 모바일이 가지고 있는 기본 브라우저로 새롭게 열게하면 된다.
 
@@ -158,13 +163,13 @@ phonegap run ios
 ![backgroud navigation ios {width:320px;}](http://cfile4.uf.tistory.com/image/245D9834539943C01F0F9C)
 ![background navigation ios {width:320px;}](http://cfile5.uf.tistory.com/image/237C8C34539943C12FC75C)
 
-하지만 이 방법을 사용하기 위해서는 a 링크의 href를 분석해서 inappbrower를 사용해서 링크를 열수 있는 JavaScript 코드로 변경을 해줘야한다. 
-> 컨텐츠를 개발자가 만들때는 문제가 되지 않지만 HTML 코드를 서버에서 Ajax와 같은 것을 이용해서 HTML코드를 가져와서 PhoneGap을 적용할 때는 a 링크 사용의 문제는 여전히 존재하게 된다. 
+하지만 이 방법을 사용하기 위해서는 a 링크의 href를 분석해서 inappbrower를 사용해서 링크를 열수 있는 JavaScript 코드로 변경을 해줘야한다.
+> 컨텐츠를 개발자가 만들때는 문제가 되지 않지만 HTML 코드를 서버에서 Ajax와 같은 것을 이용해서 HTML코드를 가져와서 PhoneGap을 적용할 때는 a 링크 사용의 문제는 여전히 존재하게 된다.
 
 ## 네이티브 코드 변경 - iOS
 
-PhoneGap은 내부적으로 **WebView**를 열어서 사용하고 로컬의 웹 자원을 사용한다. 다시 말해서 `file://` 로 HTML을 불러오기 때문에 
-> scheme가 ***http***나 ***https***일 경우에는 브라우저의 새 창으로 열리게 하면 된다. 
+PhoneGap은 내부적으로 **WebView**를 열어서 사용하고 로컬의 웹 자원을 사용한다. 다시 말해서 `file://` 로 HTML을 불러오기 때문에
+> scheme가 ***http***나 ***https***일 경우에는 브라우저의 새 창으로 열리게 하면 된다.
 
 우리는 PhoneGap 프로젝트를 iOS 플랫폼을 추가해서 만들었는데 iOS 플랫폼 디렉토리에 들어가서 `MainViewController.m` 파일을 열어보자. 그리고 scheme를 분석해서 http와 https일 경우는 모바일 브라우저로 링크를 열게 다음과 같이 코드를 추가한다.
 
@@ -205,7 +210,7 @@ PhoneGap은 내부적으로 **WebView**를 열어서 사용하고 로컬의 웹 
 - (BOOL)webView:(UIWebView *)theWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSURL *url = [request URL];
-    
+
     // Intercept the external http requests and forward to Safari.app
     // Otherwise forward to the PhoneGap WebView
     if ([[url scheme] isEqualToString:@"http"] || [[url scheme] isEqualToString:@"https"]) {
@@ -215,7 +220,7 @@ return NO;
     else {
         return [ super webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType ];
     }
-        
+
 }
 
 @end
@@ -240,7 +245,7 @@ phonegap plugin remove org.apache.cordova.inappbrowser
 phonegap run ios
 ```
 
-앱을 실행한 후 링크를 클릭하면 다음 그림과 같이 모바일 브라우저로 링크가 열리게 되는 것을 확인할 수 있다.이 방법은 기존의 HTML에 들어있는 a 링크를 InAppB	rowser 플러그인을 사용해서 열도록 코드를 분석해서 태그를 변경하지 않아도 되는 장점이 있다. 
+앱을 실행한 후 링크를 클릭하면 다음 그림과 같이 모바일 브라우저로 링크가 열리게 되는 것을 확인할 수 있다.이 방법은 기존의 HTML에 들어있는 a 링크를 InAppB	rowser 플러그인을 사용해서 열도록 코드를 분석해서 태그를 변경하지 않아도 되는 장점이 있다.
 
 ![simple page within a link {width:320px;}](http://cfile8.uf.tistory.com/image/2748EB4553993D393A709B)
 ![view safari new page from a link {width:320px;}](http://cfile23.uf.tistory.com/image/23112434539943BE2D30CA)
@@ -319,7 +324,7 @@ public class SfPhoneGapDemo extends CordovaActivity
             }
 
         });
-            
+
 
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html");
@@ -345,7 +350,7 @@ phonegap run android
 
 기존의 iOS 앱과 Android 앱을 하나의 코드로 관리하기 위해서 [Ionic Framework](http://ionicframework.com) 를 이용하여 하이브리드 앱을 만들었다. Ionic은 [AngularJS](https://angularjs.org/)와 [Cordova](http://cordova.apache.org)([PhoneGap](http://phonegap.com)) 기반의 하이브리드 앱 개발 플랫폼인데 앱을 구현할 때 상세보기에서 서버로 부터 웹페이지코드(HTML)을 가져와서 뷰에 출력시켜주는 부분이 있었다. 그런데 상세보기 페이지 안에 사용자가 작성한 A 링크가 문제가 되는 것을 확인했다. 서버에서 HTML 코드를 받아오는 것이기 때문에 PhoneGap의 [InAppBrowser](https://github.com/apache/cordova-plugin-inappbrowser) 플러그인을 사용해서 HTML 코드를 변경시키는 것은 복잡하고 비용이 많이 발생하는 것으로 판단되었다. 그래서 서버로부터 받아오는 HTML 의 코드는 변경하지 않고 HTML 코드 안에 A 링크가 포함되어 있을 때 , 사용자가 링크를 클릭(터치)하게 되면 새로운 모바일 브라우저로 링크가 열리게 하려고 자료를 찾고 연구하였다. 방법은 PhoneGap은 네이티브코드의 WebView를 사용하고 있는데 이 WebView는 각각 플랫폼에서 이벤트를 받아서 처리하는 부분에 URL을 인터셉트할 수 있는 것을 확인하였고, iOS에서는 `shouldStartLoadWithRequest`를 이용하고 Android에서는 `shouldOverrideUrlLoading'을 사용하여 처리할 수 있는 것을 알게되었다. 이것이 하이브리드 앱의 장점이 아닌가 생각한다. 웹 자원의 코드를 변경하는 것도 가능하고 네이티브의 자원을 변경하여 사용하는 것도 가능해서 문제의 해결방법이 다양한 각도로 접근할 수 있는 것 같다. 하이브리드 앱을 개발한다면 컨텐츠 안에 들어있는 A 링크를 처리하는 문제를 반드시 겪게 될 것인데 이 포스팅에서 소개하는 내용으로 문제를 해결할 수 있기를 바래본다.
 
-## 참고 
+## 참고
 
 1. https://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html
 2. http://developer.android.com/reference/android/webkit/WebViewClient.html

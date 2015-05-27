@@ -1,101 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>/nginx/redirect-using-with-parameter-on-nginx.html</loc>
+    <lastmod>2015-05-06T00:00:00+09:00</lastmod>
+  </url>
+  <url>
     <loc>/jekyll/introduce-jekyll-img-converter.html</loc>
     <lastmod>2014-11-12T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/ionic/create-hybrid-app-using-ionic.html</loc>
     <lastmod>2014-10-13T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</loc>
+    <lastmod>2014-09-12T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/git/running-yobi-on-docker.html</loc>
+    <lastmod>2014-08-28T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/ubuntu/mount-external-harddisk-on-ubuntu.html</loc>
+    <lastmod>2014-08-27T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/git/korean-foldername-in-yobi.html</loc>
+    <lastmod>2014-08-25T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/git/solve-redirect-encoded-slash-in-apache.html</loc>
+    <lastmod>2014-08-14T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/android/exclude-gpu-error-when-using-genymotion.html</loc>
+    <lastmod>2014-08-13T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/jekyll/upgrade-github-pages-dependency-versions.html</loc>
+    <lastmod>2014-08-08T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/docker/upgrade-latest-docker-using-with-homebrew.html</loc>
+    <lastmod>2014-08-06T00:00:00+09:00</lastmod>
   </url>
   <url>
     <loc>/mark2html/mark2html-v.0.0.5-upgrade.html</loc>
     <lastmod>2014-08-05T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/mark2html/mark2html-v.0.0.4-upgrade.html</loc>
     <lastmod>2014-07-29T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/mark2html/using-mark2html.html</loc>
     <lastmod>2014-07-28T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>/git/migrate-git-repository.html</loc>
+    <lastmod>2014-07-22T00:00:00+09:00</lastmod>
   </url>
   <url>
     <loc>/passport-tistory/using-passport-tistory-in-express.html</loc>
     <lastmod>2014-07-16T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/passport-tistory/create-passport-tistory.html</loc>
     <lastmod>2014-07-16T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/hybridapp/create-hybird-app-push-notification-apn-gcm.html</loc>
     <lastmod>2014-06-20T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/hybridapp/solve-external-link-tag-in-phonegap.html</loc>
     <lastmod>2014-06-14T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>/hybridapp/create-phonegap-ios-plugin.html</loc>
     <lastmod>2014-03-17T00:00:00+09:00</lastmod>
-    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>/spring/solving-lost-hibernate-connection-mysql-in-springframework.html</loc>
+    <lastmod>2011-11-09T00:00:00+09:00</lastmod>
   </url>
   <url>
     <loc>/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>/243/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>/245/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>/249/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>/251/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>/252/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>/253/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>/254/</loc>
-    <lastmod>2015-02-24T23:35:17+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>

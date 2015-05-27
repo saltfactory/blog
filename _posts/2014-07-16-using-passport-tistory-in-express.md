@@ -13,6 +13,8 @@ redirect_from: /251/
 [passport-tistory](https://github.com/saltfactory/passport-tistory) 는 passort의 많은 인증 strategy의 하나로 OAuth 2.0 기반의 인증방식을 사용하여 Tistory의 인증과정을 간단하게 처리할 수 있는 Tistory 오픈 API 인증모듈이다. passport-node의 구현 방법과 설명에 대해서는 “[passport-tistory Node.js Tistory 인증 모듈](http://blog.saltfactory.net/249)” 포스팅 했었다.
 
 이번 포스팅에서는 Node.js로 웹 서비스를 만들때 passport-tistory를 사용하여 인증을 처리와 Tistory 오픈 API를 사용할 수 있는 방법에 대해서 소개하려고 한다.
+<!--more-->
+
 
 ## Tistory Client 등록
 

@@ -5,12 +5,15 @@ category : ionic
 tags : [android, ios, hybrid, html5, ionic]
 comments : true
 redirect : /263/
----
+excerpt_separator : <!--more-->
 
+---
 
 # 하이브리드 앱 개발과 배포
 
 **[하이브레인넷](http://www.hibrain.net) 부설 연구소**에서는 모바일 서비스를 위해 아이폰과 안드로이드 앱을 개발해서 배포하고 있었다. 우리는 아이폰 사용자와 안드로이드 사용자를 위해서 두가지 플랫폼을 개발해야 했다. 안드로이드와 아이폰은 버전과 디바이스의 파편화 때문에 많은 비용을 투자해서 예외처리를 해야했다. 제한된 개발 인력으로 두가지 디바이스를 개발해야하는 복잡한 프로세스를 개선하기 위해서 우리는 **하이브리드 앱** 개발 방법을 도입하기로 결정했다. 최근 우리는 하이브리드 앱 개발 기술을 사용하여  "하이브레인넷 앱(ver. 2.3)"을 [앱스토어](https://itunes.apple.com/kr/app/haibeuleinnes/id438616285?mt=8)와 [구글 플레이](https://play.google.com/store/apps/details?id=net.hibrain.apps.android.hibrainnet)를 통해 배포했다. 우리는 하이브리드 앱을 개발하여 제품으로 배포한 과정을 블로그로 공개한다.
+
+<!--more-->
 
 ## 개발 배경
 

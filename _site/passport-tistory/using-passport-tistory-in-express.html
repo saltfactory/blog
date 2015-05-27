@@ -60,6 +60,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </nav>
 
@@ -86,7 +94,8 @@
 
 <p><a href="https://github.com/saltfactory/passport-tistory">passport-tistory</a> 는 passort의 많은 인증 strategy의 하나로 OAuth 2.0 기반의 인증방식을 사용하여 Tistory의 인증과정을 간단하게 처리할 수 있는 Tistory 오픈 API 인증모듈이다. passport-node의 구현 방법과 설명에 대해서는 “<a href="http://blog.saltfactory.net/249">passport-tistory Node.js Tistory 인증 모듈</a>” 포스팅 했었다.</p>
 
-<p>이번 포스팅에서는 Node.js로 웹 서비스를 만들때 passport-tistory를 사용하여 인증을 처리와 Tistory 오픈 API를 사용할 수 있는 방법에 대해서 소개하려고 한다.</p>
+<p>이번 포스팅에서는 Node.js로 웹 서비스를 만들때 passport-tistory를 사용하여 인증을 처리와 Tistory 오픈 API를 사용할 수 있는 방법에 대해서 소개하려고 한다.
+&lt;!--more--&gt;</p>
 
 <h2 id="tistory-client-등록">Tistory Client 등록</h2>
 
@@ -426,29 +435,29 @@ jade는 HTML의 복잡한 태그를 단순화시켰고 태그의 계층구조를
 </code></pre></div>
 <p><a href="http://127.0.0.1:3000">http://127.0.0.1:3000</a></p>
 
-<p><img src="http://cfile4.uf.tistory.com/image/2635054653D0C929103F26" alt="Screen Shot 2014-07-18 at 9.54.43 AM.png"/></p>
+<p><img src="http://cfile4.uf.tistory.com/image/2635054653D0C929103F26" alt="Screen Shot 2014-07-18 at 9.54.43 AM.png"></p>
 
 <p><a href="http://127.0.0.1:3000/login">http://127.0.0.1:3000/login</a></p>
 
-<p><img src="http://cfile4.uf.tistory.com/image/26014C3C53D0C92924E126" alt="Screen Shot 2014-07-18 at 9.54.46 AM.png"/></p>
+<p><img src="http://cfile4.uf.tistory.com/image/26014C3C53D0C92924E126" alt="Screen Shot 2014-07-18 at 9.54.46 AM.png"></p>
 
 <p><a href="http://127.0.0.1:300/login">http://127.0.0.1:300/login</a> 에서 <strong><em>Login with Tistory</em></strong> 링크를 눌렀을 때</p>
 
-<p><img src="http://cfile26.uf.tistory.com/image/263FC93453D0C9293A4B9B" alt="Screen Shot 2014-07-18 at 10.07.48 AM.png"/></p>
+<p><img src="http://cfile26.uf.tistory.com/image/263FC93453D0C9293A4B9B" alt="Screen Shot 2014-07-18 at 10.07.48 AM.png"></p>
 
-<p><img src="http://cfile30.uf.tistory.com/image/254D4C4353D0C92922FC37" alt="Screen Shot 2014-07-18 at 9.54.49 AM.png"/></p>
+<p><img src="http://cfile30.uf.tistory.com/image/254D4C4353D0C92922FC37" alt="Screen Shot 2014-07-18 at 9.54.49 AM.png"></p>
 
 <p>Tistory에서 클라이언트 인증이 모두 마치고 다시 callback URL로 돌아왔을 때,</p>
 
-<p><img src="http://cfile9.uf.tistory.com/image/27244B3953D0C9293358B7" alt="Screen Shot 2014-07-18 at 9.54.52 AM.png"/></p>
+<p><img src="http://cfile9.uf.tistory.com/image/27244B3953D0C9293358B7" alt="Screen Shot 2014-07-18 at 9.54.52 AM.png"></p>
 
 <p><a href="http://127.0.0.1:3000/account">http://127.0.0.1:3000/account</a></p>
 
-<p><img src="http://cfile2.uf.tistory.com/image/2309B13C53D0C92A1B4A04" alt="Screen Shot 2014-07-18 at 9.54.56 AM.png"/></p>
+<p><img src="http://cfile2.uf.tistory.com/image/2309B13C53D0C92A1B4A04" alt="Screen Shot 2014-07-18 at 9.54.56 AM.png"></p>
 
 <p><a href="http://127.0.0.1:3000/logout">http://127.0.0.1:3000/logout</a></p>
 
-<p><img src="http://cfile22.uf.tistory.com/image/2746824353D0C92A31DCB9" alt="Screen Shot 2014-07-18 at 9.54.43 AM.png"/></p>
+<p><img src="http://cfile22.uf.tistory.com/image/2746824353D0C92A31DCB9" alt="Screen Shot 2014-07-18 at 9.54.43 AM.png"></p>
 
 <p>실험이 이상없이 진행되면 이제부터 access_token 를 획득하였기 때문에 Tistory 오픈 API를 사용할 수 있다. 획득한 access_token은 <code>app.js</code>에 <code>passport.use()</code> 의 콜백함수에서 확인할 수 있다.
 access_token을 가지고 Tistory 오픈 API를 사용하는 방법은 다음 포스팅에서 소개하겠다.</p>

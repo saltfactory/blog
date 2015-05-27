@@ -3,7 +3,37 @@ layout: default
 ---
 
 <div class="home">
-  <ul class="categories">
+  <ul class="posts">
+    {% for post in paginator.posts %}
+    <li>
+      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+
+      <p class="excerpt">
+        {{ post.excerpt | split: '</h2>' | last | strip_html}} <a href="{{post.url | prepend: site.baseurl }}">[본문보기]</a> 
+      </p>
+
+    </li>
+    {% endfor %}
+  </ul>
+
+
+  <div class="pagination">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
+  {% else %}
+    <span class="previous">Previous</span>
+  {% endif %}
+  <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path }}" class="next">Next</a>
+  {% else %}
+    <span class="next">Next</span>
+  {% endif %}
+  </div>
+
+
+  <!-- <ul class="categories">
     {% for category in site.categories %}
       <li>
         <h1>{{category | first}}</h1>
@@ -21,7 +51,8 @@ layout: default
           </ul>
       </li>
     {% endfor%}
-  </ul>
+  </ul> -->
+
 
   <!-- <ul class="posts">
     {% for post in site.posts %}

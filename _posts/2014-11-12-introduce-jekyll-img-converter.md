@@ -1,12 +1,15 @@
 ---
 layout: post
-title: jekyll-img-converter 플러그인 제작 및 배포 (Markdown문서 이미지 사이즈 변환하기) 
+title: jekyll-img-converter 플러그인 제작 및 배포 (Markdown문서 이미지 사이즈 변환하기)
 category: jekyll
 tags: [jekyll, ruby, markdown, plugin]
 comments: true
+redirect : /264/
+excerpt_separator : <!--more-->
 ---
 
 > [jekyll-img-converter](https://github.com/saltfactory/jekyll-img-converter)는 [Markdown](http://daringfireball.net/projects/markdown/syntax)의 이미지  문법(syntax)를 HTML으로 변환 시킬 때  이미지의 사이즈를 inline style로 추가해서 변환 시키는 [Jekyll](http://jekyllrb.com)의 플러그인이다.
+<!--more-->
 
 ## Jekyll과 Markdown
 
@@ -40,7 +43,7 @@ Jekyll은 공식으로 플러그인을 만들 수 있는 [Generator](http://jeky
 
 우리는 Jekyll 프로젝트와 달리 모듈을 만들고 테스트를 하는 방법을 가지고 싶었다. 그래서 우리는 [Ruby](https://www.ruby-lang.org/en/), [gem](https://rubygems.org) 그리고 [Rakefile](http://ruby-doc.org/core-1.9.3/doc/rake/rakefile_rdoc.html)를 사용하여 플로그인을 개발하는 환경을 만들었다.
 
-### jekyll-img-converter.gemspec 
+### jekyll-img-converter.gemspec
 
 우선 우리는  **jekyll-img-converter**를 **gem**을 상요해서 배포할 것이기 때문에 `.gemspec` 파일을 생성하였다. 이 파일에 포함된 내용은 다음과 같다.
 
@@ -54,7 +57,7 @@ Jekyll은 공식으로 플러그인을 만들 수 있는 [Generator](http://jeky
 - **license** : 라이센스
 - **files** : **gem**을 사용하여 배포할 파일을 지정
 - **add_dependency** : 플러그인이 설치되었을 때 필요한 모듈의 의존성을 지정
-- **add_development_dependency** : 플러그인을 개발할 때 필요한 모듈을 지정 
+- **add_development_dependency** : 플러그인을 개발할 때 필요한 모듈을 지정
 
 ```ruby
 Gem::Specification.new do |s|
@@ -78,7 +81,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency  'redcarpet', '~> 3.2'
 end
 
-``` 
+```
 
 ### Gemfile
 
@@ -126,36 +129,36 @@ class Markdown < Converter
 
 ```ruby
 module Jekyll
-  module Converters    
+  module Converters
     class Markdown < Converter
 
       class RedcarpetParser
-      
+
           module CommonMethods
             def image(link, title, content)
               pattern = /({)(.+)(})/
               matchData = pattern.match(content)
-            
+
               imgTag = "<img src=\"#{link}\""
-            
-              if (matchData)        
+
+              if (matchData)
                 style = matchData[2]
                 stripContent = content.gsub(matchData.to_s,'').rstrip
-              
+
                 imgTag += " alt=\"#{stripContent}\" style=\"#{style}\""
               else
                 imgTag += " alt=\"#{content}\""
               end
-      
+
               if(title)
                 imgTag += " title=\"#{title}\""
               end
-      
+
               imgTag += "/>"
             end
-          end        
+          end
       end
-      
+
     end
   end
 end
@@ -185,20 +188,20 @@ Rake::TestTask.new(:test) do |test|
 end
 ```
 
-**Rakefile**을 생성하면 `test` 디렉토리를 만들자. 
+**Rakefile**을 생성하면 `test` 디렉토리를 만들자.
 
 ```
 mkdir test
 ```
 
-테스트에 필요한 파일들을 로드하기 위해서 `help.rb` 파일을 `test` 디렉토리 안에 만든다. `help.rb`의 내용은 다음과 같다. `jekyll-img-converter`를 `require` 할 수 있도록 지정을 한다. 그리고 우리는 임의의 Markdown 파일에 Markdown 문법을 사용하여 문서를 만들고 그 파일을 `textures` 라는 디렉토리에 저장하고 이것을 나중에 불러 사용할 것이다. 
+테스트에 필요한 파일들을 로드하기 위해서 `help.rb` 파일을 `test` 디렉토리 안에 만든다. `help.rb`의 내용은 다음과 같다. `jekyll-img-converter`를 `require` 할 수 있도록 지정을 한다. 그리고 우리는 임의의 Markdown 파일에 Markdown 문법을 사용하여 문서를 만들고 그 파일을 `textures` 라는 디렉토리에 저장하고 이것을 나중에 불러 사용할 것이다.
 
 ```ruby
 require 'rubygems'
 require 'minitest/autorun'
 require 'shoulda'
 
-  
+
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'jekyll-img-converter'
 
@@ -221,18 +224,18 @@ module ImgConverterTestHelpers
 end
 
 ```
-마지막으로 **jekyll-img-converter** 플러그인을 테스트할 테스트 파일을 만든다. 우리는 위에서 `test_` 시작하는 파일을 찾아서 테스트할 것이라고 정의했기 때문에 파일 이름을 `test_jekyll-img-converter.rb`으로 만든다. 테스트 파일은 위에서 만든 `help.rb`를 require 한다. 그리고 [Minitest](https://github.com/seattlerb/minitest)로 테스트를 할 것이다. 우리는 `help.rb`에서 만든 `ImgConverterTestHelper`를 Minix한다. 실제 **Jekyll** 프로젝트에서 설정을 하는 `_config.yml` 파일에 `markdown`을 `redcarpet`으로 정의하고 `extentions`을 정의 했다고 가정하기 위해서 우리는 강제로 `@config`를 만들어서 `Jekyll::Converters::Markdown`을 생성할 때 적용하도록 했다. 테스트는 `should`에서 진행한다. 우리가 만든 플러그인이 적용되어 동작하는지 알아보기 위해서 `assert_equal`를 사용해서 markdown이 HTML으로 변환이 된 결과와 동일한지 테스트를 진행했다. 
+마지막으로 **jekyll-img-converter** 플러그인을 테스트할 테스트 파일을 만든다. 우리는 위에서 `test_` 시작하는 파일을 찾아서 테스트할 것이라고 정의했기 때문에 파일 이름을 `test_jekyll-img-converter.rb`으로 만든다. 테스트 파일은 위에서 만든 `help.rb`를 require 한다. 그리고 [Minitest](https://github.com/seattlerb/minitest)로 테스트를 할 것이다. 우리는 `help.rb`에서 만든 `ImgConverterTestHelper`를 Minix한다. 실제 **Jekyll** 프로젝트에서 설정을 하는 `_config.yml` 파일에 `markdown`을 `redcarpet`으로 정의하고 `extentions`을 정의 했다고 가정하기 위해서 우리는 강제로 `@config`를 만들어서 `Jekyll::Converters::Markdown`을 생성할 때 적용하도록 했다. 테스트는 `should`에서 진행한다. 우리가 만든 플러그인이 적용되어 동작하는지 알아보기 위해서 `assert_equal`를 사용해서 markdown이 HTML으로 변환이 된 결과와 동일한지 테스트를 진행했다.
 
 ```ruby
 require 'helper'
 
 class TestImgConverter < Minitest::Test
   include ImgConverterTestHelpers
-  
+
   def setup
     @site = fixture_site
     @site.read
-    
+
     @config = {
       'redcarpet' => {'extensions' => ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables"]},
       'markdown' => 'redcarpet'
@@ -240,9 +243,9 @@ class TestImgConverter < Minitest::Test
     @markdown = Jekyll::Converters::Markdown.new @config
 
   end
-  
+
   should "convert content" do
-    assert_equal "<p><img src=\"./images/test.png\" alt=\"test_alt\" style=\"max-width:300px;\" title=\"test_title\"/></p>\n", 
+    assert_equal "<p><img src=\"./images/test.png\" alt=\"test_alt\" style=\"max-width:300px;\" title=\"test_title\"/></p>\n",
     @markdown.convert('![test_alt {max-width:300px;}](./images/test.png "test_title")')
   end
 end
@@ -256,7 +259,7 @@ rake test
 테스트한 결과는 다음과 같이 나타난다. 1 run과  1 assertions이 통과했다. 만약 오류가 생기면 failures나 error 의 값이 변경 될 것이다.
 
 ```
-/Users/saltfactory/.rvm/rubies/ruby-2.1.1/bin/ruby -I"lib:lib:test" -I"/Users/saltfactory/.rvm/gems/ruby-2.1.1/gems/rake-10.3.2/lib" "/Users/saltfactory/.rvm/gems/ruby-2.1.1/gems/rake-10.3.2/lib/rake/rake_test_loader.rb" "test/**/test_*.rb" 
+/Users/saltfactory/.rvm/rubies/ruby-2.1.1/bin/ruby -I"lib:lib:test" -I"/Users/saltfactory/.rvm/gems/ruby-2.1.1/gems/rake-10.3.2/lib" "/Users/saltfactory/.rvm/gems/ruby-2.1.1/gems/rake-10.3.2/lib/rake/rake_test_loader.rb" "test/**/test_*.rb"
 Run options: --seed 6638
 
 # Running:
@@ -267,7 +270,7 @@ Finished in 0.024375s, 41.0256 runs/s, 41.0256 assertions/s.
 1 runs, 1 assertions, 0 failures, 0 errors, 0 skips
 ```
 
-### gem 배포 
+### gem 배포
 
 마지막으로 우리는 **gem**을 사용해서 설치할 수 있도록 gem 파일을 만들어서 배포할 것이다. 우선 http://rubygems.org 에 계정을 만든다. **rubygems**의 계정을 생성한 다음 로컬에서 `gem` 파일을 만든다.
 
@@ -362,26 +365,3 @@ jekyll serve --watch
 * 페이스북 : https://facebook.com/salthub
 * 연구소 : [하이브레인넷](http://www.hibrain.net) 부설연구소
 * 연구실 : [창원대학교 데이터베이스 연구실](http://dblab.changwon.ac.kr)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

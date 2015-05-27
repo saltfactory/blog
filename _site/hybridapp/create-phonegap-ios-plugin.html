@@ -60,6 +60,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </nav>
 
@@ -78,16 +86,18 @@
   </header>
 
   <article class="post-content">
-  <p><img src="http://cfile24.uf.tistory.com/image/2143354C531FE24F19549C" alt="phonegap plugin" style="max-width:320px;"/></p>
+  <p><img src="http://cfile24.uf.tistory.com/image/2143354C531FE24F19549C" alt="phonegap plugin {max-width:320px;}"></p>
 
 <p><a href="http://phonegap.com">PhoneGap</a>은 멀티 플랫폼 하이브리드 앱 개발 프레임워크이다. 하이브리드 앱이라는 말은 웹의 기술과 네이티브앱의 기술을 융합해서 사용하여 만든 앱이다. 웹에서 접근할 수 없는 네이티브 자원을 네이티브 코드로 만들고 웹에서 접근할 수 있는 인터페이스를 이용해서 웹과 네이티브의 자원을 함께 사용할 수 있는 것을 또는 반대의 개발 방법을 적용하여 앱을 만들 수 있는 것을  말한다. PhoneGap에서는 이런 일련의 과정을 Plugins이라는 것을 사용해서 구현할 수 있다. <strong>Appspresso</strong>에서는 <strong>PDK</strong>를 이용해서 Plugins를 만들수 있지만 <strong>PhoneGap</strong>에서는 PDK와 같은 Plugin Development Kit은 없지만 PhoneGap에서 Plugins을 만들 수 있는 네이티브 클래스를 상속받고 웹에서 접근할 수 있는 JavaScript 인터페이스를 제공하고 있다. 이번 포스팅에서는 iOS 용 앱을 개발을 할 때 네이티브 코드를 사용하는 Plugins을 만들어서 PhoneGap 프로젝트에서 웹과 네이티브 자원을 서로 사용할 수 있는 방법을 소개한다. 이전 포스팅(<a href="http://blog.saltfactory.net/233)%EC%97%90%EC%84%9C%EB%8A%94">http://blog.saltfactory.net/233)에서는</a> PhoneGap의 Plugins 저장소에서 Plugins을 설치하는 방법을 살펴보았다. 이번 포스팅에서는 PhoneGap 프로젝트에 Plugins 저장소에서 가져와서 설치하는 것이 아니라 직접 만든 Plugins을 프로젝트에 설치하는 방법도 함께 소개한다.</p>
+
+<!--more-->
 
 <h2 id="phonegap-plugins-프로젝트-생성">PhoneGap Plugins 프로젝트 생성</h2>
 
 <p>Plugins을 만들기 위해서 먼저 PhoneGap CLI로 PhoneGap 프로젝트를 생성한다.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap create sf-phonegap-plugin-demo -i net.saltfactory.tutorial.phonegap.plugindemo -n SF-PhoneGap-Plugin-Demo
 </code></pre></div>
-<p><img src="http://cfile27.uf.tistory.com/image/27686B3C531FE7302375E4" alt="phonegap create" style="max-width:600px;"/></p>
+<p><img src="http://cfile27.uf.tistory.com/image/27686B3C531FE7302375E4" alt="phonegap create {max-width:600px;}"></p>
 
 <p>현재 PhoneGap CLI 버전( 3.4.0-0.19.7 )에서는 PhoneGap CLI로 프로젝트를 만들면 <strong>identifier</strong>와 프로젝트 이름이 디폴트에서 변경되지 않는 문제가 있다.(참조 : <a href="http://blog.saltfactory.net/234">http://blog.saltfactory.net/234</a>) 에디터로 <code>./www/config.xml</code> 을 열어서 다음을 수정하자.</p>
 <div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
@@ -198,7 +208,7 @@
 <p>위와 같이 <code>phonegap local build</code>를 실행하면 비어있던 <code>./platforms</code> 디렉토리에 iOS 플랫폼 자원이 만들어진 것을 확인할 수 있다. iOS 플랫폼의 자원중에 iOS 프로젝트 디렉토리를 살펴보자. 우리는 PhoneGap 프로젝트 이름을 <strong>SF-PhoneGap-Plugin-Demo</strong>로 만들었다.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">ls -l ./platforms/ios/SF-PhoneGap-Plugin-Demo
 </code></pre></div>
-<p><img src="http://cfile1.uf.tistory.com/image/2202B750531FE9852E434B" alt="phonegap ios platform" style="max-width: 600px;"/></p>
+<p><img src="http://cfile1.uf.tistory.com/image/2202B750531FE9852E434B" alt="phonegap ios platform {max-width: 600px;}"></p>
 
 <p><code>./platforms/ios/SF-PhoneGap-Plugin-Demo</code> 라는 디렉토리 안에는 iOS 프로젝트에 사용하는 파일들이 존재하고 <code>Plugins</code>라는 디렉토리가 있는 것을 확인할 수 있다. 현재 아무런 Plugins을 만들지 않았기 때문에 비어있는 상태이다.</p>
 
@@ -206,11 +216,11 @@
 
 <p>iOS용 Plugins을 만들기 위해서는 <strong>Xcode가</strong> 필요하다. PhoneGap CLI로 local build ios를 이용해서 iOS 플랫폼 자원을 만들면 iOS 코드를 편집할 수 있는 Xcode 프로젝트 파일도 함께 만들어지는데 위치는 <code>./platforms/ios</code> 안에 <code>{PhoneGap 프로젝트 이름}.xcodeproj</code> 파일로 만들어진다.</p>
 
-<p><img src="http://cfile30.uf.tistory.com/image/2714344B531FEA7235F61F" alt="xcode project" style="max-width:600px;"/></p>
+<p><img src="http://cfile30.uf.tistory.com/image/2714344B531FEA7235F61F" alt="xcode project {max-width:600px;}"></p>
 
 <p><code>./platforms/ios/SF-PhoneGap-Plugin-Demo.xcodeproj</code> 파일을 실행시켜보자. 아래와 같이 <strong>SF-PhoneGap-Plugin-Demo</strong> 프로젝트 안에 <code>CordovaLib.xcodeproj</code> 파일이 포함되어 있는 것을 알 수 있다. 또한 <strong>Build Phases의 Link binary With Libraries</strong>를 살펴보면 <strong>libCordova.a</strong>라는 cordova의 static library가 포함되어 있는 것을 확인할 수 있다. 이러한 이유로 Cordova에서 만든 Class를 우리는 별 다른 설정없이 사용할 수 있다.</p>
 
-<p><img src="http://cfile26.uf.tistory.com/image/2523544B531FEAEA2FA936" alt="xcode build phases" style="max-width:600px;"/></p>
+<p><img src="http://cfile26.uf.tistory.com/image/2523544B531FEAEA2FA936" alt="xcode build phases {max-width:600px;}"></p>
 
 <p>우리는 이제 PhoneGap 공식 문서의 Echo 기능을 가진 Plugin을 만들어볼 것이다. (참조 : <a href="http://docs.phonegap.com/en/edge/guide_hybrid_plugins_index.md.html#Plugin%20Development%20Guide">http://docs.phonegap.com/en/edge/guide_hybrid_plugins_index.md.html#Plugin%20Development%20Guide</a>) 문서에서는 복잡하게 설명이 되어 있는데 간단하게 원리는 다음과 같다.</p>
 
@@ -226,23 +236,23 @@
 
 <p><strong>SF-PhoneGap-Plugin-Demo</strong> 안에 있는 <code>Plugins</code> 디렉토리에서 <strong>New File</strong> 을 한다.</p>
 
-<p><img src="http://cfile24.uf.tistory.com/image/22651F3C531FED2A12EB09" alt="New file" style="max-width: 600px;"/></p>
+<p><img src="http://cfile24.uf.tistory.com/image/22651F3C531FED2A12EB09" alt="New file {max-width: 600px;}"></p>
 
 <p>그리고 <strong>Subclass of</strong> 부분에서 우리는 Cordova의 CDVPlugin을 상속받아서 만들려하기 때문에 <strong>CDVPlugin</strong>을 입력한다. 그리고 새로운 파일의 Class 이름을 입력한다. 우리는 Echo 하는 클래스를 만들 것이기 때문에 편의상 이름을 <strong>SFPluginEcho</strong>라 입력하겠다.</p>
 
-<p><img src="http://cfile21.uf.tistory.com/image/213C1F45531FEDF429888E" alt="New file" style="max-width: 600px;"/></p>
+<p><img src="http://cfile21.uf.tistory.com/image/213C1F45531FEDF429888E" alt="New file {max-width: 600px;}"></p>
 
-<p><img src="http://cfile3.uf.tistory.com/image/2404B436531FEE38231744" alt="New file" style="max-width: 600px;"/></p>
+<p><img src="http://cfile3.uf.tistory.com/image/2404B436531FEE38231744" alt="New file {max-width: 600px;}"></p>
 
 <p>위와 같이 새로운 Class 파일을 Plugins에 만들어 진것을 확인할 수 있다. 우리는 간단히 웹에서 넘겨준 문자열을 iOS 자원인 <strong>UIAlertView</strong>를 이용해서 경고창을 띄우는 것을 에제로 해볼 것이다. 메소드 이름은 echo로 하겠다. <code>SFPluginEcho.h</code>에 다음과 같이 메소들 선언한다.</p>
 
 <p>메소드를 추가하기 전에 CDVPlugin를 상속 받은 <code>SFPluginEcho.h</code> 파일을 살펴보면 <code>#import&lt;Cordova/Cordova.h&gt;</code>에 에러가 발생한 것을 확인할 수 있다. PhoneGap CLI의 버그인지 알수 없지만 Cordova 라이브러리를 추가하여 사용할 때 <code>Cordova/CDV.h</code>를 import 해야하기 때문에 다음과 같이 변경한다.</p>
 
-<p><img src="http://cfile10.uf.tistory.com/image/215CDA37531FF07D23860D" alt="cordova header import" style="max-width:600px;"/></p>
+<p><img src="http://cfile10.uf.tistory.com/image/215CDA37531FF07D23860D" alt="cordova header import {max-width:600px;}"></p>
 
 <p>아래와 같이 <code>Cordova/CDV.h</code>를 import하면 위의 에러가 사라진다. <code>Cordova/CDV.h</code>를 열어서 확인하면 그 안에 <code>CDVPlugin.h</code>를 import하고 있는 것을 확인할 수 있다.</p>
 
-<p><img src="http://cfile29.uf.tistory.com/image/23630941531FF0BE01BDC8" alt="import header" style="max-width:600px;"/></p>
+<p><img src="http://cfile29.uf.tistory.com/image/23630941531FF0BE01BDC8" alt="import header {max-width:600px;}"></p>
 
 <p>이제 echo 메소드를 추가하자. 메소드를 추가할 때 이 Class는 웹에서 Cordova가 제공하는 JavaScript 인터페이스로 접근을 할 것이다. 이 때, Cordova 내부에서 지정하기를 <code>CDVInvokedUrlCommand</code> 형태로 넘어오기 때문에 메소드를 추가할 때는 인자값을 <code>CDVInokedUrlCommand</code>를 받을 수 있게 정의 한다.</p>
 <div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
@@ -361,7 +371,7 @@
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local build ios
 </code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local install ios
 </code></pre></div>
-<p><img src="http://cfile30.uf.tistory.com/image/2638433753201106120031" alt="ios simulator" style="max-width:320px;"/></p>
+<p><img src="http://cfile30.uf.tistory.com/image/2638433753201106120031" alt="ios simulator {max-width:320px;}"></p>
 
 <h2 id="cdvpluginresult를-이용해서-네이티브의-데이터를-javascript에-넘겨서-사용하기">CDVPluginResult를 이용해서 네이티브의 데이터를 JavaScript에 넘겨서 사용하기</h2>
 
@@ -504,7 +514,7 @@
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local build ios
 </code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local install ios
 </code></pre></div>
-<p><img src="http://cfile25.uf.tistory.com/image/251BA73A53268C1434CACE" alt="ios simulator" style="max-width:320px;"/></p>
+<p><img src="http://cfile25.uf.tistory.com/image/251BA73A53268C1434CACE" alt="ios simulator {max-width:320px;}"></p>
 
 <p>위와 같이 네이티브 코드에서 <code>CDVPluginResult</code>에 값을 Dictionary 넘겨서 JavaScript의 callback에서 JSON 값을 받아서 출력할 수 있다.</p>
 
@@ -591,7 +601,7 @@
         <span class="n">pluginResult</span> <span class="o">=</span> <span class="p">[</span><span class="n">CDVPluginResult</span> <span class="nl">resultWithStatus</span><span class="p">:</span><span class="n">CDVCommandStatus_ERROR</span> <span class="nl">messageAsString</span><span class="p">:[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]];</span>
     <span class="p">}</span>
 
-    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">commandDelegate</span> <span class="nl">sendPluginResult</span><span class="p">:</span><span class="n">pluginResult</span> <span class="nl">callbackId</span><span class="p">:</span><span class="n">command</span><span class="p">.</span><span class="n">callbackId</span><span class="p">];</span>     
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">commandDelegate</span> <span class="nl">sendPluginResult</span><span class="p">:</span><span class="n">pluginResult</span> <span class="nl">callbackId</span><span class="p">:</span><span class="n">command</span><span class="p">.</span><span class="n">callbackId</span><span class="p">];</span>
 
 <span class="p">}</span>
 
@@ -694,9 +704,9 @@
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local build ios
 </code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local install ios
 </code></pre></div>
-<p><img src="http://cfile4.uf.tistory.com/image/231DFD3E5326A9561A50B5" alt="ios simulator" style="max-width:320px;"/></p>
+<p><img src="http://cfile4.uf.tistory.com/image/231DFD3E5326A9561A50B5" alt="ios simulator {max-width:320px;}"></p>
 
-<p>위와 같이 iOS 네이티브 코드에서 JavaScript의 <code>print_message()</code> 함수를 호출한 것을 확인할 수 있다. </p>
+<p>위와 같이 iOS 네이티브 코드에서 JavaScript의 <code>print_message()</code> 함수를 호출한 것을 확인할 수 있다.</p>
 
 <h3 id="[self.commanddelegate-evaljs:]-로-네이티브에서-javascript-함수-호출하기">[self.commandDelegate evalJs:] 로 네이티브에서 JavaScript 함수 호출하기</h3>
 
@@ -742,12 +752,12 @@
 <span class="c1">//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonInfo options:NSJSONWritingPrettyPrinted error:&amp;error];</span>
 <span class="c1">//</span>
 <span class="c1">//    CDVPluginResult *pluginResult = nil;</span>
-<span class="c1">//    </span>
+<span class="c1">//</span>
 <span class="c1">//    if (!error) {</span>
 <span class="c1">//        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];</span>
 <span class="c1">//        NSString *javaScriptString = [NSString stringWithFormat:@&quot;print_message(%@)&quot;, jsonString];</span>
 <span class="c1">//        [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];</span>
-<span class="c1">//        </span>
+<span class="c1">//</span>
 <span class="c1">//        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];</span>
 <span class="c1">//    } else {</span>
 <span class="c1">//        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];</span>
@@ -895,23 +905,23 @@
 <p>먼저 Plugins의 목록을 살펴보자. 현재는 아무런 Plugins 가 설치 되어 있지 않다.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap plugin list
 </code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/22071B485326B09A281A99" alt="plugins list" style="max-width:600px;"/></p>
+<p><img src="http://cfile23.uf.tistory.com/image/22071B485326B09A281A99" alt="plugins list {max-width:600px;}"></p>
 
 <p>이제 우리가 만든 Plugins을 설치 해보자.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local plugin add ../sf-phonegap-plugin-demo
 </code></pre></div>
-<p><img src="http://cfile2.uf.tistory.com/image/22044F475326B1CA12AC08" alt="add plugin" style="max-width:600px;"/></p>
+<p><img src="http://cfile2.uf.tistory.com/image/22044F475326B1CA12AC08" alt="add plugin {max-width:600px;}"></p>
 
 <p>Plugins 설치가 마치면 다시 PhoneGap 프로젝트의 Plugins의 목록을 살펴보자.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap plugin list
 </code></pre></div>
-<p><img src="http://cfile1.uf.tistory.com/image/264F5D3A5326B1F8044001" alt="plugins list" style="max-width:600px;"/></p>
+<p><img src="http://cfile1.uf.tistory.com/image/264F5D3A5326B1F8044001" alt="plugins list {max-width:600px;}"></p>
 
 <p>아무런 Plugins가 없었는데 설치후 우리가 생성한 <strong>net.saltfactory.tutorial.phonegap.plugindemo</strong> Plugins이 설치된 것을 확인할 수 있다.
 <code>./plugins</code> 디렉토리 안을 살펴보자.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">ls -l ./plugins
 </code></pre></div>
-<p><img src="http://cfile25.uf.tistory.com/image/2163F1345326B34832093D" alt="plugins list" style="max-width:600px;"/></p>
+<p><img src="http://cfile25.uf.tistory.com/image/2163F1345326B34832093D" alt="plugins list {max-width:600px;}"></p>
 
 <p>PhoneGap 프로젝트의 <code>./plugins</code> 디렉토리 안에는 우리가 Plugins으로 생성한 <strong>net.saltfactory.tutorial.phonegap.plugindemo</strong>가 설치된 것을 확인할 수 있다. 그리고 <code>ios.json</code> 파일을 열어보자. 아래와 같이 <code>config.xml</code>에 자동적으로 feature를 추가하는 정보가 들어가 있다.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">{
@@ -945,7 +955,7 @@
         <span class="p">]</span>
     <span class="p">}</span>
 <span class="p">];</span>
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span> 
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span>
 <span class="c1">// TOP OF METADATA</span>
 <span class="p">{</span>
     <span class="s2">&quot;net.saltfactory.tutorial.phonegap.plugindemo&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span>
@@ -1012,7 +1022,7 @@
 <div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local build ios
 </code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">phonegap local install ios
 </code></pre></div>
-<p><img src="http://cfile9.uf.tistory.com/image/22066D405326B9171D9AD5" alt="ios simulator" style="max-width:320px;"/></p>
+<p><img src="http://cfile9.uf.tistory.com/image/22066D405326B9171D9AD5" alt="ios simulator {max-width:320px;}"></p>
 
 <p>실행 결과 정상적으로 우리가 만든 Plugins을 새로운 PhoneGap 프로젝트에 설치해서 적용하는 것을 확인했다.</p>
 

@@ -60,6 +60,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </nav>
 
@@ -78,7 +86,13 @@
   </header>
 
   <article class="post-content">
-  <h2 id="mark2html@0.0.4"><a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a></h2>
+  <h2 id="서론">서론</h2>
+
+<p>Markdown에서 이미지 태그를 표현하기 위한 표기법을 사용할 때 가장 큰 단점은 아미지 사이즐르 지정할 수 없다는 것이다. 이 포스트에서는 Markdown 문서를 HTML로 변경할 때 Markdown에 포함된 이미지를 HTML로 변환할 때 이미지 사이즈를 지정할 수 있는 방법을 소개한다.</p>
+
+<!--more-->
+
+<h2 id="mark2html@0.0.4"><a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a></h2>
 
 <p>mark2html을 <strong><em>0.0.4</em></strong>버전으로 업그레이드 했다. 이번 업데이트에는 Makrdown에서 HTML으로 변환할 때 이미지의 크기 등 style을 적용할 수 있는 기능이 추가 되었다.</p>
 
@@ -110,7 +124,7 @@
 <p>이 문법은 HTML 코드로 변환되면 다음과 같이 변환이 된다.</p>
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">&gt;</span>
 </code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" title="아이폰화면"/></p>
+<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" title="아이폰화면"></p>
 
 <p><code>img</code> 속성중에 <code>alt</code> 값은 이미지가 나타나는한 화면에 나타나지 않고 이미지를 설명하는 값이다. 그래서 Markdown을 작성할 때 <code>alt</code> 값에 <code>style</code> 값을 넣어서 사용하기로 했다.</p>
 
@@ -128,7 +142,7 @@
 <p>그러면 다음과 같이 HTML 코드로 변환이 된다.</p>
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">style=</span><span class="s">&quot;width:320px;&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">/&gt;</span>
 </code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" style="max-width:320px;" title="아이폰화면"/></p>
+<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지 {max-width:320px;}" title="아이폰화면"></p>
 
 <h2 id="결론">결론</h2>
 
