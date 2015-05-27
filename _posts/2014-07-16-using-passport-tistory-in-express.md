@@ -6,15 +6,17 @@ comments: true
 redirect_from: /251/
 ---
 
-> *[passport-tistory](https://github.com/saltfactory/passport-tistory)를 사용하여 Node.js 로 Tistory 오픈 API를 사용하는 방법을 소개한다. passport-tistory는 Node.js로 만들어진 Tistory 오픈 API 인증모듈이다.*
+## 서론
+
+*[passport-tistory](https://github.com/saltfactory/passport-tistory)를 사용하여 Node.js 로 Tistory 오픈 API를 사용하는 방법을 소개한다. passport-tistory는 Node.js로 만들어진 Tistory 오픈 API 인증모듈이다.*
+
+<!--more-->
 
 ## passport-tistory?
 
 [passport-tistory](https://github.com/saltfactory/passport-tistory) 는 passort의 많은 인증 strategy의 하나로 OAuth 2.0 기반의 인증방식을 사용하여 Tistory의 인증과정을 간단하게 처리할 수 있는 Tistory 오픈 API 인증모듈이다. passport-node의 구현 방법과 설명에 대해서는 “[passport-tistory Node.js Tistory 인증 모듈](http://blog.saltfactory.net/249)” 포스팅 했었다.
 
 이번 포스팅에서는 Node.js로 웹 서비스를 만들때 passport-tistory를 사용하여 인증을 처리와 Tistory 오픈 API를 사용할 수 있는 방법에 대해서 소개하려고 한다.
-<!--more-->
-
 
 ## Tistory Client 등록
 
@@ -366,8 +368,8 @@ http://127.0.0.1:3000/logout
 실험이 이상없이 진행되면 이제부터 access_token 를 획득하였기 때문에 Tistory 오픈 API를 사용할 수 있다. 획득한 access_token은 `app.js`에 `passport.use()` 의 콜백함수에서 확인할 수 있다.
 access_token을 가지고 Tistory 오픈 API를 사용하는 방법은 다음 포스팅에서 소개하겠다.
 
-결론
-====
+## 결론
+
 
 오픈 API를 사용하기 전에 항성 거쳐야할 과정이 바로 OAuth 인증이다. 만약 개인이 OAuth 인증 과정을 처리하는 프로그램을 작성한다면 아주 복잡한 과정을 프로그램으로 구현해야한다.
 Node.js에서는 프로그램을 정말 간결하게 만들어줄 수 있는 획기적인 모듈들이 많은데 `passort` 라는 모듈이 그러하다. `passport`는 복잡한 인증과정을 추상적으로 상용할 수 있는 방법을 제공한다.
@@ -379,8 +381,7 @@ Tistory 역시 오픈 API를 사용하기 위해서 OAuth 2.0 인증을 처리�
 `passport-tistory` 는 현재 `0.1.0` 버전이지만 꽤 안정적이고 앞으로도 지속적으로 업데이트를 할 예정이다. Node.js로 Tistory 어플리케이션을 만들거나,
 Tistory의 오픈 API를 사용하기 위해서 OAuth 2.0 인증 후 access_token을 획득하고자 하는 개발자와 연구원들에게 도움이 되길 바란다.
 
-참고자료
-======
+## 참고자료
 
 * http://blog.saltfactory.net/249
 * http://blog.outsider.ne.kr/829
@@ -389,11 +390,10 @@ Tistory의 오픈 API를 사용하기 위해서 OAuth 2.0 인증 후 access_toke
 * https://github.com/visionmedia/express
 
 
-연구원 소개
-=======
+## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
-* 프로필 : http://about.me/saltfactory
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

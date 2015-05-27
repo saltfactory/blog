@@ -572,11 +572,10 @@ node-gcm 모듈로 Node.js 기반의 안드로이드 GCM 서버를 간단히 만
 
 그리고 Node.js의 ***node-apn***과 ***node-gcm*** 모듈을 사용해서 PhoneGap(Cordova)에서 획득한 디바이스 정보를 가지고 쉽게 푸시를 발송할 수 있는 프로바이더 서버를 쉽게 만들 수 있는 것도 확인했다. 이제 하이브리드 앱을 만들때 더이상 푸시서비스를 어떻게 만들어야할지 걱정할 필요가 없을 것이다. 좀 더 네이티브에 가까운 서비스를 웹 리소스로 제어할 수 있으니 UI를 담당하는 웹 리소스를 가지고 푸시 서비스를 쉽게 만들 수 있을 것이다.
 
-연구원 소개
-========
+## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
-* 프로필 : http://about.me/saltfactory
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

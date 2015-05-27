@@ -10,7 +10,7 @@ redirect : /259/
 ## 서론
 
 Safari 브라우저에서 **Yobi**를 사용할 때 git에 올린 **한글 디렉토리명**일 경우 디렉토리 내부로 네비게이션이 정상적으로 이루어지지 못하는 문제가 있는데 이 문제를 해결하기 위한 방법을 알아본다.
-<!--more--> 
+<!--more-->
 
 ## Yobi 와 Windows 사용자
 
@@ -125,6 +125,7 @@ Safari 브라우저 버그는 `<a/>` 태그의 링크를 클릭하면 인코딩 
 ## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

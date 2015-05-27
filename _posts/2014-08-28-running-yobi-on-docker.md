@@ -7,7 +7,7 @@ comments : true
 redirect : /261/
 ---
 
-## docker-yobi(saltfactory/yobi)
+## 서론
 
 우리는 LXC로 서버를 운영하기 위해서 [Docker](http://docker.com)를 도입하기로 했다. docker를 도입해서 docker에 올리는 서비스중 첫번째로 [Yobi](http://yobi.io)를 적용하기로 했다. 개인연구로 사용하고 있는 랩탑은 Mac OS X를 사용하고 있기 때문에 [boot2docker]()를 사용하여 Dockerfile을 생성해서 GitHub에 [docker-hub](https://github.com/saltfactory/docker-yobi) 와 [Docker Hub](https://registry.hub.docker.com/u/saltfactory/yobi/)에 올렸다. 이 포스팅에서는 GitHub와 Docker Hub를 이용해서 Yobi를 사용하는 방법을 소개한다.
 
@@ -179,6 +179,7 @@ Yobi는 git를 사용하기 위한 repository를 포함하고 있다. 이 reposi
 ## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

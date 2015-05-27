@@ -6,7 +6,7 @@ comments: true
 redirect_from: /252/
 ---
 
-## mark2html 소개
+## 서론
 
 [mark2html](http://saltfactory.net/mark2html/)는 Markdown 파일을 html 파일로 변환시켜주는 모듈이자 작은 프로그램이다. makr2html을 사용하여 HTML으로 변화할 때 Markdown에 포함된 이미지 파일을 HTML 파일의 경로에 함께 복하하거나 이미지를 datauri로 변환시켜 포함시켜주는 기능을 가지고 있다. mark2html은  Node.js 프로그램에 상용할 수 있는 모듈과 명령어로 사용할 수 있게 CLI 설치가 가능하다. HTML 입력을 요구하는 블로그에 Markdown 파일을 포스팅할 때 mark2html을 유용하게 사용할 수 있다.
 
@@ -118,11 +118,10 @@ mark2html은 Markdown 파일을 HTML 파일로 만들어주는 모듈이다. `np
 지금 이 글도 mark2html을 사용해서 Markdown으로 작성된 문서를 HTML으로 변환시켜 포스팅 될 것이다. Tistory에 글을 작성할 때 Markdown을 사용하기 위해서는 HTML 모드로 편집기를 사용해야하는데, 이때 이미지를 첨부할 수 없는 문제가 있다. 이때 mark2html을 사용해서 HTML으로 변환할 때 이미지를 datauri로 만들어서 HTML 파일 안에 포함시키면 된다. mark2html은 아직 개발단계이지만 Markdown을 사용해서 Tistory나  HTML 입력 모드를 지원하는 블로그에 글을 포스팅하고 싶을때 사용하면 유용할 것으로 생각된다.
 
 
-연구원 소개
-========
+## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
-* 프로필 : http://about.me/saltfactory
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

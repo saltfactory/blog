@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Linux에서 접근 가능한 IP 제한과 리포팅하기</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/linux/restict-allowing-ip-in-linux.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Linux에서 접근 가능한 IP 제한과 리포팅하기</h1>
+    <p class="meta">Jan 18, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p>서버관리자는 서버를 매일 모니터링을 해야한다는 것이 서버관리자의 가장 큰 의무 중에 하나라고 생각된다. 서비스의 정도와 다르게 비록 개발 서버라고 할지라도 서버라는 것이 존재한다는 것은 언제나 공격의 대상이되고 내가 직접적으로 나쁜 의도로 사용하지 않아도 다른 서비스에 공격할 수 있는 통로가 되기도 한다. 그래서 서버를 운영한다는 것은 사실은 큰 부담감을 가지고 있는 것이다. 그래서 가장 간단하면서도 강력한 보안 정책이 있는데 간단하게 설명하자면 특정 서비스에 특정 호스트만 접근하게 하거나 막을수 있는 TCP Wrapped Service라는 것이 있다. TCP Wrapper라고 검색하면 사용하는 방법들이 많이 검색이 될 것이기 때문에 간단하게 사용하는 방법에 대해서 설명을 하고자 한다. 이 포스트는 TCP Wrapper 를 사용하면서 자동적으로 리포팅 기능을 할 수 있게 하는 것이 목적이기 때문에 <a href="http://en.wikipedia.org/wiki/TCP_Wrapper">TCP Wrapper</a>에 대한 보다 깊은 내용은 다른 블로그나 문서를 참조하길 바란다.</p>
+
+<!--more-->
+
+<h2 id="tcp-wrapper">TCP Wrapper</h2>
+
+<p>TCP Wrapper의 기능은 간단히 특정 host의 접근을 허락하거나 거절하는 기능이다.
+이 설정은 통상 /etc/hosts.allow와 /etc/hosts.deny 파일 두가지에서 설정이 가능하다. 파일 이름을 보면 그 기능을 알 수 있을텐데 hosts.allow는 접속을 허락하는 서비스별 host를 정의할 수 있고 hosts.deny는 접근을 거부하는 서비스별 host를 정의할 수 있다. 이때 접근의 방법을 정의하는 룰은 다음과 같다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">데몬 : 호스트명(IP) [:옵션1:옵션2:...]
+</code></pre></div>
+<p>예를 들어서 특정 아이피 111.111.111.111이라는 IP를 가진 호스트가 무작위로 ssh 접근을 한다고 가정하면 hosts.deny 파일에 다음과 같이 설정하면 된다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sshd : 111.111.111.111
+</code></pre></div>
+<p>매우 간단하지만 한가지 더 예를 들어 보자. 모든 호스트의 접근은 막는데 내가 개발하고 있는 호스트 123.123.123.111과 123.123.123.222만 서버에 접근하게 하고 싶을 경우에 다음과 같이 설정하면 된다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># hosts.deny
+ALL : ALL
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text"># hosts.allow
+ALL : 123.123.123.111, 123.123.123.222
+</code></pre></div>
+<p>이렇게 간단하게 서버에 접근할 할수 있는 호스트를 제한할 수 있다. 이제 좀더 스마트하게 리포트 기능을 추가해 보자.
+내가 만약에 접근할 수 있는 클라이언트를 정했는데 알수 없는 클라이언트에서 계속적으로 서버로 접근하려는 시도를 감지하기 위해서 이렇게 접근을 허락하지 않는 알수 없는 클라이언트가 접근하려면 관리자에게 메일을 발송 시키도록 하는 기능을 추가해보자.</p>
+
+<h2 id="메일-리포팅-기능-추가">메일 리포팅 기능 추가</h2>
+
+<p>메일 발송 프로그램은 Python으로 SMTP을 이용하여 메일발송 (파일첨부, 공동참조자 포함) 포스트에 사용한 python으로 작성한 메일 발송 프로그램을 사용하였다. 꼭 python 메일 발송 프로그램이 아니라 자신의 서버에 맞는 메일 발송 프로그램을 사용하면 된다. 개인적으로는 서버 관리 프로그램은 python이나 ruby를 사용하기 때문에 이 포스팅에서는 python을 이용하는 방법을 설명한다.</p>
+
+<p>python 메일 발송 프로그램은 외부에서 arguments를 받아서 그 문장을 현재 시간과 결합해서 리포트 메세지를 만들어서 서버 관리자나 리포터에게 메일을 발송한는 간단한 프로그램이다. <code>sendmail_unkwnown_ip.py</code> 라는 파일을 root만 접근할 수 있는 디록토리에 만들었다고 가정한다.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/python</span>
+<span class="c"># -*- coding:utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">from</span> <span class="nn">email.MIMEMultipart</span> <span class="kn">import</span> <span class="n">MIMEMultipart</span>
+<span class="kn">from</span> <span class="nn">email.MIMEBase</span> <span class="kn">import</span> <span class="n">MIMEBase</span>
+<span class="kn">from</span> <span class="nn">email.MIMEText</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+<span class="kn">from</span> <span class="nn">email</span> <span class="kn">import</span> <span class="n">Encoders</span>
+<span class="kn">from</span> <span class="nn">email</span> <span class="kn">import</span> <span class="n">Utils</span>
+<span class="kn">from</span> <span class="nn">email.header</span> <span class="kn">import</span> <span class="n">Header</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">smtp_server</span>  <span class="o">=</span> <span class="s">&quot;SMTP 서버 주소&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="s">&quot;SMTP 포트번호&quot;</span>
+<span class="n">userid</span> <span class="o">=</span> <span class="s">&quot;SMTP 계정&quot;</span>
+<span class="n">passwd</span> <span class="o">=</span> <span class="s">&quot;SMTP 비밀번호&quot;</span>
+
+<span class="k">def</span> <span class="nf">send_mail</span><span class="p">(</span><span class="n">from_user</span><span class="p">,</span> <span class="n">to_user</span><span class="p">,</span> <span class="n">cc_users</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">attach</span><span class="p">):</span>
+        <span class="n">COMMASPACE</span> <span class="o">=</span> <span class="s">&quot;, &quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">(</span><span class="s">&quot;alternative&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s">&quot;From&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_user</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s">&quot;To&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">COMMASPACE</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to_user</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s">&quot;Cc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">COMMASPACE</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cc_users</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s">&quot;Subject&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">formatdate</span><span class="p">(</span><span class="n">localtime</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">MIMEText</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s">&quot;html&quot;</span><span class="p">,</span> <span class="n">_charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">attach</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">part</span> <span class="o">=</span> <span class="n">MIMEBase</span><span class="p">(</span><span class="s">&quot;application&quot;</span><span class="p">,</span> <span class="s">&quot;octet-stream&quot;</span><span class="p">)</span>
+                <span class="n">part</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">attach</span><span class="p">,</span> <span class="s">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="n">Encoders</span><span class="o">.</span><span class="n">encode_base64</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+                <span class="n">part</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s">&quot;Content-Disposition&quot;</span><span class="p">,</span> <span class="s">&quot;attachment; filename=</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">attach</span><span class="p">))</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+
+        <span class="n">smtp</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="n">smtp_server</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="n">smtp</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">userid</span><span class="p">,</span> <span class="n">passwd</span><span class="p">)</span>
+        <span class="n">smtp</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="n">from_user</span><span class="p">,</span> <span class="n">cc_users</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_string</span><span class="p">())</span>
+        <span class="n">smtp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+<span class="n">now</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%04d</span><span class="s">-</span><span class="si">%02d</span><span class="s">-</span><span class="si">%02d</span><span class="s"> </span><span class="si">%02d</span><span class="s">:</span><span class="si">%02d</span><span class="s">:</span><span class="si">%02d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">tm_year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">tm_mon</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">tm_mday</span><span class="p">,</span>
+
+<span class="n">now</span><span class="o">.</span><span class="n">tm_hour</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">tm_min</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">tm_sec</span><span class="p">)</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="s">&quot;&lt;h2&gt;알수 없는 IP 접근&lt;/h2&gt; [</span><span class="si">%s</span><span class="s">] from  &lt;font color=&#39;red&#39;&gt;</span><span class="si">%s</span><span class="s">&lt;/font&gt; &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">send_mail</span><span class="p">(</span><span class="s">&quot;발송 이메일주소&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;수신자 이메일주소&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s">&quot;공동참조자 이메일주소&quot;</span><span class="p">],</span> <span class="s">&quot;알수 없는 IP 접근 리포트&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span>  <span class="bp">None</span><span class="p">)</span>
+</code></pre></div>
+<p>이 python 이메일 전송 프로그램은 외부에서 파라미터를 하나 받도록 만들었다. <code>sys.argv[1]</code>은 알수 없는 호스트가 접근할때의 IP를 받아오는 argument 가 될 것이다. 다음은 shell이 이 프로그램을 실행할 수 있도록 실행 권한을 파일에게 추가 한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">chmod +x /root/sendmail_unknown_ip.py
+</code></pre></div>
+<p>host의 접근 권한을 hosts.allow와 hosts.deny에서 룰을 설정해서 관리할 수 있는데 <code>hosts.allow</code> 파일을 열어서 다음 문장을 추가한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">ALL : UNKNOWN : spawn /root/sendmail_unknown_ip.py %h : deny
+</code></pre></div>
+<p>모든 서버에서 알수 없는(UNKNOWN) 호스트가 접근하면 spawn을 사용해서 위에서 만든 <code>sendmail_unkown_ip.py</code>을 실행하는데 이 때 파라미터로 접근한 호스트의 IP를 넘기게 된다. 그러면 python 메일 전송 프로그램이 리포트할 message를 완성시켜 관리자에게 메일을 전송하는 것이다.</p>
+
+<p><code>spawn</code>은 자식 프로세스를 하나 생성시켜서 새로운 쉘 명령어(shell command)를 할 수 있게 해주는 옵션이다.</p>
+
+<p>이제 TCP Wrapper에 정의한 허락된 호스트 접근 이외의 알수 없는 호스트가 서버에 접근을 하게 되면 다음과 같이 즉시 메일로 접근한 사항을 메일로 확인 받을 수 있게 되었다.</p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/1813B0424F16561B1A42B1" alt=""></p>
+
+<p>하지만 이렇게 TCP Wrapper 기능을 사용하고 알수없는 호스트의 접근 사항을 메일로 확인 할 수 있더라도, 반드시 서버 관리자는 서버의 로그 파일을 주기적으로 모니터링하고 분석하는 일을 해야한다. 어떠한 사항으로 장애가 일어날지 모르며 어떻게 다른 경로로 접근해서 서버를 다른 용도로 사용할지 모르기 때문이다.</p>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>

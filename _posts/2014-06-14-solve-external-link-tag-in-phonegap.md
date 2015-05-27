@@ -9,6 +9,7 @@ redirect_from: /243/
 ## 서론
 
 PhoneGap을 사용하여 크로스플랫폼 하이브리드 앱을 개발할 때, PhoneGap은 SDK의 **WebView** 기반으로 동작하는 어플리케이션으로 WebView 에 링크가 있을 경우 PhoneGap 내부의 URL은 해당 페이지를 이동하지만, 만약 외부 URL이 포함된 경우 링크를 터치하면 PhoneGap 하이브리드 앱에서 외부링크로 location이 변경되어 버린다. 이 문제를 해결하기 위해 PhoneGap 내부에서 외부 링크가 포함되었을 때 처리하는 방법에 대해서 소개한다.
+
 <!--more-->
 
 ![phonegap](http://tricedesigns.com/presentations/dreamforce/native-like%20phonegap%20apps/assets/phonegap_flow.png)
@@ -361,7 +362,7 @@ phonegap run android
 ## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
-* 프로필 : http://about.me/saltfactory
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

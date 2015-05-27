@@ -131,7 +131,7 @@ boot2docker stop
 ## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
-* 프로필 : http://about.me/saltfactory
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

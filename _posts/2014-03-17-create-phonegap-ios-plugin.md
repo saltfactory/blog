@@ -7,7 +7,7 @@ comments : true
 redirect : /235/
 ---
 
-![phonegap plugin {max-width:320px;}](http://cfile24.uf.tistory.com/image/2143354C531FE24F19549C)
+## 서론
 
 [PhoneGap](http://phonegap.com)은 멀티 플랫폼 하이브리드 앱 개발 프레임워크이다. 하이브리드 앱이라는 말은 웹의 기술과 네이티브앱의 기술을 융합해서 사용하여 만든 앱이다. 웹에서 접근할 수 없는 네이티브 자원을 네이티브 코드로 만들고 웹에서 접근할 수 있는 인터페이스를 이용해서 웹과 네이티브의 자원을 함께 사용할 수 있는 것을 또는 반대의 개발 방법을 적용하여 앱을 만들 수 있는 것을  말한다. PhoneGap에서는 이런 일련의 과정을 Plugins이라는 것을 사용해서 구현할 수 있다. **Appspresso**에서는 **PDK**를 이용해서 Plugins를 만들수 있지만 **PhoneGap**에서는 PDK와 같은 Plugin Development Kit은 없지만 PhoneGap에서 Plugins을 만들 수 있는 네이티브 클래스를 상속받고 웹에서 접근할 수 있는 JavaScript 인터페이스를 제공하고 있다. 이번 포스팅에서는 iOS 용 앱을 개발을 할 때 네이티브 코드를 사용하는 Plugins을 만들어서 PhoneGap 프로젝트에서 웹과 네이티브 자원을 서로 사용할 수 있는 방법을 소개한다. 이전 포스팅(http://blog.saltfactory.net/233)에서는 PhoneGap의 Plugins 저장소에서 Plugins을 설치하는 방법을 살펴보았다. 이번 포스팅에서는 PhoneGap 프로젝트에 Plugins 저장소에서 가져와서 설치하는 것이 아니라 직접 만든 Plugins을 프로젝트에 설치하는 방법도 함께 소개한다.
 
@@ -1068,12 +1068,10 @@ phonegap local install ios
 2. http://docs.phonegap.com/en/3.3.0/guide_platforms_ios_plugin.md.html#iOS%20Plugins
 
 
-연구원 소개
-========
+## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
 * 블로그 : http://blog.saltfactory.net
-* 프로필 : http://about.me/saltfactory
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

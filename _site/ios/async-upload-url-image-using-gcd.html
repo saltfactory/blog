@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GCD와 Block을 이용한 URL 이미지 비동기 로딩</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/ios/async-upload-url-image-using-gcd.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>GCD와 Block을 이용한 URL 이미지 비동기 로딩</h1>
+    <p class="meta">Jan 31, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p><strong>UITableView</strong>에서 각 cell 마다 이미지를 로드하거나 특정 시점이 아닌 비동기적으로 이미지를 로드하기 위한 방법이 필요할 때가 있다. 이미지 로드가 완료될때까지 기다렸다가 다음 프로세스를 진행하게 되면 UI가 멈추거나 인터렉티브한 프로그램을 만드는데 많은 제약이 생기기 때문이다. 이러한 이유로 이전부터 비동기 형식으로 이미지를 로드하는 방법과 예제가 블로그와 책에 소개가 많이 되어왔다. 이러한 비동기 방식으로 이미지 로드는 iPhone 로컬의 이미지를 로드하기보다 원격지에 있는 URL을 이용해서 이미지를 로드할때 그 필요성이 더 필요하다. 네트워크를 통해서 이미지를 가져온다는 것은 바이너리 이미지를 로드하는 시간보다 네트워크에서 데이터를 전송하는 시간이 더 많이 걸리기 때문이다. 만약 원격 이미지를 비동기 방식으로 로드하지 않게 되면 UI가 멈추어 버리기 때문에 사용자들은 앱이 죽었다고 생각하거나 답답해서 그 앱을 두번다시 사용하지 않을지도 모른다.</p>
+
+<p>비동기 방식으로 이미지를 로드하는 예제들</p>
+
+<ul>
+<li><a href="http://developer.apple.com/library/ios/#samplecode/LazyTableImages/index.html">http://developer.apple.com/library/ios/#samplecode/LazyTableImages/index.html</a></li>
+<li><a href="http://www.markj.net/iphone-asynchronous-table-image/">http://www.markj.net/iphone-asynchronous-table-image/</a></li>
+<li><a href="http://gazapps.com/wp/2011/06/29/asynchronous-images-on-ios/">http://gazapps.com/wp/2011/06/29/asynchronous-images-on-ios/</a></li>
+<li><a href="http://avishek.net/blog/?p=39">http://avishek.net/blog/?p=39</a></li>
+</ul>
+
+<p>위에서 사용하는 방법은 <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSURLConnection_Class/index.html">NSURLConnection</a>을 이용해서 delegate method를 이용하는 방법을 보통 사용한다. delegate pattern은 작업 처리를 하는 객체에게 위임을하거나 비동기적으로 객체에 메소드를 호출할때 매우 유용한 방법이다. 하지만 delegate를 사용하면 delegate 메소드가 필요하게 되고 delegate 메소드 안에서 처리할 작업을 정의해 두어야 한다.</p>
+
+<!--more-->
+
+<h2 id="gcd와-block을-이용한-비동기-처리">GCD와 Block을 이용한 비동기 처리</h2>
+
+<p>이미지를 비동기 방식으로 로드하고 비동기 방식으로 로드하면서 외부에서 그 이미지를 처리하는 메소드까지 선언해줄수 있는 방법으로 <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Blocks/Articles/00_Introduction.html">block</a>과 <a href="https://developer.apple.com/library/mac/documentation/Performance/Reference/GCD_libdispatch_Ref/">GCD (grand centeral dispatch)</a>를 이용하는 방법을 참조하였다. block은 Python이나 Ruby 등에서 사용하는 closure 개념과 비슷하다. Block은 C 레벨의 문법과 런타임 특징이다. 이것은 C의 기본 함수와 비슷하지만 실행가능한 코드를 추가할 수가 있고 stack 또는 heap 메모리를 바인딩하는 변수를 포함할 수 있다. 이러한 특징 대문에 Block은 실행되는 동안에 어떠한 행위를 위해서 데이터의 상태를 유지할 수 있는 특성을 가진다. Block에 관해서는 다시 한번 Block의 주제에 관해서 다시 포스팅을 할 예정이다. GCD는 애플에서 개발한 기술로써 멀티코어 프로세서에 최적화된 어플리케이션을 지원하기 위해서 만들어진 기술이다. GCD는 병렬처리와 쓰레드 풀을 기반한 기술이다. GCD에 대한 상세한 내용역시 다른 포스팅으로 준비 중이다. Block과 GCD를 이용하면 기존에 사용하던 방법(delegate로 처리하는 방법)과는 다르게 원하는 방법을 구현할 수 있을 것이라는 생각을 가지고 검색해서 다음 블로그를 찾을 수 있게 되었다.  <a href="http://www.geekygoodness.com/2011/06/17/uiimage-from-url-simplified/">http://www.geekygoodness.com/2011/06/17/uiimage-from-url-simplified/</a>  이 블로그에서는 아주 간단한 설명만 남겨 두었지만 Block과 GCD를 이용해서 이미지를 로드하는 방법을 소스코드로 잘 표현해 주고 있다. Block은 iOS4 이상에서만 사용이 가능하다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="kt">void</span> <span class="nf">UIImageFromURL</span><span class="p">(</span> <span class="bp">NSURL</span> <span class="o">*</span> <span class="n">URL</span><span class="p">,</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">imageBlock</span><span class="p">)(</span><span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image</span><span class="p">),</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">errorBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span> <span class="n">dispatch_get_global_queue</span><span class="p">(</span> <span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span> <span class="p">),</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+                   <span class="p">{</span>
+                       <span class="bp">NSData</span> <span class="o">*</span> <span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSData</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithContentsOfURL</span><span class="p">:</span><span class="n">URL</span><span class="p">];</span>
+                       <span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIImage</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithData</span><span class="p">:</span><span class="n">data</span><span class="p">];</span>
+                       <span class="n">dispatch_async</span><span class="p">(</span> <span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+                           <span class="k">if</span><span class="p">(</span> <span class="n">image</span> <span class="o">!=</span> <span class="nb">nil</span> <span class="p">)</span>
+                           <span class="p">{</span>
+                               <span class="n">imageBlock</span><span class="p">(</span> <span class="n">image</span> <span class="p">);</span>
+                           <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                               <span class="n">errorBlock</span><span class="p">();</span>
+                           <span class="p">}</span>
+                       <span class="p">});</span>
+                   <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>이 코드를 iOS에서 사용하면 다음과 같은 warning이 나타난다.</p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/130CF7364F2753D10308D5" alt=""></p>
+
+<p>이것은 UIImageFromURL가 미리 선언되어 있지 않아서 발생하는 경고인데 .h 파일 안에 미리 선언해주면 이 경고는 사라진다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+
+<span class="k">@interface</span> <span class="nc">ViewController</span> : <span class="bp">UIViewController</span>
+
+<span class="kt">void</span> <span class="nf">UIImageFromURL</span><span class="p">(</span> <span class="bp">NSURL</span> <span class="o">*</span> <span class="n">URL</span><span class="p">,</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">imageBlock</span><span class="p">)(</span><span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image</span><span class="p">),</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">errorBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="p">);</span>
+<span class="k">@end</span>
+</code></pre></div>
+<p>사용방법은 참조한 블로그에 나온 방법대로 사용하면 되는데 다음과 같이 사용하면 된다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+    <span class="c1">// Do any additional setup after loading the view, typically from a nib.</span>
+
+    <span class="n">UIImageFromURL</span><span class="p">(</span> <span class="p">[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:</span><span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">],</span> <span class="o">^</span><span class="p">(</span> <span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview</span><span class="p">:[[</span><span class="bp">UIImageView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithImage</span><span class="p">:</span><span class="n">image</span><span class="p">]];</span>
+    <span class="p">},</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span><span class="s">@&quot;error!&quot;</span><span class="p">);</span>
+    <span class="p">});</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p><img src="http://cfile10.uf.tistory.com/image/143F5F404F275729018C66" alt=""></p>
+
+<p>우리는 이 코드를 좀더 Objective-C에 익숙한 메소드와 파라미터 방식으로 변경하고 싶다고 생각했다. Objective-C의 메소드 선언 방법은 개발할때 파라미터에 대한 이름과 타입을 참조하는데 더 유용하기 때문이다. 그래서 이 코드를 다음과 같이 변경하여 인스턴스 메소드로 만들어서 사용할 수 있다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+
+<span class="k">@interface</span> <span class="nc">ViewController</span> : <span class="bp">UIViewController</span>
+
+<span class="c1">//void UIImageFromURL( NSURL * URL, void (^imageBlock)(UIImage * image), void (^errorBlock)(void) );</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">loadAsyncImageFromURL:</span><span class="p">(</span><span class="bp">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span>  <span class="nf">imageBlock:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)</span> <span class="p">(</span><span class="bp">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">imageBlock</span> <span class="nf">errorBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">errorBlock</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div><div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">loadAsyncImageFromURL:</span><span class="p">(</span><span class="bp">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span>  <span class="nf">imageBlock:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)</span> <span class="p">(</span><span class="bp">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">))</span><span class="nv">imageBlock</span> <span class="nf">errorBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="nv">errorBlock</span>
+<span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span> <span class="n">dispatch_get_global_queue</span><span class="p">(</span> <span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span> <span class="p">),</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+                   <span class="p">{</span>
+                       <span class="bp">NSData</span> <span class="o">*</span> <span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSData</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithContentsOfURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
+                       <span class="bp">UIImage</span> <span class="o">*</span> <span class="n">image</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIImage</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithData</span><span class="p">:</span><span class="n">data</span><span class="p">];</span>
+                       <span class="n">dispatch_async</span><span class="p">(</span> <span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+                           <span class="k">if</span><span class="p">(</span> <span class="n">image</span> <span class="o">!=</span> <span class="nb">nil</span> <span class="p">)</span>
+                           <span class="p">{</span>
+                               <span class="n">imageBlock</span><span class="p">(</span> <span class="n">image</span> <span class="p">);</span>
+                           <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                               <span class="n">errorBlock</span><span class="p">();</span>
+                           <span class="p">}</span>
+                       <span class="p">});</span>
+                   <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+    <span class="c1">// Do any additional setup after loading the view, typically from a nib.</span>
+
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">loadAsyncImageFromURL</span><span class="p">:[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:</span><span class="s">@&quot;http://cfile27.uf.tistory.com/image/1349CD374EA43DFB2EF0B6&quot;</span><span class="p">]</span>
+                     <span class="nl">imageBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="bp">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">){</span>
+                         <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview</span><span class="p">:[[</span><span class="bp">UIImageView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithImage</span><span class="p">:</span><span class="n">image</span><span class="p">]];</span>
+                     <span class="p">}</span>
+                     <span class="nl">errorBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+                         <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="s">@&quot;error!&quot;</span><span class="p">);</span>
+                     <span class="p">}];</span>
+
+
+<span class="c1">//    UIImageFromURL( [NSURL URLWithString:@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;], ^( UIImage * image )</span>
+<span class="c1">//    {</span>
+<span class="c1">//        [self.view addSubview:[[UIImageView alloc] initWithImage:image]];</span>
+<span class="c1">//    }, ^(void){</span>
+<span class="c1">//        NSLog(@&quot;%@&quot;,@&quot;error!&quot;);</span>
+<span class="c1">//    });</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>이 방법을 이용해서 테이블에 이미지를 비동기 방식으로 로드하는 예제를 작성하면 다음과 같이 될 것이다. 간단하게 테이블에 URL 문자열을 가지는 items 배열을 가지고 사용하였지만, 실제 사용할때는 이 데이터 역시 json이나 xml에서 받아와서 만들 것으로 예상이 된다. <code>tableView:cellForRowAtIndexPath:</code> 메소드에서 cell의 작업을 할때 우리는 비동기 방식으로 처리하는 이 코드로 작업을 처리할 수 있다.
+(이 예제는 정말 단순하고 간단한 예제 이다. 더욱 좋은 코드를 만들기 위한 방법을 이 포스트에서는 소개하지 않는다.)</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSArray</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithObjects</span><span class="p">:</span><span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="s">@&quot;http://cfile30.uf.tistory.com/image/186A3A384EEAE043315B79&quot;</span><span class="p">,</span>
+             <span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="bp">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">cellForRowAtIndexPath:</span><span class="p">(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="bp">NSString</span> <span class="o">*</span><span class="n">CellIdentifier</span> <span class="o">=</span> <span class="s">@&quot;Cell&quot;</span><span class="p">;</span>
+
+    <span class="bp">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Configure the cell...</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">loadAsyncImageFromURL</span><span class="p">:[</span><span class="bp">NSURL</span> <span class="nl">URLWithString</span><span class="p">:[</span><span class="n">items</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">]]</span>
+                     <span class="nl">imageBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="bp">UIImage</span> <span class="o">*</span><span class="n">image</span><span class="p">){</span>
+
+                         <span class="p">[[</span><span class="n">cell</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">viewWithTag</span><span class="p">:</span><span class="mi">999</span><span class="o">+</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">]</span> <span class="n">removeFromSuperview</span><span class="p">];</span>
+
+                         <span class="bp">UIImageView</span> <span class="o">*</span><span class="n">imageView</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIImageView</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithImage</span><span class="p">:</span><span class="n">image</span><span class="p">];</span>
+                         <span class="n">imageView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mf">04.0f</span><span class="p">,</span> <span class="mf">.0f</span><span class="p">,</span> <span class="mf">44.0f</span><span class="p">,</span> <span class="mf">44.0f</span><span class="p">);</span>
+                         <span class="n">imageView</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="mi">999</span><span class="o">+</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">;</span>
+
+                         <span class="p">[</span><span class="n">cell</span><span class="p">.</span><span class="n">contentView</span> <span class="nl">addSubview</span><span class="p">:</span><span class="n">imageView</span><span class="p">];</span>
+                     <span class="p">}</span>
+                     <span class="nl">errorBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+                         <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="s">@&quot;error!&quot;</span><span class="p">);</span>
+                     <span class="p">}];</span>
+    <span class="n">cell</span><span class="p">.</span><span class="n">textLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><img src="http://cfile4.uf.tistory.com/image/142CC23E4F27776E21F98A" alt=""></p>
+
+<p>참조 원문 : <a href="http://www.geekygoodness.com/2011/06/17/uiimage-from-url-simplified/">http://www.geekygoodness.com/2011/06/17/uiimage-from-url-simplified/</a>
+코드의 저작권은 <a href="http://www.geekygoodness.com">http://www.geekygoodness.com</a> 에 있기 때문에 코드 사용시 원 저작권자에게 사용 요청을 받기 바랍니다.</p>
+
+<p><a href="http://blog.saltfactory.net/attachment/cfile5.uf@202A18504F2A3B7E319A00.gz">http://blog.saltfactory.net/attachment/cfile5.uf@202A18504F2A3B7E319A00.gz</a></p>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>

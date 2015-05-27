@@ -68,6 +68,50 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </nav>
 
@@ -376,12 +420,11 @@ gems:
 
 <p><strong>Jekyll</strong>은 Markdown을 사용해서 정적 웹 사이트를 만들 수 있는 static web page generator 프레임워크이다. Jekyll을 사용하면 개인 웹 서버나 고가의 데이터베이스 없이 <strong>Github Pages</strong>를 이용해서 개인 웹 사이트나 블로그를 쉽게 구축할 수 있다. Markdown은 문서 제작를 간편하고 빠르게 제작할 수 있게 스타일을 지정하지 않는다. 하지만 웹 사이트를 만들다보면 이미지 사이즈를 조정하는 경우가 많다. Markdown의 기본 문법에서는 IMG 태그에 스타일을 지정할 수 없기 때문에 우리는 Jekyll의 <strong>Redcarpet</strong>이라는 Markdown 변환기에서 IMG 태그를 변환하는 메소드를 오버라이드하여 Jekyll 플러그인 <strong>jekyll-img-converter</strong>를 제작하게 되었다. jekyll은 <strong>Ruby</strong> 기반으로 만들어졌기 때문에 우리는 <strong>Rakefile</strong>을 이용해서 플러그인을 만들고 테스트를 진행했다. 우리는 우리가 만든 플러그인을 <strong>gem</strong>을 사용해서 설치할 수 있게 <strong>rubygems</strong>에 우리가 만든 플러그인을 등록해서 배포했고 이 모든 과정을 이 포스트에서 소개 했다. Ruby는 Minxin이라는 기능을 가지고 있고 모든 클래스 기반 언어처럼 상속과 오버라이드를 지원한다. 우리는 이 개념을 잘 사용하여 Markdown의 문법을 해치지 않고 이미지 문법의 ALT 속성에 <strong>inline style</strong>을 지정하여 IMG 태그를 분석할 때 오버라이드한 메소드가 이를 분석해서 IMG 태그에 <strong>style</strong> 속성에 inline style을 적용하도록 했다. 이 포스트를 참조해서 앞으로 더욱 많은 Jekyll의 플러그인이 제작되길 기대해본다.</p>
 
-<h1 id="연구원-소개">연구원 소개</h1>
+<h2 id="연구원-소개">연구원 소개</h2>
 
 <ul>
 <li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
 <li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
-<li>프로필 : <a href="http://about.me/saltfactory">http://about.me/saltfactory</a></li>
 <li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
 <li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
 <li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>

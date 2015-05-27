@@ -361,8 +361,7 @@ module.exports = TistoryStrategy;
 직접 express로 웹 프로젝트를 만들고 passport-tistory를 사용해서 인증을 완료한 뒤에 Tistory의 오픈 API를 사용하는 예제를 포스팅할 예정이다.
 
 
-결론
-====
+## 결론
 
 난생 처음으로 conributor가 되었다. 항상 Node.js 개발을 하면서 모듈을 가져와서 사용하기만 했는데 언젠가 한번 내가 직접 등록하고 싶다고 생각했는데 Tistory 오픈 API를 사용할 일이 생겨서 이번 기회에 npm 으로 배포할 수 있게 되었다.
 아직 0.1.0 버전으로 병아리 패키지이다. 하지만 처음으로 conributor가 된 것에 스스로 감동하고 있다. 그리고 앞으로는 개인적으로 만들어서 사용한 모듈을 될 수 있는한 오류 없이 문서화해서 배포할 수 있게 구현할 예정이다.
@@ -374,8 +373,8 @@ passport-tistory 를 구현하는데 처음에는 생각보다 쉽지 않았다.
 
 라고 가르쳐주신 교수님의 말씀이 생각난다. 연구원으로 살면서 앞으로도 더 많은 모듈을 만들어서 배포할 수 있는 contributor가 되려고 노력하고 싶다.
 
-참고자료
-======
+## 참고자료
+
 * https://github.com/jaredhanson/passport
 * http://blog.outsider.ne.kr/829
 * https://github.com/outsideris/passport-me2day
@@ -385,11 +384,10 @@ passport-tistory 를 구현하는데 처음에는 생각보다 쉽지 않았다.
 * https://github.com/visionmedia/express
 
 
-연구원 소개
-=======
+## 연구원 소개
 
 * 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
-* 프로필 : http://about.me/saltfactory
+* 블로그 : http://blog.saltfactory.net
 * 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * 트위터 : [@saltfactory](https://twitter.com/saltfactory)
 * 페이스북 : https://facebook.com/salthub

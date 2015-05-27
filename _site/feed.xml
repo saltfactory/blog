@@ -5,8 +5,8 @@
     <description></description>
     <link>/series/</link>
     <atom:link href="/series/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 27 May 2015 14:51:40 +0900</pubDate>
-    <lastBuildDate>Wed, 27 May 2015 14:51:40 +0900</lastBuildDate>
+    <pubDate>Wed, 27 May 2015 16:28:17 +0900</pubDate>
+    <lastBuildDate>Wed, 27 May 2015 16:28:17 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -136,6 +136,1204 @@
         
         
         <category>nginx</category>
+        
+      </item>
+    
+      <item>
+        <title>개발용 PC와 운영체제 인코딩 설정 따른 톰캣 WAR 파일 한글 문제 해결</title>
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;Java를 이용하여 웹 프로젝트를 진행하면서 한번쯤은 캐릭터 문제를 겪게 된다. 이것은 프로그램을 작성할 때 한글(EUC_KR)을 함께 사용하기 때문이다. 내 PC에서 개발할 때는 문제가 없는데 특정 서버에 Deploy를 시키면 파일 안에 &lt;strong&gt;한글 주석&lt;/strong&gt;이 이상한 문자열로 깨어지거나 HTTP 요청을 할 때 한글이 제대로 표현되지 않는 문제 등을 만날 수 있다. 이번 포스팅은 Java 프로그램을 작성해서 Tomcat 서버에 Deploy를 시키고 난 이후 war 파일이 풀렸을 때 war 안에 들어 있던 파일 속의 한글이 깨어지는 문제를 해결하는 방법을 소개한다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;개발-pc-환경&quot;&gt;개발 PC 환경&lt;/h2&gt;
+
+&lt;p&gt;최근 웹 개발은 Mac을 이용하거나 Ubuntu와 같은 리눅스 데스크탑 환경을 많이 사용한다. Mac과 Ubuntu는 특별한 설정을 하지 않으면 기본적으로 UTF-8 환경을 가진다. &lt;code&gt;locale&lt;/code&gt; 명령어를 사용해서 내 컴퓨터의 설정을 확인해 볼 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;locale
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;LANG=
+LC_COLLATE=&amp;quot;C&amp;quot;
+LC_CTYPE=&amp;quot;UTF-8&amp;quot;
+LC_MESSAGES=&amp;quot;C&amp;quot;
+LC_MONETARY=&amp;quot;C&amp;quot;
+LC_NUMERIC=&amp;quot;C&amp;quot;
+LC_TIME=&amp;quot;C&amp;quot;
+LC_ALL=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이렇게 UTF-8 로 사용되고 있는 Mac에서 IntelliJ 와 같은 응용 프로그램을 사용해서 파일을 생성하게 되면 파일은 기본적으로 System encoding을 따르기 때문에 파일은 &lt;strong&gt;UTF-8&lt;/strong&gt;로 만들어지게 된다. 만약 Windows를 사용한다면 CP959 캐릭터 기반으로 만들어지게 될 것이다. &lt;strong&gt;IntelliJ&lt;/strong&gt;의 &lt;strong&gt;Preferences&lt;/strong&gt;를 열어서 확인하면 기본 &lt;strong&gt;IDE Encoding&lt;/strong&gt;, &lt;strong&gt;Project Encoding&lt;/strong&gt;, &lt;strong&gt;Default encoding for properties files&lt;/strong&gt;를 설정할 수 있는 것을 확인할 수 있다. 만약 Windows PC에서 개발을 한다면 이 정보를 잘 확인해서 서버환경과 동일하게 만드는 것이 좋다.
+&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-20%20at%203_35_13%20PM-01.png?m=1426842028&quot; alt=&quot;&quot;&gt;
+개발 PC 환경은 CP949나 EUC_KR 일 경우 서버에서 파일을 열게 되면 한글이 깨어지기 때문이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;jvm-환경&quot;&gt;JVM 환경&lt;/h2&gt;
+
+&lt;p&gt;Java로 프로젝트를 진행하고 있다면 현재 사용하고 있는 JVM의 환경이 어떤지 확인해 둘 필요가 있다. JVM은 파일을 바이너리코드로 변경해서 어떠한 JVM 환경에서도 운영할 수 있게 만들어주는데 이때 한글이 깨어지지 않게 동작하게 하기 위해서는 JVM의 환경을 알아두는게 좋다. JVM은 OS의 환경 기반으로 동작한다. 다음 코드를 사용해서 운영체제와 파일 인코딩을 확인 할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;먼저 JVM의 인코딩을 알아보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;new OutputStreamWriter(new ByteArrayOutputStream()).getEncoding();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음은 파일 인코딩을 알아보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;System.getProperty(&amp;quot;file.encoding&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;두가지 설정을 jar로 바로 확인할 수 있도록 github에 jar를 등록해 두었다. git에서 소스를 clone 받아서 &lt;code&gt;EncodingDetector.jar&lt;/code&gt;를 실행하면 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git clone https://github.com/saltfactory/EncodingDetector.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;시스템 환경을 확인하기 위해서는 &lt;code&gt;system&lt;/code&gt;을 입력한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;java -jar EncodingDetector.jar system
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;파일 인코딩을 확인하기 위해서는 &lt;code&gt;file&lt;/code&gt;을 입력한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;java -jar EncodingDetector.jar file
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;두가지 모두 확인하기 위해서는 &lt;code&gt;both&lt;/code&gt;를 입력한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;java -jar EncodingDetector.jar both
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;tomcat-환경&quot;&gt;Tomcat 환경&lt;/h2&gt;
+
+&lt;p&gt;Tomcat은 JVM을 위에서 운영된다. 이런 이유로 Tomcat의 환경은 JVM의 환경을 따른다. 즉, Tomcat의 Web 관리 툴을 가지고 &lt;code&gt;.war&lt;/code&gt; 파일을 deploy 시키면  JVM이 가지고 있는 환경을 가지고 &lt;code&gt;.war&lt;/code&gt; 파일을 풀어서 운영한다. 내 PC에서 &lt;strong&gt;UTF-8&lt;/strong&gt; 환경으로 파일을 archive 시켰는데 서버 환경이 &lt;strong&gt;EUC_KR&lt;/strong&gt;로 되어 있다면&lt;code&gt;.war&lt;/code&gt; 파일이 풀렸을때 한글 내용이 저장되어 있는 파일을 열어보면 한글이 깨어지는 것을 확인할 수 있을 것이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;실험&quot;&gt;실험&lt;/h2&gt;
+
+&lt;p&gt;우리는 이 환경을 테스트하기 다음과 같이 환경을 설정해보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UTF-8&lt;/strong&gt;로 한글 내용이 저장되어 있는 파일을 &lt;code&gt;.war&lt;/code&gt;로 묶어보자&lt;/p&gt;
+
+&lt;p&gt;지금 운영체제의 환경은 &lt;strong&gt;UTF-8&lt;/strong&gt; 이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;mkdir encoding_test &amp;amp;&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;echo &amp;quot;한글테스트&amp;quot; &amp;gt; encoding_test/test.text
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;jar -cvf encoding_test.war encoding_test/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위와 같이 &lt;code&gt;encoding_test.war&lt;/code&gt;를 만들었다. 이것은 Tomcat 기반의 웹 프로그램을 만들어서 &lt;code&gt;.war&lt;/code&gt;로 묶은 것과 동일하다고 가정한다.
+이제 운영체제의 환경을 &lt;strong&gt;EUC_KR&lt;/strong&gt;로 변경해보겠다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;export LAGN=EUC_KR
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;시스템 인코딩 설정을 변경하고 적용된 결과를 확인하기 위해서 &lt;code&gt;locale&lt;/code&gt;로 확인해보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;locale
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;LANG=&amp;quot;EUC_KR&amp;quot;
+LC_COLLATE=&amp;quot;C&amp;quot;
+LC_CTYPE=&amp;quot;C&amp;quot;
+LC_MESSAGES=&amp;quot;C&amp;quot;
+LC_MONETARY=&amp;quot;C&amp;quot;
+LC_NUMERIC=&amp;quot;C&amp;quot;
+LC_TIME=&amp;quot;C&amp;quot;
+LC_ALL=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 시스템 환경이 바뀌었다. 이제 &lt;strong&gt;UTF-8&lt;/strong&gt; 환경이 아닌 곳에서 &lt;code&gt;.war&lt;/code&gt;를 풀어보자. 이 작업은 &lt;strong&gt;UTF-8&lt;/strong&gt;이 아닌 환경에서 Tomcat이 &lt;code&gt;.war&lt;/code&gt;를 푸는것과 동일하다고 가정한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;jar -xvf encoidng_test.war
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;방금 &lt;strong&gt;UTF-8&lt;/strong&gt;로 만든 &lt;code&gt;test.text&lt;/code&gt; 파일을 열어보면 한글이 깨어진 것을 확인할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;우리는 개발용 PC와 JVM 기반의 Tomcat 서버가 운영하는 서버의 인코딩이 다를 때 발생하는 문제를 실험해 보았다. 시스템 인코딩 문제는 흔히 개발자들이 실수하는 문제이다. 만약 Lagacy 서버를 사용한다면 최근 &lt;strong&gt;UTF-8&lt;/strong&gt; 환경으로 시스템을 구축하기 전, 한글 서비스 위주의 서버들로 &lt;strong&gt;EUC_KR&lt;/strong&gt; 설정(또는 &lt;strong&gt;KO&lt;/strong&gt;)으로 되어 있을것이다. 특히 &lt;strong&gt;Sun Solaris&lt;/strong&gt; 기반에 서버를 사용하고 있다면 반드시 운영체제의 환경을 확인해보면 좋을 것이다. 개발용 PC는 &lt;strong&gt;UTF-8&lt;/strong&gt;로 파일을 작업하면서 서버에 deploy 시킬때는 &lt;strong&gt;EUC_KR&lt;/strong&gt; 환경이여서 서버에 접속해서 파일을 살펴보면 한글 내용이 깨어진 것을 발견하게 될 것이다. 개발용 PC와 서버의 환경 설정을 동일하게 만들어주는 것이 우선적으로 필요하면 만약 서버 환경을 변경할 수 없을 경우 &lt;code&gt;JAVA_OPT= -Dencoding=utf-8&lt;/code&gt; 옵션을 사용하여 JVM에서 인코딩을 다르게 사용하여 실행할 수 있도록 유도해야한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.coderanch.com/t/277269/java-io/java/Change-default-character-set-JVM&quot;&gt;http://www.coderanch.com/t/277269/java-io/java/Change-default-character-set-JVM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 20 Mar 2015 00:00:00 +0900</pubDate>
+        <link>/series/java/solving-character-in-war-prolbem-via-os-and-jvm.html</link>
+        <guid isPermaLink="true">/series/java/solving-character-in-war-prolbem-via-os-and-jvm.html</guid>
+        
+        <category>java</category>
+        
+        <category>jvm</category>
+        
+        <category>tomcat</category>
+        
+        <category>character</category>
+        
+        <category>utf-8</category>
+        
+        <category>war</category>
+        
+        
+        <category>java</category>
+        
+      </item>
+    
+      <item>
+        <title>Ubuntu에 Oracle XE 설치하기</title>
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;기존의 Redhat 계열의 리눅스 서버 운영체제를 &lt;strong&gt;Ubuntu&lt;/strong&gt; 서버로 운영하기 위해서 여러가지 서비스를 새롭게 설치해야한다. 최근의 오픈소스 프로젝트로 만들어지는 패키지들은 특정 운영체제와 상관없이 대부분의 운영체제의 기본 패키지로 포함이 되어 있거나 새롭게 컴파일해서 설치할 수 있도록 배포하고 있다. Oracle은 오픈소스 프로젝트가 아니다. &lt;strong&gt;Oracle Express Edition&lt;/strong&gt;으로 무료 소프트웨어를 배포하고 있지만 리눅스 환경에서 RPM 패키지 관리툴로 설치할 수 있도록 배포하고 있다. 기존의 Redhat 계열 리눅스 서버에서는 RPM으로 설치가 가능했지만 &lt;strong&gt;Ubuntu&lt;/strong&gt; 서버로 변경하면서 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하는 메뉴얼이 필요해 서 Oracle XE를 Ubuntu에 설치하는 방법에 대해서 소개한다. 설치하는 과정 중에 &lt;strong&gt;리눅스 커널 파라미터 설정&lt;/strong&gt;과 &lt;strong&gt;공유메모리 설정&lt;/strong&gt; 부분을 주의하지 않아 오류는 없지만 설치후 Oracle이 동작하지 않는 문제를 발견했었다. 이 문서에서 이와 같은 문제를 겪을 때 해결할 수 있는 방법을 소개한다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;ubuntu&quot;&gt;Ubuntu&lt;/h2&gt;
+
+&lt;p&gt;최근 국내에서 가장 있기는 리눅스 서버는 &lt;a href=&quot;www.ubuntu.com/&quot;&gt;Ubuntu&lt;/a&gt;라고해도 과언이 아닐 것이라 생각이된다. &lt;strong&gt;Ubuntu&lt;/strong&gt;는 &lt;a href=&quot;https://www.debian.org/&quot;&gt;Debian&lt;/a&gt;를 기반으로 만들어졌다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ubuntu-kr.org/download/file.php?id=9592&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;그래서 안정적이고 편리하게 패키지를 관리할 수 있는 장점을 가지고 있다. 무엇보다도 현재 리눅스 커뮤니티 중에서 가장 엑티브하게 활동하는 곳이 Ubuntu이기 때문에 온라인 자료가 많은 것이 최고의 장점이다. &lt;strong&gt;Debian&lt;/strong&gt;은 오픈 소스 프로젝트 가운데 하나로 37,500개의 패키지를 갖춘 저장소를 관리하기 때문에 패키지 사용이 편리하다. &lt;a href=&quot;http://redhat.com&quot;&gt;Redhat&lt;/a&gt; 계열이 &lt;a href=&quot;https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/ch-yum.html&quot;&gt;yum&lt;/a&gt;으로 패키지를 관리할 수 있다면 &lt;strong&gt;Debian&lt;/strong&gt; 계열은 &lt;a href=&quot;https://wiki.debian.org/apt-get&quot;&gt;apt-get&lt;/a&gt;로 패키지를 관리할 수 있다. &lt;strong&gt;Ubuntu&lt;/strong&gt;는 Desktop 버전 위주로 개발을 진행해왔기 때문에 서버 패키지보다 업데이트 주기가 빠른 편이라 최신 라이브러리들을 사용할 수 있는 장점이 있다. 하지만 너무 빠른 업데이트 주기 때문에 안정성이 낮아질 수 있기 때문에 &lt;a href=&quot;https://wiki.ubuntu.com/LTS&quot;&gt;LTS(Long Term Support)&lt;/a&gt; 버전으로 만들어진 서버를 배포하고 있는데 &lt;strong&gt;5년&lt;/strong&gt;동안 지속적인 관리를 보장 받을 수 있다. 현재 가장 안정화된 서버 버전은 &lt;a href=&quot;http://releases.ubuntu.com/12.04/&quot;&gt;12.04LTS&lt;/a&gt;이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;oralce-express-edition&quot;&gt;Oralce Express Edition&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.oracle.com/technetwork/database/database-technologies/express-edition/overview/index.html&quot;&gt;Oracle XE(Express Edition)&lt;/a&gt;는 상용 Oracle의 무료로 사용할 수 있는 Oracle DBMS로 사용 Oracle의 대부분의 기능을 사용할 수 있기 때문에 개발자나 관리자들이 빠르게 개발을 하거나 실험을 위해서 사용할 수 있다. &lt;strong&gt;Oracle XE&lt;/strong&gt;는 무료이지만 오픈소스 프로젝트는 아니다. 이러한 이유로 위에서 말한 오픈소스 패키지 저장소에서 패키지를 관리할 수 없고, Oracle 공식 사이트에서 &lt;a href=&quot;http://www.oracle.com/technetwork/database/database-technologies/express-edition/downloads/index.html&quot;&gt;Linux용 Oracle-XE&lt;/a&gt;를 다운 받을 수 있다. Oracle는 &lt;a href=&quot;http://www.oracle.com/us/technologies/linux/overview/index.html&quot;&gt;Oracle Linux&lt;/a&gt; 운영체제를 배포하고 있는데  Oracle Linux는 Redhat 계열이고 이것은 &lt;a href=&quot;https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Deployment_Guide/ch-rpm.html&quot;&gt;rpm&lt;/a&gt;이라는 패키지 관리툴로 패키지를 설치할 수 있다. Oracle은 &lt;strong&gt;Oracle XE&lt;/strong&gt; Linux 버전을 rpm 파일 형태로 배포하고 있다. &lt;strong&gt;Oracle XE 10g&lt;/strong&gt; 버전까지는 &lt;strong&gt;32bit&lt;/strong&gt;를 지원했지만 Oracle은 더이상 &lt;strong&gt;Oracle XE 10g&lt;/strong&gt;를 배포하고 있지 않고, &lt;strong&gt;Oracle XE 11g&lt;/strong&gt; 부터 &lt;strong&gt;64bit&lt;/strong&gt;만 배포하고 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;ubuntu에-oracle-xe-설치&quot;&gt;Ubuntu에 Oracle XE 설치&lt;/h2&gt;
+
+&lt;h3 id=&quot;ubunut-64bit-확인&quot;&gt;Ubunut 64Bit 확인&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt;는 11g 버전을 배포하면서 32bit 지원을 중단하고 64bit만 배포하고 있다. (32bit는 Windows용만 지원을 한다.) 다시 말해서 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하기 위해서는 서버 운영체제가 64bit 운영체제야 한다. Ubuntu에서 현재 시스템이 64bit인지를 확인해보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;uname -i
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;결과가 &lt;code&gt;x86_64&lt;/code&gt;로 나오면 현재 설치된 운영체제는 64bit이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;oralce-xe-다운로드&quot;&gt;Oralce XE 다운로드&lt;/h3&gt;
+
+&lt;p&gt;위에서 설명했듯 &lt;strong&gt;Oracle XE&lt;/strong&gt;는 오픈소스가 아니기 때문에 오픈소스 패키지를 관리하는 저장소에서 패키지 관리툴로 설치할 수 없다. &lt;strong&gt;Oracle XE&lt;/strong&gt;는 Oracle 공식 사이트에 &lt;code&gt;RPM&lt;/code&gt; 파일 형태로 배포되고 있다. 가장 최신 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 다운 받는다. (Oracle XE를 다운로드하기 위해서는 Oracle 사이트 계정이 필요하다. Oracle 계정으로 로그인 후 다운로드를 할 수 있기 때문에 Curl이나 wget으로 서버에서 바로 다운받을 수 없고 PC에 다운 받아서 서버로 다운 받은 파일을 업로드해야 한다.)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.oracle.com/technetwork/database/database-technologies/express-edition/downloads/index.html&quot;&gt;Oracle XE 다운로드&lt;/a&gt; 에서 Linux용 64비트를 다운받는다. 현재 배포 버전은 &lt;strong&gt;Oracle Database Express Edition 11g Release 2 for Linux x64&lt;/strong&gt; 이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;oracle-xe-설치에-필요한-패키지&quot;&gt;Oracle XE 설치에 필요한 패키지&lt;/h3&gt;
+
+&lt;p&gt;Ubuntu에서는 &lt;code&gt;.rpm&lt;/code&gt; 파일을 사용해서 패키지를 설치할 수 없기 때문에 PRM 파일을 Debian 계열의 패키지 설칠를 위한 &lt;code&gt;.deb&lt;/code&gt; 파일로 변경하여 패키지를 설치해야한다.
+Ubuntu에 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하기 위해서 필요한 패키지들이 있는데 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://help.ubuntu.com/community/RPM/AlienHowto&quot;&gt;alien&lt;/a&gt;&lt;/strong&gt; : RPM 패키지를 Debian 패키지로 변환하는 툴&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://packages.ubuntu.com/lucid/libs/libaio1&quot;&gt;libaio1&lt;/a&gt;&lt;/strong&gt; : Linux 커널 AIO&lt;a href=&quot;http://lse.sourceforge.net/io/aio.html&quot;&gt;Asynchronous I/O&lt;/a&gt; 엑세스 라이브러리&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://packages.ubuntu.com/lucid/unixodbc&quot;&gt;unixodbc&lt;/a&gt;&lt;/strong&gt; : &lt;a href=&quot;http://en.wikipedia.org/wiki/Open_Database_Connectivity&quot;&gt;ODBC(Open Database Connectivity)&lt;/a&gt; 라이브러리&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;필요한 패키지를 &lt;code&gt;apt-get&lt;/code&gt; 명령어를 이용하여 root 권한으로  설치한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo apt-get install -y alien libaio1 unixodbc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;rpm-파일을-deb-파일로-변환&quot;&gt;RPM 파일을 DEB 파일로 변환&lt;/h3&gt;
+
+&lt;p&gt;다운받은 &lt;code&gt;.rpm&lt;/code&gt; 파일을 &lt;strong&gt;Ubuntu&lt;/strong&gt;에 설치하기 위해서 &lt;strong&gt;alien&lt;/strong&gt;을 사용하여 &lt;code&gt;.deb&lt;/code&gt; 파일로 변경한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo alien --scripts -d oracle-xe-11.2.0-1.0.x86_64.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 명령어를 실행하면 한참의 시간이 지난 이후  같은 경로에 &lt;code&gt;oracle-xe_11.2.0-2_amd64.deb&lt;/code&gt; 파일이 생성된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;/sbin/chkconfig&quot;&gt;/sbin/chkconfig&lt;/h3&gt;
+
+&lt;p&gt;Rethat 패키지들은 설치할 때 &lt;code&gt;/sbin/chkconfg&lt;/code&gt;를 사용하는데 &lt;strong&gt;Ubuntu&lt;/strong&gt;에는 없기 때문에 이와 동일한 환경을 만들어주기 위해서 아래 내용을 가지고 &lt;code&gt;/bin/chkconfig&lt;/code&gt; 파일을 생성한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo vi /sbin/chkconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Oracle 11gR2 XE installer chkconfig hack for Ubuntu&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/etc/init.d/oracle-xe
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; ! &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;tail -n1 &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep INIT&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;### BEGIN INIT INFO&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;# Provides: OracleXE&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;# Required-Start: $remote_fs $syslog&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;# Required-Stop: $remote_fs $syslog&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;# Default-Start: 2 3 4 5&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;# Default-Stop: 0 1 6&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;# Short-Description: Oracle 11g Express Edition&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;### END INIT INFO&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+update-rc.d oracle-xe defaults &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; 01
+&lt;span class=&quot;c&quot;&gt;#EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;파일 생성 이후 이 파일을 실행할 수 있도록 파일 권한을 &lt;strong&gt;755&lt;/strong&gt; 변경한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo chmod 755 /sbin/chkconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;kernel-파라미터-설정&quot;&gt;Kernel 파라미터 설정&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Oracle&lt;/strong&gt;는 서버를 운영하는데 커널파라미터 설정이 필요한데 시스템 컨트롤 데몬에 시스템 파라미터 설정을 저장하여 등록한다. Oralce은 Linux 커널의 파라미터를 사용하여 운영되기 때문이다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://docs.oracle.com/cd/B28359_01/server.111/b32009/appc_linux.htm#UNXAR011&quot;&gt;fs.file-max&lt;/a&gt;&lt;/strong&gt; : 오픈하는 파일의 수를 지정하는 커널 파리미터(각 오라클 인스턴스는 512*PROCESSES만큼 file descriptior를 가진다.)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/sect-Oracle_9i_and_10g_Tuning_Guide-Adjusting_Network_Settings-Changing_Network_Kernel_Settings.html&quot;&gt;net.ipv4.ip_local_port_range&lt;/a&gt;&lt;/strong&gt; : 이 값은 TCP와 UDP의 트래픽을 위한 범위를 설정하는 커널 파라미터&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;kernel.sem&lt;/strong&gt; : 세마포를 지정하는 커널 파라미터&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;kernel.shmmax&lt;/strong&gt; : 공유 메모리 페이지를 지정하는 커널 파라미터&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo vi /etc/sysctl.d/60-oracle.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# Oracle 11g XE kernel parameters
+fs.file-max=6815744
+net.ipv4.ip_local_port_range=9000 65000
+kernel.sem=250 32000 100 128
+kernel.shmmax=536870912
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;시스템컨트롤러 데몬에 커널파라미터를 설정하였으면 커널 파라미터를 로드한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo service procps start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;oracle-xe가-사용할-파일-추가&quot;&gt;Oracle XE가 사용할 파일 추가&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt;는 &lt;code&gt;/bin/awk&lt;/code&gt;를 사용하게 되는데 Ubuntu에는 &lt;code&gt;/usr/bin/awk&lt;/code&gt;에 설치되어 있기 때문에 다음과 같이 심볼릭링크를 만들어준다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo ln -s /usr/bin/awk /bin/awk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt;는 리스너가 사용할 lock 파일을 만들어준다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo mkdir /var/lock/subsys
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo touch /var/lock/subsys/listener
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;메모리-설정&quot;&gt;메모리 설정&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하고 나서 특별한 에러 없이 Oracle 프로세스가 리스너만 시작되고 다른 프로세스가 실행되지 않는 문제를 만날 수 있다. &lt;strong&gt;Oralce XE&lt;/strong&gt;를 설치할 때 정상적으로 설치가 되지 않거나 오류가 발생하게되면 &lt;code&gt;$ORACL_HOME&lt;/code&gt;안의 &lt;code&gt;log&lt;/code&gt; 디렉토리를 살펴보면 된다. 설치가 정상적으로 되지 않거나, 설치는 되었는데 에러 없이 Oracle이 정상적으로 시작이 되지 않을 경우 로그를 살펴보면&lt;strong&gt;ORA-000845:MEMORY_TARGET&lt;/strong&gt; 에러가 발생하게 되는 경우가 있는데 메모리의 설정이 잘못되거나 사이즈가 부족해서 그런 경우이다. 이런 경우 메모리 설정을 위해서 다음 과정을 진행한다.&lt;/p&gt;
+
+&lt;p&gt;먼저 현재 설정되어 있는 &lt;strong&gt;shared memeory&lt;/strong&gt;를 삭제한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo rm -rf /dev/shm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;새롭게 SHM을 만들어서 마운트를 시킬 수 있게 다시 만든다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo mkdir /dev/shm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo mount -t tmpfs shmfs -size=4096m /dev/shm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;shm 설정을 데몬에 등록해서 로드하도록 하기 위해서 다음 내용을 &lt;code&gt;/etc/rc2.d/S01shm_load&lt;/code&gt; 파일로 등록한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo vi /etc/rc2.d/S01shm_load
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;#!/bin/sh
+case &amp;quot;$1&amp;quot; in
+start) mkdir /var/lock/subsys 2&amp;gt;/dev/null
+touch /var/lock/subsys/listener
+rm /dev/shm 2&amp;gt;/dev/null
+mkdir /dev/shm 2&amp;gt;/dev/null
+mount -t tmpfs shmfs -o size=4096m /dev/shm ;;
+*) echo error
+exit 1 ;;
+esac
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo chmod 755 /etc/rc2.d/S01shm_load
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;oracle-xe-패키지-설치&quot;&gt;Oracle XE 패키지 설치&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하기 위한 &lt;strong&gt;Ubuntu&lt;/strong&gt;의 환경설정은 끝났다. 이제 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하기 위해 &lt;code&gt;.rpm&lt;/code&gt;을 &lt;code&gt;.deb&lt;/code&gt; 파일로 변환한 패키지를 설치한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo dpkg --install oracle-xe_11.2.0-2_amd64.deb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;정상적으로 설치가 되면 다음과 같이 &lt;strong&gt;Oracle XE&lt;/strong&gt;가 설치되고 데몬을 자동으로 등록하게 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Selecting previously unselected package oracle-xe.
+(Reading database ... 72392 files and directories currently installed.)
+Preparing to unpack ./oracle-xe_11.2.0-2_amd64.deb ...
+Unpacking oracle-xe (11.2.0-2) ...
+Setting up oracle-xe (11.2.0-2) ...
+Executing post-install steps...
+
+ Adding system startup for /etc/init.d/oracle-xe ...
+   /etc/rc0.d/K01oracle-xe -&amp;gt; ../init.d/oracle-xe
+   /etc/rc1.d/K01oracle-xe -&amp;gt; ../init.d/oracle-xe
+   /etc/rc6.d/K01oracle-xe -&amp;gt; ../init.d/oracle-xe
+   /etc/rc2.d/S80oracle-xe -&amp;gt; ../init.d/oracle-xe
+   /etc/rc3.d/S80oracle-xe -&amp;gt; ../init.d/oracle-xe
+   /etc/rc4.d/S80oracle-xe -&amp;gt; ../init.d/oracle-xe
+   /etc/rc5.d/S80oracle-xe -&amp;gt; ../init.d/oracle-xe
+
+You must run &amp;#39;/etc/init.d/oracle-xe configure&amp;#39; as the root user to configure the database.
+
+Processing triggers for ureadahead (0.100.0-16) ...
+Processing triggers for desktop-file-utils (0.22-1ubuntu1) ...
+Processing triggers for mime-support (3.54ubuntu1.1) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.6) ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설치가 모두 마친 이후 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 사용하기 위해 Oracle 최초 설정을 &lt;code&gt;/etc/init.d/oracle-xe configure&lt;/code&gt;로 설정한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo /etc/init.d/oracle-xe configure
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;최초 설정 내용은 다음과 같이 서비스 포트설정과 패스워드 설정이다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Specify the HTTP port that will be used for Oracle Application Express [8080]:&lt;/li&gt;
+&lt;li&gt;Specify a port that will be used for the database listener [1521]:&lt;/li&gt;
+&lt;li&gt;Specify a password to be used for database accounts.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;환경변수-설정&quot;&gt;환경변수 설정&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt; 설치가 모두 끝나면 Oracle에 관련된 환경 변수를 추가한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;vi ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+export ORACLE_SID=XE
+export NLS_LANG=`$ORACLE_HOME/bin/nls_lang.sh`
+export ORACLE_BASE=/u01/app/oracle
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;source ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt; 서버 전체에 사용하는 변수에 등록하고 싶으면 &lt;code&gt;/etc/environment&lt;/code&gt; 파일에 위 내용을 추가한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;상태-확인&quot;&gt;상태 확인&lt;/h3&gt;
+
+&lt;p&gt;설치가 모두 끝나면 정상적으로 운영되고 있는지 다음과 같이 확인한다. Oracle의 네트워크 상태를 확인하기 위해서 리스너가 정상적으로 동작하고 있는지 확인한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;lsnrctl status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;만약 리스너가 정상적으로 동작하고 있으면 다음과 같은 결과를 출력할 것이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;LSNRCTL for Linux: Version 11.2.0.2.0 - Production on 13-MAR-2015 13:54:41
+
+Copyright (c) 1991, 2011, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=IPC)(KEY=EXTPROC_FOR_XE)))
+STATUS of the LISTENER
+
+Alias                     LISTENER
+Version                   TNSLSNR for Linux: Version 11.2.0.2.0 - Production
+Start Date                13-MAR-2015 10:32:50
+Uptime                    0 days 3 hr. 21 min. 53 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Default Service           XE
+Listener Parameter File   /u01/app/oracle/product/11.2.0/xe/network/admin/listener.ora
+Listener Log File         /u01/app/oracle/diag/tnslsnr/brainoffice1/listener/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC_FOR_XE)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=brainoffice1.hibrain.net)(PORT=1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=brainoffice1.hibrain.net)(PORT=8080))(Presentation=HTTP)(Session=RAW))
+Services Summary...
+Service &amp;quot;PLSExtProc&amp;quot; has 1 instance(s).
+  Instance &amp;quot;PLSExtProc&amp;quot;, status UNKNOWN, has 1 handler(s) for this service...
+Service &amp;quot;XE&amp;quot; has 1 instance(s).
+  Instance &amp;quot;XE&amp;quot;, status READY, has 1 handler(s) for this service...
+Service &amp;quot;XEXDB&amp;quot; has 1 instance(s).
+  Instance &amp;quot;XE&amp;quot;, status READY, has 1 handler(s) for this service...
+The command completed successfully
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설치한 Oracle에 로그인 해보자. SYS와  SYSTEM 계정의 초기 비밀번호는 설치할 때 입력한 비밀번호를 사용한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sqlplus system
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;정상적으로 로그인이 되면 다음과 같은 화면이 출력되면서 Oracle에 접속이 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;SQL*Plus: Release 11.2.0.2.0 Production on Fri Mar 13 13:59:40 2015
+
+Copyright (c) 1982, 2011, Oracle.  All rights reserved.
+
+Enter password:
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;oracle-xe-삭제&quot;&gt;Oracle XE 삭제&lt;/h2&gt;
+
+&lt;p&gt;만약 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하는 도중에 에러가 발생하여 재설치를 해야하는 경우나 완전히 삭제해야하는 경우는 다음과 같이 삭제한다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt; 서비스를 정지한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo service oracle-xe stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt; 패키지를 삭제한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; sudo dpkg --purge oracle-xe
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Oracle&lt;/strong&gt; 디렉토리를 삭제한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo rm -rf /u01/app
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt; 데몬을 삭제하고 갱신하다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo rm /etc/default/oracle-xe
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo update-rc.d -f oracle-xe remove
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt; 설정 파일을 삭제한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo rm /sbin/chkconfig /etc/rc2.d/S01shm_load /etc/sysctl.d/60-oracle.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Oracle XE&lt;/strong&gt; 리눅스 계정을 삭제한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo userdel -r oracle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo delgroup dba
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;Oracle은 가장 많이 사용하고 있는 RDBMS이다. 프로젝트를 진행할 때 Oracle 기반의 어플리케이션을 개발하기 위해서는 Oracle 서버가 필요한데 개발용 서버에 Oracle을 가볍게 설치하고 운영하기 위해서 &lt;strong&gt;Oracle XE&lt;/strong&gt;를 설치하여 운영할 수 있다. Oracle XE는 Redhat 계열에 설치할 수 있는 RPM 파일 형태로 배포하고 있다. 최근 Ubuntu 리눅스 서버가 패키지 관리의 편리성과 활발한 커뮤니티 활동으로 많은 인기를 얻고 있어 Ubuntu 리눅스를 도입하게 될 때 Oracle XE를 설치기 위해서는 &lt;code&gt;.rpm&lt;/code&gt; 파일을 &lt;code&gt;.deb&lt;/code&gt; 파일로 변경하여 설치하는 방법이 필요하다. 이때 Redhat 계열에 최적화되어 있는 환경을 Ubuntu에 맞게  &lt;strong&gt;rpm에 관련된 파일&lt;/strong&gt;, &lt;strong&gt;커널 파라미터&lt;/strong&gt;, 그리고 &lt;strong&gt;공유 메모리&lt;/strong&gt;에 관련되어 설정을 해야한다. 이에 관한 내용을 조사하고 설치시 발생한 문제를 해결했다. 설치 후 에러는 없지만 Oracle이 정상적으로 실행이 되지 않을 때 &lt;code&gt;$ORACLE_HOME/log&lt;/code&gt; 디렉토리 안에 있는 로그 파일을 분석하면 이 문서에서 소개하는 내용의 문제로 실행이 되지 않는 경우를 발견했었다. Ubuntu에서 Oracle을 운영할 경우나 새롭게 설치해야하는 경우 이 문서를 참조하면 개발 환경을 구축하는데 도움이 될 수 있을것으로 기대된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;참조&quot;&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://docs.oracle.com/cd/E17781_01/install.112/e18802/toc.htm&quot;&gt;http://docs.oracle.com/cd/E17781_01/install.112/e18802/toc.htm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.whitehorses.nl/2014/03/18/installing-java-oracle-11g-r2-express-edition-and-sql-developer-on-ubuntu-64-bit/&quot;&gt;http://blog.whitehorses.nl/2014/03/18/installing-java-oracle-11g-r2-express-edition-and-sql-developer-on-ubuntu-64-bit/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meandmyubuntulinux.blogspot.kr/2012/05/installing-oracle-11g-r2-express.html&quot;&gt;http://meandmyubuntulinux.blogspot.kr/2012/05/installing-oracle-11g-r2-express.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 13 Mar 2015 00:00:00 +0900</pubDate>
+        <link>/series/ubuntu/install-oracle-xe-on-ubuntu.html</link>
+        <guid isPermaLink="true">/series/ubuntu/install-oracle-xe-on-ubuntu.html</guid>
+        
+        <category>database</category>
+        
+        <category>ubuntu</category>
+        
+        <category>oracle</category>
+        
+        
+        <category>ubuntu</category>
+        
+      </item>
+    
+      <item>
+        <title>popup 창에서 리다이렉트 이후 window.opener 사라지는 문제 해결하기</title>
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;웹 프로그램을 개발할 때 현재 열려 있는 페이지를 그대로 유지하면서 사용자에게 다른 액션을 유도하기 위해서 우리는 &lt;strong&gt;Popup&lt;/strong&gt;으로 새로운 창을 열도록 개발하는 경우가 있다. 예를 들어서 &lt;strong&gt;i-PIN&lt;/strong&gt; 인증을 처리하는 경우 회원가입 화면에서 i-PIN 인증 화면을 Popup으로 열어서 사용자 인증을 거친 이후 인증이 완료되면 열었던 창으로 결과를 던져주는 경우가 있다. JavaScript로 Popup을 사용하여 새로운 창을 열고 Popup에서 처리한 결과를 Popup을 열게한 &lt;strong&gt;window.opener&lt;/strong&gt;에 접근해서 이벤트를 전달하는 것은 어렵지않게 이미 알려진 방법으로 해결할 수 있다. 하지만 특정 브라우저에서 Popup한 창에 열려진 사이트가 &lt;strong&gt;Redirect&lt;/strong&gt;를 하여 다른 host로 이동을 할 경우 window.opener 객체를 잃게 되버리는 문제를 발견했다. 이번 포스팅은 JavaScript로 Popup을 사용하는 방법 중에 Popup의 호스트가 이동후 opener에 접근할 수 있는 방법에 대해서 소개한다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;설명의 편의를 위해 Popup을 생성하여 열게한 창을 &lt;strong&gt;부모창&lt;/strong&gt;, Popup으로  새롭게 열려진 창을 &lt;strong&gt;자식창&lt;/strong&gt;이라고 정의하고 설명한다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;javascript로-popup-열기&quot;&gt;JavaScript로 Popup 열기&lt;/h2&gt;
+
+&lt;p&gt;JavaScript로 Popup 창을 여는 방법은 여러가지가 있지만 가장 간단하게 다음과 같이 할 수 있다.
+&lt;strong&gt;부모창&lt;/strong&gt; 에서 &lt;code&gt;window.open()&lt;/code&gt; 메소드를 사용하여 &lt;strong&gt;자식창&lt;/strong&gt;을 새롭게 만들 수 있다. 이 때 &lt;strong&gt;자식창&lt;/strong&gt;의 고유 이름을 지정하거나 &lt;code&gt;_self&lt;/code&gt;, &lt;code&gt;_blank&lt;/code&gt;와 같이 예약된 이름으로 만들 수 있고 &lt;strong&gt;자식창&lt;/strong&gt;의 속성을 부여할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;parentWin.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;onPopupWindow()&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;팝업창 열기&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// filename : parentWin.js&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onPopupWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;popup.html&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;_blank&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;top=10, left=10, width=400, height=400&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;자식창에서-부모창-접근&quot;&gt;자식창에서 부모창 접근&lt;/h2&gt;
+
+&lt;p&gt;Popup으로 열린 &lt;strong&gt;자식창&lt;/strong&gt;에서 특정 작업이 처리된 이후 &lt;strong&gt;부모창&lt;/strong&gt;에 데이터를 넘겨주거나 이벤트를 처리해야할 때 다음과 같이 &lt;a href=&quot;http://www.w3schools.com/jsref/prop_win_opener.asp&quot;&gt;window.opener&lt;/a&gt; 객체를 이용하여 접근할 수 있다. 예를 들어 &lt;strong&gt;자식창&lt;/strong&gt;에서 &lt;strong&gt;부모창&lt;/strong&gt;에 열려있는 페이지를 다른 페이로 이동시키고 싶을 경우 &lt;strong&gt;자식창&lt;/strong&gt;에서 다음과 같이 할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;childWin.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;doRedirectOpener()&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;부모창 페이지 이동&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// filename : childWin.js&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;doRedirectOpener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;parentWindow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;opener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;parentWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;href&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;http://blog.saltfactory.net&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;자식창&lt;/strong&gt;에서 &lt;strong&gt;부모창&lt;/strong&gt;에 접근하기 위해서는 &lt;code&gt;window.opener&lt;/code&gt;를 참조하면 &lt;strong&gt;부모창&lt;/strong&gt;의 윈도우객체를 참조할 수 있다. 위 예제는 &lt;code&gt;window.opener&lt;/code&gt;를 이용해 &lt;strong&gt;부모창&lt;/strong&gt;의 &lt;code&gt;window&lt;/code&gt;객체를 접근해 &lt;code&gt;window.location.href&lt;/code&gt; 값을 수정하여 새로운 HOST로 부모창의 페이지를 이동하게 한 예제이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;자식창의-host가-리다이렉트-되는-경우&quot;&gt;자식창의 HOST가 리다이렉트 되는 경우&lt;/h2&gt;
+
+&lt;p&gt;만약 Popup으로 &lt;strong&gt;자식창&lt;/strong&gt;을 Popup으로 열었는데 특정 일을 처리하고 난 이후 &lt;strong&gt;자식창&lt;/strong&gt;의 HOST가 변경될 경우를 생각해보자. 예를 들어 &lt;strong&gt;i-PIN&lt;/strong&gt; 인증창을 Poup으로 연다고 가정하자.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;자식창&lt;/strong&gt;의 플로우는 다음과 같다.
+설명의 편의를 위해서 우리 호스트는 &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt; 이라고 하고 i-PIN 인증 업체 호스트는 &lt;a href=&quot;http://i-pin.org&quot;&gt;http://i-pin.org&lt;/a&gt; 이라고 한다.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;부모창&lt;/strong&gt;에서 &lt;strong&gt;자식창&lt;/strong&gt;을 popup으로 연다. 이때 URL은 나의 HOST의 &lt;code&gt;child.html&lt;/code&gt;이다&lt;/li&gt;
+&lt;li&gt;checkIPIN.html : 필요한 데이터를 조합해서 &lt;strong&gt;i-PIN&lt;/strong&gt; 인증 업체의 URL &lt;code&gt;iPin.html&lt;/code&gt;으로 리다이렉트를 한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;iPinMain.html&lt;/strong&gt; : 외부 업체 사이트에서 필요한 작업을 처리하고 결과를 나의 HOST의 &lt;code&gt;result.html&lt;/code&gt;으로 리다이렉트 한다.&lt;/li&gt;
+&lt;li&gt;result.html : 외부에서 전달한 값을 가지고 &lt;strong&gt;부모창&lt;/strong&gt;에 접근하여 결과를 액션을 취한다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-13%20at%204_35_04%20PM.png?m=1426232233&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;이와 같은 경우 최종적으로 &lt;strong&gt;자식창&lt;/strong&gt;에서 결과를 &lt;strong&gt;부모창&lt;/strong&gt;에 전달하기 위해서 &lt;code&gt;window.opener&lt;/code&gt;를 사용하면 &lt;code&gt;undefined&lt;/code&gt; 에러를 발생시킨다.
+다시 말해서 HOST가 변경되면서 처음 &lt;strong&gt;자식창&lt;/strong&gt;이 열렸을 때의 &lt;code&gt;window.opener&lt;/code&gt;가 유지가 되지 않고 변경이 되는 문제를 가지게 되는 것이다. 이 문제는 Internet Explore의 보안설정에 의해서 발생한다. 이 문제를 해결하기  위해서 사용자에게 보안 설정을 해지하거나 변경해야한다고 공지할 수는 없기 때문에 우리는 이 문제를 해결하기 위한 방법을 찾게 되었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;popup창을-iframe으로-열기&quot;&gt;Popup창을 iframe으로 열기&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;자식창&lt;/strong&gt;이 Popup으로 열려서 URL이 다른 HOST로 이동하게 되면 &lt;code&gt;window.opener&lt;/code&gt;를 유지할 수 없는 문제를 해결하기 위해서 &lt;a href=&quot;http://www.w3schools.com/tags/tag_iframe.asp&quot;&gt;iframe&lt;/a&gt;을 이용하여 &lt;strong&gt;자식창&lt;/strong&gt;의 HOST는 변경하지 않고 &lt;code&gt;iframe&lt;/code&gt;안에서만 페이지가 변경될 수 있도록 실험하였다. &lt;strong&gt;자식창&lt;/strong&gt;의 &lt;code&gt;window&lt;/code&gt;객체는 변경되지 않기 때문에 &lt;strong&gt;자식창&lt;/strong&gt;에서는 &lt;strong&gt;부모창&lt;/strong&gt;을 접근할 수 있는 &lt;code&gt;window.opener&lt;/code&gt;를 잃지 않을 것으로 생각했다. 결과 페이지인 &lt;code&gt;result.html&lt;/code&gt; 페이지 안에서 &lt;code&gt;iframe&lt;/code&gt;에 접근하면 &lt;code&gt;iframe&lt;/code&gt;을 가지고 있는 &lt;strong&gt;자식창&lt;/strong&gt;을 접근할 수 있고, &lt;strong&gt;자식창&lt;/strong&gt;에서 &lt;strong&gt;부모창&lt;/strong&gt;으로 접근할 수 있기 때문이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-13%20at%204_37_03%20PM.png?m=1426232233&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;부모창&lt;/strong&gt;에서 &lt;strong&gt;자식창&lt;/strong&gt;을 열때 &lt;code&gt;iframe&lt;/code&gt;을 만들고 &lt;code&gt;iframe&lt;/code&gt;안에서 &lt;strong&gt;자식창&lt;/strong&gt; URL인 &lt;code&gt;http://blog.saltfactory.net/child.html&lt;/code&gt;을 열도록 하였다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// filename : parentWin.js&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onPopupWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;win&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;_blank&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;top=10, left=10, width=400, height=400&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;win&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;lt;iframe width=&amp;quot;100%&amp;quot;, height=&amp;quot;100%&amp;quot; src=&amp;quot;http://blog.saltfactory.net/child.html&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;child.html&lt;/code&gt;에서는 내부적으로 &lt;code&gt;http:///i-pin.org/iPin.html&lt;/code&gt;로 페이지를 전환후에 작업을 모두 처리한 이후 결과를 &lt;code&gt;http://blog.saltfactory.net/result.html&lt;/code&gt;으로 다시 리다이렉트를 시켜주었다. 결과 받은 &lt;code&gt;result.html&lt;/code&gt;은 다음과 같은 소스코드를 가지고 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;lang=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;child-resultWin.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;onCloseSendResultToOpener()&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;이 창을 닫고 회원가입을 계속 진행합니다.&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// filename : child-resultWin.js&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onCloseSendResultToOpener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;childWindow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;parentWindow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;childWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;opener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;parentWindow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;href&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;http://blog.saltfactory.net/account.html&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다시 말해서 &lt;strong&gt;i-PIN&lt;/strong&gt; 인증창이 &lt;strong&gt;자식창&lt;/strong&gt; 안의 &lt;code&gt;iframe&lt;/code&gt;안에 열려있고, 처리가 완료된 이후 &lt;code&gt;result.html&lt;/code&gt;도 &lt;strong&gt;자식창&lt;/strong&gt;의 &lt;code&gt;iframe&lt;/code&gt; 안에 열려 있는 것이다. &lt;strong&gt;자식창&lt;/strong&gt;에서 리다이렉트하는 모든 사이트들은 &lt;strong&gt;부모창&lt;/strong&gt;에서 &lt;strong&gt;자식창&lt;/strong&gt;을 열때 만들어 놓은 &lt;code&gt;iframe&lt;/code&gt;안에서 동작하고 있기 때문에 마지막 결과를 받은 &lt;code&gt;result.html&lt;/code&gt;에서 &lt;code&gt;iframe&lt;/code&gt;으로 접근하고, &lt;code&gt;iframe&lt;/code&gt;에서는  &lt;strong&gt;자식창&lt;/strong&gt;에 접근하고 마지막으로 &lt;strong&gt;자식창&lt;/strong&gt;에서 &lt;strong&gt;부모창&lt;/strong&gt;으로 접근할 수 있는 것이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;부모창&lt;/strong&gt;에서 JavaScript를 이용하여 &lt;strong&gt;자식창&lt;/strong&gt;을 Popup으로 열게되면 &lt;strong&gt;자식창&lt;/strong&gt;에서 &lt;code&gt;window.opener&lt;/code&gt;를 참조하여  &lt;strong&gt;부모창&lt;/strong&gt; 에 접근할 수 있다. 하지만 &lt;strong&gt;자식창&lt;/strong&gt;에 다른 HOST로 리다이렉트가 되는 경우 &lt;code&gt;window.opener&lt;/code&gt;객체가 사라지는 문제를 발견했다. 이 문제를 해결하기 위해서 &lt;strong&gt;자식창&lt;/strong&gt;을 Popup으로 열때 &lt;code&gt;iframe&lt;/code&gt;을 생성하여 &lt;code&gt;iframe&lt;/code&gt; 내부에서 페이지가 열리고 다른 HOST로 리다이렉트 되게 하였다. 마지막 결과를 처리하는 최종 &lt;strong&gt;자식창&lt;/strong&gt;의 페이지에서 &lt;strong&gt;부모창&lt;/strong&gt;에 접근하기 위해서 &lt;code&gt;iframe&lt;/code&gt;을 매개체로 상위 객체로 접근하게 되면 &lt;strong&gt;자식창&lt;/strong&gt;의 페이지가 다른 HOST로 리다이렉트 될 때 &lt;code&gt;window.opener&lt;/code&gt; 객체가 &lt;code&gt;undefined&lt;/code&gt;되는 문제를 해결 할 수 있었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/7120534/window-opener-is-null-after-redirect&quot;&gt;http://stackoverflow.com/questions/7120534/window-opener-is-null-after-redirect&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/5656349/close-child-window-redirect-parent-window&quot;&gt;http://stackoverflow.com/questions/5656349/close-child-window-redirect-parent-window&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://abcoder.com/javascript/maintain-reference-to-popup-window-over-page-refresh-or-redirect-in-javascript-solved&quot;&gt;http://abcoder.com/javascript/maintain-reference-to-popup-window-over-page-refresh-or-redirect-in-javascript-solved&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 13 Mar 2015 00:00:00 +0900</pubDate>
+        <link>/series/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</link>
+        <guid isPermaLink="true">/series/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</guid>
+        
+        <category>javascript</category>
+        
+        <category>opener</category>
+        
+        <category>window</category>
+        
+        
+        <category>javascript</category>
+        
+      </item>
+    
+      <item>
+        <title>node-gallery3을 이용하여 Gallery3 REST API 사용하기</title>
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;Gallery3은 이미지 호스팅 서비스를 개발할 때 가장 많이 사용하고 있는 오픈소스 Photo Album Organizer이다. Gallery3은 REST API를 지원하기 때문에 서버에 Gallery3을 운영하고 있다면 REST API를 사용하여 다양한 어플리케이션을 개발 할 수 있다. Gallery3의 API를 사용하기 위해 node.js 모듈 node-gallery3을 만들었다. node-gallery3을 이용하여 Gallery3 REST API를 사용하는 방법에 대해서 소개한다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;gallery-소개&quot;&gt;Gallery 소개&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://galleryproject.org/&quot;&gt;Gallery&lt;/a&gt;는 웹에서 사진을 관리하기 위한 오픈소스 Photo Album Organizer 이다. &lt;a href=&quot;https://instagram.com/&quot;&gt;Instagram&lt;/a&gt;이나 &lt;a href=&quot;https://story.kakao.com&quot;&gt;KakaoStory&lt;/a&gt;등 SNS가 유행하면서 지금은 예전처럼 Photo Gallery 사이트를 많이 볼수 없지만 아직 전문적인이고 체계적인 이미지 서비스를 위해 Photo Gallery를 도입하여 사용하는 곳이 많다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://500px.com/&quot;&gt;500px&lt;/a&gt;과 같은 사진 커뮤니티를 만들기 위해서 어렵게 프로그램을 만들지 않고 Gallery을 사용하여 이와 같은 서비스를 쉽게 만들 수 있다. Gallery은 오래전부터 인기있는 &lt;a href=&quot;http://php.net&quot;&gt;PHP&lt;/a&gt; 오픈소스 프로젝트 중에 하나이다. Gallery 프로젝트는 Gallery1, Gallery2 그리고 Gallery3 버전으로 개발이 진행되고 있고 가장 최근의 프로젝트가 Gallery3 이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;gallery3-rest&quot;&gt;Gallery3 REST&lt;/h2&gt;
+
+&lt;p&gt;Gallery3는 앨범과 사진정보에 관한 &lt;a href=&quot;http://en.wikipedia.org/wiki/Representational_state_transfer&quot;&gt;RESTful&lt;/a&gt; 서비스 모듈을 추가 하였다. &lt;a href=&quot;http://codex.galleryproject.org/Gallery3:API:RESTl&quot;&gt;Gallery3:API:REST&lt;/a&gt; 페이지에서 Gallery3의 REST 서비스에 관한 자세한 설명을 참조할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;Gallery3의 REST 서비스를 요청하기 위해서 http 요청을 할 때 header에 &lt;strong&gt;X-Gallery-Request-Key&lt;/strong&gt;와 &lt;strong&gt;X-Gallery-Request-Method&lt;/strong&gt;를 반드시 추가해서 사용해야한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;x-gallery-request-key&quot;&gt;X-Gallery-Request-Key&lt;/h3&gt;
+
+&lt;p&gt;Gallery의 REST 서비스를 요청하는 header에 request key를 반드시 필요하는데 이 값은 Login 요청으로 획득할 수 있다. &lt;a href=&quot;http://codex.galleryproject.org/Gallery3:API:RESTl&quot;&gt;Gallery3:API:REST&lt;/a&gt; 페이지에서 &lt;strong&gt;X-Gallery-Request-Key&lt;/strong&gt;를 획득하기 위한 요청 예제를 찾을 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;POST /gallery3/index.php/rest HTTP/1.1
+Host: example.com
+X-Gallery-Request-Method: post
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 25
+user=admin&amp;amp;password=12345
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위의 요청의 결과는 아래와 같이 &lt;strong&gt;X-Gallery-Request-Key&lt;/strong&gt;의 값을 문자열로 응답을 받을 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; HTTP/1.1 200 OK
+ Content-Length: 34
+ Content-Type: application/json
+ &amp;quot;1114d4023d89b15ce10a20ba4333eff7&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이렇게 발급 받은 &lt;strong&gt;X-Gallery-Request-Key&lt;/strong&gt;를 이용하여 Gallery REST API를 요청할 수 있다. 예를 들어 &lt;strong&gt;item 1&lt;/strong&gt;에 관한 &lt;strong&gt;GET&lt;/strong&gt; 요청을 한다면 다음과 같이 발급받은 X-Gallery-Request-Key를 이용하여 요청할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;GET /gallery3/index.php/rest/item/1 HTTP/1.1
+Host: example.com
+X-Gallery-Request-Method: get
+X-Gallery-Request-Key: 1114d4023d89b15ce10a20ba4333eff7
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;x-gallery-request-method&quot;&gt;X-Gallery-Request-Method&lt;/h3&gt;
+
+&lt;p&gt;Gallery REST 서비스도 다른 &lt;a href=&quot;http://en.wikipedia.org/wiki/Representational_state_transfer&quot;&gt;RESTful&lt;/a&gt;와 동일하게 &lt;strong&gt;Method&lt;/strong&gt;를 이용하여 동일한 URL에 다른 의미의 요청을 가능하게 할 수 있다. Method의 값은 &lt;strong&gt;GET&lt;/strong&gt;, &lt;strong&gt;POST&lt;/strong&gt;, &lt;strong&gt;UPDATE&lt;/strong&gt; 그리고 &lt;strong&gt;DELETE&lt;/strong&gt;로 지정 할 수 있다.&lt;/p&gt;
+
+&lt;h3 id=&quot;response-format&quot;&gt;Response format&lt;/h3&gt;
+
+&lt;p&gt;Gallery3의 REST의 요청의 결과는 &lt;strong&gt;JSON&lt;/strong&gt;과 &lt;strong&gt;HTML&lt;/strong&gt;으로 받을 수 있는데 &lt;code&gt;output&lt;/code&gt;이라는 파라미터를 추가후 &lt;code&gt;output=json&lt;/code&gt;또는 &lt;code&gt;output=html&lt;/code&gt;으로 지정할 수 있다. 기본적으로는 &lt;code&gt;json&lt;/code&gt;으로 지정된다. 다음은 응답받은 JSON 문자열이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; GET /gallery3/index.php/rest/item/1
+ ...
+ HTTP/1.1 200 OK
+ Content-Length: 1200
+ Content-Type: application/json
+ {&amp;quot;url&amp;quot;:&amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/item\/1&amp;quot;,&amp;quot;entity&amp;quot;:{&amp;quot;id&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;captured&amp;quot;:
+ null,&amp;quot;created&amp;quot;:&amp;quot;1270793819&amp;quot;,&amp;quot;description&amp;quot;:&amp;quot;&amp;quot;,&amp;quot;height&amp;quot;:null,&amp;quot;level&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;mime_type&amp;quot;:null,
+ &amp;quot;name&amp;quot;:null,&amp;quot;owner_id&amp;quot;:&amp;quot;2&amp;quot;,&amp;quot;rand_key&amp;quot;:null,&amp;quot;resize_height&amp;quot;:null,&amp;quot;resize_width&amp;quot;:null,&amp;quot;slug&amp;quot;:null,
+ &amp;quot;sort_column&amp;quot;:&amp;quot;weight&amp;quot;,&amp;quot;sort_order&amp;quot;:&amp;quot;ASC&amp;quot;,&amp;quot;thumb_height&amp;quot;:&amp;quot;103&amp;quot;,&amp;quot;thumb_width&amp;quot;:&amp;quot;164&amp;quot;,&amp;quot;title&amp;quot;:
+ &amp;quot;Gallery&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;album&amp;quot;,&amp;quot;updated&amp;quot;:&amp;quot;1270958456&amp;quot;,&amp;quot;view_count&amp;quot;:&amp;quot;0&amp;quot;,&amp;quot;width&amp;quot;:null,&amp;quot;view_1&amp;quot;:&amp;quot;1&amp;quot;,
+ &amp;quot;view_2&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;album_cover&amp;quot;:&amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/item\/3&amp;quot;,
+ &amp;quot;thumb_url&amp;quot;:&amp;quot;http:\/\/example.com\/gallery3\/var\/thumbs\/\/.album.jpg?m=1270958456&amp;quot;},
+ &amp;quot;relationships&amp;quot;:{&amp;quot;tags&amp;quot;:{&amp;quot;url&amp;quot;:&amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/item_tags\/1&amp;quot;,
+ &amp;quot;members&amp;quot;:[&amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/tag_item\/9,1&amp;quot;,
+ &amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/tag_item\/10,1&amp;quot;]}},&amp;quot;members&amp;quot;:[
+ &amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/item\/7&amp;quot;,
+ &amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/item\/11&amp;quot;,
+ &amp;quot;http:\/\/example.com\/gallery3\/index.php\/rest\/item\/26&amp;quot;]}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 결과를 JSON 객체로 변형하면 다음과 같다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;{
+   &amp;quot;url&amp;quot;: &amp;quot;http://example.com/gallery3/index.php/rest/item/1&amp;quot;,
+   &amp;quot;entity&amp;quot;: {
+     &amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;,
+     &amp;quot;captured&amp;quot;: null,
+     &amp;quot;created&amp;quot;: &amp;quot;1270793819&amp;quot;,
+     &amp;quot;description&amp;quot;: &amp;quot;&amp;quot;,
+     &amp;quot;height&amp;quot;: null,
+     &amp;quot;level&amp;quot;: &amp;quot;1&amp;quot;,
+     &amp;quot;mime_type&amp;quot;: null,
+     &amp;quot;name&amp;quot;: null,
+     &amp;quot;owner_id&amp;quot;: &amp;quot;2&amp;quot;,
+     &amp;quot;rand_key&amp;quot;: null,
+     &amp;quot;resize_height&amp;quot;: null,
+     ...skipped some values to keep things short...
+     &amp;quot;album_cover&amp;quot;: &amp;quot;http://example.com/gallery3/index.php/rest/item/3&amp;quot;,
+     &amp;quot;thumb_url&amp;quot;: &amp;quot;http://example.com/gallery3/var/thumbs//.album.jpg?m=1270958456&amp;quot;
+   },
+   &amp;quot;relationships&amp;quot;: {
+     &amp;quot;tags&amp;quot;: {
+       &amp;quot;url&amp;quot;: &amp;quot;http://example.com/gallery3/index.php/rest/item_tags/1&amp;quot;,
+       &amp;quot;members&amp;quot;: [
+         &amp;quot;http://example.com/gallery3/index.php/rest/tag_item/9,1&amp;quot;,
+         &amp;quot;http://example.com/gallery3/index.php/rest/tag_item/10,1&amp;quot;
+       ]
+      }
+    },
+   &amp;quot;members&amp;quot;: [
+     &amp;quot;http://example.com/gallery3/index.php/rest/item/7&amp;quot;,
+     &amp;quot;http://example.com/gallery3/index.php/rest/item/11&amp;quot;,
+     &amp;quot;http://example.com/gallery3/index.php/rest/item/26&amp;quot;
+   ]
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;GAllery의 REST의 결과값은 크게 &lt;strong&gt;url&lt;/strong&gt;, &lt;strong&gt;entity&lt;/strong&gt;, &lt;strong&gt;relationships&lt;/strong&gt;, &lt;strong&gt;memebers&lt;/strong&gt; 로 나눌 수 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;url&lt;/strong&gt; : REST로 접근한 URL&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;entity&lt;/strong&gt; : item의 정보 (앨범, 사진, 영상 등 Gallery의 모든 객체를 item*으로 표현하고 있고 item은 entity로 세부 정보를 지정하거나 표현된다)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;releationships&lt;/strong&gt; : 요청한 item과 연관된 item의 집합&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;members&lt;/strong&gt; : item에 접근 가능한 멤버의 집합&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;node-gallery3&quot;&gt;node-gallery3&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nodejs.org&quot;&gt;Node.js&lt;/a&gt; 프로젝트를 진행하면서 이미지 관련해서 Gallery3 서비스를 구축하여 이미지를 관리하기 위해 Node로 만들어진 Gallery3 Client가 필요했다. Gallery3 공식 페이지에서는 &lt;a href=&quot;http://codex.galleryproject.org/Gallery_3:Other_Clients:Gallery_3_REST_Client_(rWatcher)&quot;&gt;rWatcher&lt;/a&gt;라는 클라이언트와 &lt;a href=&quot;http://codex.galleryproject.org/Category:Gallery_3:Other_Clients&quot;&gt;써드파티 클라이언트&lt;/a&gt;에 관한 자료를 제공하고 있고,  &lt;a href=&quot;http://codex.galleryproject.org/Gallery3:API:REST:Python&quot;&gt;python&lt;/a&gt;과 &lt;a href=&quot;http://codex.galleryproject.org/Gallery3:API:REST:Java-Android&quot;&gt;android-java&lt;/a&gt;로 된 예제는 공개하고 있지만 Node.js 모듈로 만들어진 client 자료는 없어서 직접 만들게 되었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/saltfactory/node-gallery3&quot;&gt;node-gallery3&lt;/a&gt;는 Gallery3의 REST API를 사용하기 위한 &lt;a href=&quot;https://github.com/request/request&quot;&gt;Request.js&lt;/a&gt;를 이용하여 Gallery REST API 요청을  랩핑한 모듈이다. 직관적이고 코드의 간결성을 위해 &lt;a href=&quot;https://github.com/kriskowal/q&quot;&gt;Promise&lt;/a&gt;를 사용하여 응답을 처리하도록 하였다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;node-gallery3&lt;/strong&gt;은 NPM을 이용하여 쉽게 설치할 수 있다. global &lt;code&gt;-g&lt;/code&gt; 옵션을 이용하여 설치하면 CLI로 사용도 가능하다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;npm install node-gallery3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;node-gallery3&lt;/strong&gt;는 객체를 생성할 때 Gallery3 서버의 정보를 입력하거나 정보를 &lt;code&gt;$HOME/.gallery3.json&lt;/code&gt; 파일을 만들어서 사용 할 수 있다. &lt;strong&gt;node-gallery3&lt;/strong&gt; 사용하기 위한 설정 값은 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;host&lt;/strong&gt; : Gallery3 서버가 설치된 호스트 정보&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;basae&lt;/strong&gt; : Gallery3 서버에 Gallery3가 설치된 URL 경로 (생략하면 &lt;code&gt;/gallery3&lt;/code&gt;이 기본 값으로 지정)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;rootItemId&lt;/strong&gt; : 기본적으로 REST 요청을 타겟 Item으로 보통 사진 파일을 업로드할 앨범의 id를 지정 (생락하면 &lt;code&gt;1&lt;/code&gt;이 기본 값으로 지정)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;requestKey&lt;/strong&gt; : Gallery3의 REST API를 요청하기 위해서 반드시 필요한 &lt;strong&gt;X-Gallery-Request-Key&lt;/strong&gt;의 값&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;생성자에 정보를 입력하여 사용하는 방법은 다음과 같다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;var options = {
+    host: &amp;#39;http://example.com&amp;#39;,
+    base: &amp;#39;/gallery3&amp;#39;,
+    rootItemId: 1,
+    requestKey: &amp;#39;1234abcd&amp;#39;
+};
+var gallery3 = new Gallery3(options);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설정 파일로 만들어서 사용하려면 &lt;code&gt;$HOME/.gallery3.json&lt;/code&gt; 파일에 다음과 같이 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;{
+    &amp;#39;host&amp;#39;: &amp;#39;http://example.com&amp;#39;,
+    &amp;#39;base&amp;#39;: &amp;#39;/gallery3&amp;#39;,
+    &amp;#39;rootItemId&amp;#39;: 1,
+    &amp;#39;requestKey&amp;#39;: &amp;#39;1234abcd&amp;#39;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;gallery3.login(user,-password)&quot;&gt;Gallery3.login(user, password)&lt;/h2&gt;
+
+&lt;p&gt;Gallery3의 REST API를 사용하기 위해서는 &lt;strong&gt;X-Gallery-Request-Key&lt;/strong&gt;가 필요한데 이 값을 획득하기 위해서 &lt;strong&gt;node-gallery3&lt;/strong&gt;의 &lt;code&gt;Gallery3.login(user, password)&lt;/code&gt; 메소드를 사용하여 획득 할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;  describe(&amp;#39;login&amp;#39;, function(){
+    it(&amp;#39;login user/password&amp;#39;, function(done){
+      var user = &amp;#39;user&amp;#39;;
+      var password = &amp;#39;password&amp;#39;
+
+      gallery3.login(user, password)
+        .success(function(result){
+          console.log(result);
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen_Shot_2015-03-11_at_10_25_24_AM.png?m=1426039276&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;gallery3.finditem(identifier)&quot;&gt;Gallery3.findItem(identifier)&lt;/h2&gt;
+
+&lt;p&gt;Gallery3에서는 &lt;strong&gt;앨범&lt;/strong&gt;, &lt;strong&gt;사진&lt;/strong&gt;, &lt;strong&gt;동영상&lt;/strong&gt; 등 모든 정보를 &lt;strong&gt;item&lt;/strong&gt;이라는 개념으로 정보를 표현한다. 이미 만들어진 앨범의 정보를 요청하기 위해서 &lt;code&gt;Gallery3.findItem(identifier)&lt;/code&gt; 메소드를 사용하여 정보를 가져올 수 있다. 이때 &lt;strong&gt;identifier&lt;/strong&gt;는 고유 &lt;strong&gt;URL&lt;/strong&gt;이거나 &lt;strong&gt;ItemId&lt;/strong&gt;를 넣어주면 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;describe.only(&amp;#39;findItem&amp;#39;, function(){
+    var itemId = 2;
+    var url = gallery3.options.host + gallery3.options.base + &amp;#39;/rest/item/&amp;#39; + itemId;
+
+    it(&amp;#39;find item by url&amp;#39;, function(done){
+      console.log(gallery3);
+      gallery3.findItem(url)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;find item by item id&amp;#39;, function(done){
+      gallery3.findItem(itemId)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen_Shot_2015-03-11_at_10_28_34_AM.png?m=1426039277&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;gallery3.createitem(entity,-identifier)&quot;&gt;Gallery3.createItem(entity, identifier)&lt;/h2&gt;
+
+&lt;p&gt;Gallery3에서 &lt;strong&gt;앨범&lt;/strong&gt;은 &lt;code&gt;type&lt;/code&gt;이 &lt;code&gt;album&lt;/code&gt;인 &lt;strong&gt;item&lt;/strong&gt;이다. 새로운 앨범을 생성하기 위해서는 &lt;code&gt;Gallery3.createItem(entity, identifier)&lt;/code&gt; 메소드를 사용한다. entity의 내용은 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;type&lt;/strong&gt; : 앨범을 만들기 위해서&amp;#39;album&amp;#39; 으로 지정한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;name&lt;/strong&gt; : 앨범의 이름&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;title&lt;/strong&gt; : 앨범 타이틀&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;앨범은 특정 앨범 하위에 서브 앨범으로 만들 수 있는데 이 때 상위 item의 &lt;strong&gt;identifier&lt;/strong&gt;(상위 item의 URL이나 itemId)를 입력한다. 정상적으로 앨범이 생성되면 결과 값으로 생성한 앨범의 &lt;strong&gt;URL&lt;/strong&gt;을 가진 &lt;strong&gt;JSON&lt;/strong&gt;을 반환한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt; describe.only(&amp;#39;create Item&amp;#39;, function(){
+    var itemId = 2;
+    var url = gallery3.options.host + gallery3.options.base + &amp;#39;/rest/item/&amp;#39; + itemId;
+    var entity = {
+      type: &amp;#39;album&amp;#39;,
+      name: &amp;#39;Sample Album&amp;#39;,
+      title: &amp;#39;This is my Sample Album&amp;#39;
+    };
+
+    it(&amp;#39;create Item without parentItem, default&amp;#39;, function(done){
+      gallery3.createItem(entity)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;create Item in parent item by url&amp;#39;, function(done){
+      gallery3.createItem(entity, url)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;create Item in parent item by itemId&amp;#39;, function(done){
+      gallery3.createItem(entity, itemId)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen_Shot_2015-03-11_at_10_39_26_AM.png?m=1426039277&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;gallery3.uploadfile(filepath,-entity,-identifier)&quot;&gt;Gallery3.uploadFile(filePath, entity, identifier)&lt;/h2&gt;
+
+&lt;p&gt;Gallery3의 주 목적은 사진을 업로드하는 것이다. 사진을 Gallery3에 업로드하기 위해서는 &lt;code&gt;Gallery3.uploadFile(filePath, entity, identifier)&lt;/code&gt; 메소드를 사용하면 된다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;filePath&lt;/strong&gt; : 컴퓨터 내의 파일 경로&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;entity&lt;/strong&gt; : 사진의 정보(이름, 파일이름, 설명 등)를 entity 형식으로 명시할 수 있다. (생략하면 파일 이름 기반으로 자동으로 만들어짐)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;identifier&lt;/strong&gt; : 사진이 업로드될 앨범 (생략하면 itemId가 1인 최상위에 사진이 업로드 된다)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이미지가 정상적으로 업로드가 되면 업로된 객체의 &lt;strong&gt;Item&lt;/strong&gt;에 대한 고유 URL을 JSON 형태로 반환한다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;업로드 후 반환되는 URL은 이미지의 URL이 아니라 이미지의 정보를 가지는 Item의 URL이라는 것을 주의해야한다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;이미지에의 URL을 획득하기 위해서는 &lt;code&gt;Gallery3.findItem(identifier)&lt;/code&gt;를 사용하면 이미지의 URL 정보를 포함한 JSON을 가져올 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;describe.only(&amp;#39;upload file&amp;#39;, function(){
+    var itemId = 2;
+    var url = gallery3.options.host + gallery3.options.base + &amp;#39;/rest/item/&amp;#39; + itemId;
+    var filePath = &amp;#39;/Users/saltfactory/Downloads/bh6hug.jpg&amp;#39;;
+    var entity = {
+      title: &amp;#39;title&amp;#39;,
+      description: &amp;#39;description&amp;#39;
+    };
+
+    it(&amp;#39;upload file without parent identifier&amp;#39;, function(done){
+      //gallery3 = new Gallery3({rootItemId:58});
+
+      gallery3.uploadFile(filePath)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;upload file without entity in parent album by url&amp;#39;, function(done){
+
+      gallery3.uploadFile(filePath, url)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;upload file without entity in parent album by id&amp;#39;, function(done){
+      gallery3.uploadFile(filePath, itemId)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;upload file with entity&amp;#39;, function(done){
+      gallery3.uploadFile(filePath, entity)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;upload file with entity and url&amp;#39;, function(done){
+      gallery3.uploadFile(filePath, entity, url )
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;upload file with entity and itemId&amp;#39;, function(done){
+      gallery3.uploadFile(filePath, entity, itemId )
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen_Shot_2015-03-11_at_10_45_53_AM.png?m=1426039276&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;gallery3.getimageurlpublic(identifier)&quot;&gt;Gallery3.getImageUrlPublic(identifier)&lt;/h2&gt;
+
+&lt;p&gt;Gallery3를 이용하면서 이미지 자체의 URL이 필요한 경우가 있다. 이때는 &lt;code&gt;Gallery3.findItem(identifier)&lt;/code&gt;를 사용하여 가져올 수도 있지만 좀 더 직관적인 메소드인 &lt;code&gt;Gallery3.getImageUrlPublic(identifier)&lt;/code&gt;를 사용하여 이미지의 URL 가져올 수 있다. 위의 예제에서 생성한 Item 110 사진의 URL을 가져오는 예제를 만들어 보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;describe.only(&amp;#39;getImageUrlPublic&amp;#39;, function(){
+    var itemId = 110;
+    var url = gallery3.options.host + gallery3.options.base +&amp;#39;/rest/item/&amp;#39;+itemId;
+
+    it(&amp;#39;get public image url by url&amp;#39;, function(done){
+      gallery3.getImageUrlPublic(url)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+    it(&amp;#39;get public image url by itemId&amp;#39;, function(done){
+      gallery3.getImageUrlPublic(itemId)
+        .success(function(result){
+          console.log(result)
+        })
+        .error(function(err){
+          console.log(err);
+        })
+        .finally(done);
+    });
+
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen_Shot_2015-03-11_at_10_52_02_AM.png?m=1426039276&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/saltfactory/node-gallery3&quot;&gt;node-gallery3&lt;/a&gt;를 사용하여 Gallery3 서버에 앨범을 만들고 사진을 업로드하였다. 실제 서버에는 웹으로 업로드한 파일을 다음과 같이 관리할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-11%20at%2010_54_25%20AM.png?m=1426039277&quot; alt=&quot;&quot;&gt;
+&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-11%20at%2010_54_12%20AM.png?m=1426039277&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Gallery3은 앨범을 만들거나 사진을 관리하기 위한 오픈 소스 프로젝트이만 사용하는 방법에 따라서 다양한 서비스를 만들 수 있다. 이렇게 구축된 Gallery3 서비스를 클라이언트 프로그램이나 외부 프로그램에서 Gallery3의 RESTful API를 사용하여 편리하게 데이터를 가져올 수 있다. 이 때 &lt;strong&gt;node-gallery3&lt;/strong&gt;를 이용하면 편리하고 쉽게 Gallery3의 데이터를 관리할 수 있을 것이다. &lt;strong&gt;node-gallery3&lt;/strong&gt;은 CLI를 제공하고 있다. Unix나 Mac을 사용하는 사용자는 터미널에서 쉽게 파일을 Gallery3로 업로드할 수 있다. &lt;strong&gt;node-gallery3&lt;/strong&gt;을 이용하여 확장된 Gallery3 클라이언트 프로그램도 만들 수 있을 것이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;참조&quot;&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://codex.galleryproject.org/Gallery3:API:REST&quot;&gt;http://codex.galleryproject.org/Gallery3:API:REST&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/request/request&quot;&gt;https://github.com/request/request&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/kriskowal/q&quot;&gt;https://github.com/kriskowal/q&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 10 Mar 2015 00:00:00 +0900</pubDate>
+        <link>/series/node/introduce-node-gallery3.html</link>
+        <guid isPermaLink="true">/series/node/introduce-node-gallery3.html</guid>
+        
+        <category>javascript</category>
+        
+        <category>node</category>
+        
+        <category>node.js</category>
+        
+        <category>gallery3</category>
+        
+        <category>api</category>
+        
+        <category>rest</category>
+        
+        
+        <category>node</category>
+        
+      </item>
+    
+      <item>
+        <title>Mac과 Docker 상호간 디렉토리 공유하기 (Boot2Docker에서 VOLUME 사용)</title>
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;Mac에서 &lt;strong&gt;Docker&lt;/strong&gt;를 사용하기 위해서는 &lt;strong&gt;Boot2Docker&lt;/strong&gt;를 사용해야한다. Boot2Docker는 VirtualBox를 사용하기 때문에 Docker에 바로 로컬디렉토리를 공유폴더로 지정하기 위해서는 VirtualBox를 통해서 사용해야한다. 이러한 이유로 Docker에서 VOLUME을 사용하는 방법과 다른 방법이 필요하다. 이 포스트에서는 ssfs를 사용하여 Boot2Docker에서 Mac과 Docker 상호간 디렉토리를 공유하는 방법에대해 소개한다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;boot2docker&quot;&gt;Boot2Docker&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Docker_(software)&quot;&gt;Docker&lt;/a&gt;는 리눅스 커널 기반의 컨테이너 개념을 가지고 운용하는데 Mac은 리눅스 기반의 시스템이 아니기 때문에 &lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;VirtualBox&lt;/a&gt; 기반에서 Docker를 운영할 수 있다. &lt;a href=&quot;http://boot2docker.io/&quot;&gt;Boot2Docker&lt;/a&gt;는 Mac이나 Windows에서 VirtualBox를 사용하여 가볍고 빠른 &lt;a href=&quot;http://tinycorelinux.net/&quot;&gt;Tiny Core Linux&lt;/a&gt; 운영체제 기반에 Docker를 운영하도록 만든 것이다. 다시 말해서 Boot2Docker를 사용하면 Linux 계열 운영체제가 아니더라도 docker를 운영할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;boot2docker의-한계&quot;&gt;Boot2Docker의 한계&lt;/h2&gt;
+
+&lt;p&gt;원래 Docker를 사용하면 리눅스 서버 운영체제에 격리된 컨테이너 안에서 각각 필요한 환경에서 동작한다. 상황에 따라 컨테이너 외부의 파일을 공유해야할 경우가 발생하는데 Docker에서 &lt;a href=&quot;https://docs.docker.com/reference/builder/#volume&quot;&gt;VOLUME&lt;/a&gt; 이라는 개념을 가지고 컨테이너 외부의 디렉토리를 컨테이너 내부의 디렉토리로 마운트시켜 공유할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Boot2Docker&lt;/strong&gt;를 사용하면 &lt;strong&gt;VOLUME&lt;/strong&gt;을 사용하는데 제한이 있다. Boot2Docker는 리눅스 계열이 아닌 운영체제에서 VirutualBox를 사용하여 가상머신 위에 Tiny Core Linux를 사용하고 있기 때문에 Local Host에서 Docker 컨테이너 내부에 직접적으로 디렉토리를 마운트를 시킬 수가 없다.&lt;/p&gt;
+
+&lt;h2 id=&quot;sshfs&quot;&gt;SSHFS&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/SSHFS&quot;&gt;ssfs&lt;/a&gt;는 원격지에 있는 디렉토리를 ssh 커넥션으로 로컬의 디렉토리에 마운트 시키는 파일시스템 클라이언트이다. &lt;strong&gt;ssfs&lt;/strong&gt;는 &lt;a href=&quot;http://en.wikipedia.org/wiki/SSH_File_Transfer_Protocol&quot;&gt;SFTP&lt;/a&gt;을 이용하여 데이터를 엑세스한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;boot2docker-환경에서-sshfs를-이용하여-volume-사용하기&quot;&gt;Boot2Docker 환경에서 SSHFS를 이용하여 VOLUME 사용하기&lt;/h2&gt;
+
+&lt;p&gt;SSHFS를 이용하면 Boot2Docker의 한계를 개선하여 디렉토리를 공유할 수 있다.
+원리는 간단히 설명하면 SSHFS를 이용하여  Mac OS X 디렉토리를 Boot2Docker의 운영체제에 마운트를 하고,  Docker 실행할 때  Boot2Docker의 디렉토리를 docker 컨테이너로 마운트하게 된다. 즉, Mac OS X -&amp;gt; Boot2Docker -&amp;gt; Docker로 된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;1.-sshfs-설치-(mac)&quot;&gt;1. SSHFS 설치 (Mac)&lt;/h3&gt;
+
+&lt;p&gt;Mac OS X에 SSHFS를 설치한다. SSHFS는 osxfuse를 이용하여 마운트를 하기 때문에 osxfuse를 함께 설치한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew install Caskroom/cask/osxfuse
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew install sshfs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;2.-local의-공유-디렉토리-생성-(mac)&quot;&gt;2. Local의 공유 디렉토리 생성 (Mac)&lt;/h3&gt;
+
+&lt;p&gt;최종적으로 Docker에 공유하기 위한 Mac OS X에 디렉토리를 생성한다. (현재  Mac OS X 안 경로에 만드는 것이다)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;mkdir /Users/saltfactory/shared
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;3.-sshfs-fuse-로드-(boot2docker)&quot;&gt;3. sshfs-fuse 로드 (Boot2Docker)&lt;/h3&gt;
+
+&lt;p&gt;Boot2Docker 안에서 sshfs를 사용하여 원격에 있는 디렉토리를 마운트하기 위해 Boot2Docker에 ssh로 로그인후 &lt;strong&gt;sshfs-fuse&lt;/strong&gt;를 로드한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;boot2docker ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;boot2docker tce-load -wi sshfs-fuse
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;4.-마운트될-디렉토리-생성-(boot2docker)&quot;&gt;4. 마운트될 디렉토리 생성 (Boot2Docker)&lt;/h3&gt;
+
+&lt;p&gt;Boot2Docker 안에서 Mac OS X에서 생성한 디렉토리를 마운트할 디렉토리 지점을 지정하기 위해서 디렉토리를 생성한다. (현재 Boot2Docker 안 경로에 만드는 것이다)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;mkdir /home/docker/shared
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;5.-마운트-설정을-위해-fuse.conf-추가-(boot2docker)&quot;&gt;5. 마운트 설정을 위해 fuse.conf 추가 (Boot2Docker)&lt;/h3&gt;
+
+&lt;p&gt;SSFS는 fuse를 사용하여 Mac OS X로부터 Boot2Docker에 디렉토리를 마운트하게 되는데 접근할 수 있는 권한을 설정하기 위해서  /etc/fuse.conf 파일을 다음 내용으로 추가한다. (현재 Boot2Docker 안 경로에서 만드는 것이다)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# filename: fuse.conf
+# Set the maximum number of FUSE mounts allowed to non-root users.
+# The default is 1000.
+#
+#mount_max = 1000
+
+# Allow non-root users to specify the &amp;#39;allow_other&amp;#39; or &amp;#39;allow_root&amp;#39;
+# mount options.
+#
+user_allow_other
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;6.-sshfs를-이용하여-마운트-(boot2docker)&quot;&gt;6. SSHFS를 이용하여 마운트 (Boot2Docker)&lt;/h3&gt;
+
+&lt;p&gt;Boot2Docker 내부에서 SSFS를 이용하여 Mac에 생성한 디렉토리를 마운트한다. SSHFS를 사용할 때 Mac의 계정과 Boot2Docker에서 접근가능한 Mac의 내부 HostIP가 필요하다. SSHFS로  Mac의 디렉토리를 Boot2Docker에 마운트하기 위해서는 다음과 같이 사용한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sshfs -o allow_other {Mac계정}@{Boot2Docker에서 Mac에 접근할 수 있는 내무 HostIP}:/Users/saltfactory/shared /home/docker/shared
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Boot2Docker에서 접근 가능하는 내부 HostIP는 &lt;code&gt;boot2docker config&lt;/code&gt;에서 확인할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;boot2docker config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 명령어를 실행하면 아래와 같이 Boot2Docker의 설정을 볼 수 있는데 &lt;strong&gt;HostIP&lt;/strong&gt; 값을 참조하면 된다. (아래 결과에서는 HostIP 값이 192.168.59.3 이다)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# boot2docker profile filename: /Users/saltfactory/.boot2docker/profile
+Init = false
+Verbose = false
+Driver = &amp;quot;virtualbox&amp;quot;
+Clobber = true
+ForceUpgradeDownload = false
+SSH = &amp;quot;ssh&amp;quot;
+SSHGen = &amp;quot;ssh-keygen&amp;quot;
+SSHKey = &amp;quot;/Users/saltfactory/.ssh/id_boot2docker&amp;quot;
+VM = &amp;quot;boot2docker-vm&amp;quot;
+Dir = &amp;quot;/Users/saltfactory/.boot2docker&amp;quot;
+ISOURL = &amp;quot;https://api.github.com/repos/boot2docker/boot2docker/releases&amp;quot;
+ISO = &amp;quot;/Users/saltfactory/.boot2docker/boot2docker.iso&amp;quot;
+DiskSize = 20000
+Memory = 2048
+SSHPort = 2022
+DockerPort = 0
+HostIP = &amp;quot;192.168.59.3&amp;quot;
+DHCPIP = &amp;quot;192.168.59.99&amp;quot;
+NetMask = [255, 255, 255, 0]
+LowerIP = &amp;quot;192.168.59.103&amp;quot;
+UpperIP = &amp;quot;192.168.59.254&amp;quot;
+DHCPEnabled = true
+Serial = false
+SerialFile = &amp;quot;/Users/saltfactory/.boot2docker/boot2docker-vm.sock&amp;quot;
+Waittime = 300
+Retries = 75
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 SSFS로 Mac의 계정과 Boot2Docker의 HostIP를 이용하여 Mac에서 생성했던 &lt;code&gt;/Users/saltfactory/shared&lt;/code&gt; 디렉토리를 Boot2Docker의 &lt;code&gt;/home/docker/shared&lt;/code&gt;로 마운트를 시킨다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sshfs -o allow_other saltfactory@192.168.59.3:/Users/saltfactory/shared /home/docker/shared
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;지금까지 문제 없이 진행하였다면 Mac의 디렉토리가 Boot2Docker 안에 정상적으로 마운트가 되어 두 디렉토리가 공유되고 있는 것을 확인할 수 있다. Mac의 디레토리에 파일을 만들면 자동으로 Boot2Docker에 마운트된 디렉토리 안에 파일이 보여지는 것을 확인할 수 있을 것이다.&lt;/p&gt;
+
+&lt;p&gt;Mac에서 파일을 만들어보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;touch /Users/saltfactory/shared/README.md
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Boot2Docker에서 파일이 보여지는지 확인해보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;ls -l /home/docker/shared
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ssfs로 마운트되어진 디렉토리는 다음과 같이 &lt;code&gt;fusermount&lt;/code&gt; 명령어로 마운트를 해지할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;fusermount -u /home/docker/shared
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;7.-dockerfile에-volume을-지정-(mac)&quot;&gt;7. Dockerfile에 VOLUME을 지정 (Mac)&lt;/h3&gt;
+
+&lt;p&gt;이제 Mac OS X에서도 Boot2Docker를 사용하지만 SSHFS를 이용하여 Mac의 디렉토리를 Boot2Docker로 마운트하였기 때문에, &lt;code&gt;Dockerfile&lt;/code&gt; 안에 &lt;code&gt;VOLUME&lt;/code&gt;을 사용하여 Boot2Docker에 마운트되어 있는 리렉토리를 Docker 컨테이너안에 마운트하여 공유할 수 있게 되었다. Dockerfile에 VOLUME을 추가한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;FROM ubuntu:latest
+MAINTAINER SungKwang Song &amp;lt;saltfactory@gmail.com&amp;gt;
+
+... 생략 ...
+VOLUME /shared
+... 생략 ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;8.-docker-실행&quot;&gt;8. docker 실행&lt;/h3&gt;
+
+&lt;p&gt;모든 설정이 끝났다. 마지막으로 docker를 실행하면서 Boot2Docker에 마운트된 디렉토리(&lt;code&gt;/home/docker/shared&lt;/code&gt;)를 Docker 컨테이너 디렉토리로(&lt;code&gt;/shared&lt;/code&gt;) 연결하도록 한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;docker run -it -v /home/docker/shared:/shared ubunt:latest /bin/bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 Mac에서 생성한 디렉토리(&lt;code&gt;/Users/saltfactory/shared&lt;/code&gt;)가 docker 컨테이너 내부의 디렉토리(&lt;code&gt;/shared&lt;/code&gt;)와 공유가 되었다. 왜 Mac의 디렉토리를 Docker 컨테이너로 마운트하는데 바로 하지 않고 Boot2Docker의 디렉토리를 마운트하는지는 앞에의 글에서 살펴보았듯이, Mac OS X -&amp;gt; Boot2Docker -&amp;gt; Docker로 마운트가 되어지기 때문이다. 즉, Boot2Docker의 디렉토리를 사용했지만 이 디렉토리는 Mac의 디렉토리의 마운트 포인트가 되고 있기 때문이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;참조&quot;&gt;참조&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/boot2docker/boot2docker#folder-sharing&quot;&gt;https://github.com/boot2docker/boot2docker#folder-sharing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://gist.github.com/codeinthehole/7ea69f8a21c67cc07293&quot;&gt;https://gist.github.com/codeinthehole/7ea69f8a21c67cc07293&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://forum.docker.co.kr/t/osx-sshfs-osx/163&quot;&gt;http://forum.docker.co.kr/t/osx-sshfs-osx/163&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 06 Mar 2015 00:00:00 +0900</pubDate>
+        <link>/series/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</link>
+        <guid isPermaLink="true">/series/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</guid>
+        
+        <category>mac</category>
+        
+        <category>docker</category>
+        
+        <category>boot2docker</category>
+        
+        <category>volumn</category>
+        
+        <category>ssfs</category>
+        
+        
+        <category>docker</category>
         
       </item>
     
@@ -431,12 +1629,11 @@ gems:
 
 &lt;p&gt;&lt;strong&gt;Jekyll&lt;/strong&gt;은 Markdown을 사용해서 정적 웹 사이트를 만들 수 있는 static web page generator 프레임워크이다. Jekyll을 사용하면 개인 웹 서버나 고가의 데이터베이스 없이 &lt;strong&gt;Github Pages&lt;/strong&gt;를 이용해서 개인 웹 사이트나 블로그를 쉽게 구축할 수 있다. Markdown은 문서 제작를 간편하고 빠르게 제작할 수 있게 스타일을 지정하지 않는다. 하지만 웹 사이트를 만들다보면 이미지 사이즈를 조정하는 경우가 많다. Markdown의 기본 문법에서는 IMG 태그에 스타일을 지정할 수 없기 때문에 우리는 Jekyll의 &lt;strong&gt;Redcarpet&lt;/strong&gt;이라는 Markdown 변환기에서 IMG 태그를 변환하는 메소드를 오버라이드하여 Jekyll 플러그인 &lt;strong&gt;jekyll-img-converter&lt;/strong&gt;를 제작하게 되었다. jekyll은 &lt;strong&gt;Ruby&lt;/strong&gt; 기반으로 만들어졌기 때문에 우리는 &lt;strong&gt;Rakefile&lt;/strong&gt;을 이용해서 플러그인을 만들고 테스트를 진행했다. 우리는 우리가 만든 플러그인을 &lt;strong&gt;gem&lt;/strong&gt;을 사용해서 설치할 수 있게 &lt;strong&gt;rubygems&lt;/strong&gt;에 우리가 만든 플러그인을 등록해서 배포했고 이 모든 과정을 이 포스트에서 소개 했다. Ruby는 Minxin이라는 기능을 가지고 있고 모든 클래스 기반 언어처럼 상속과 오버라이드를 지원한다. 우리는 이 개념을 잘 사용하여 Markdown의 문법을 해치지 않고 이미지 문법의 ALT 속성에 &lt;strong&gt;inline style&lt;/strong&gt;을 지정하여 IMG 태그를 분석할 때 오버라이드한 메소드가 이를 분석해서 IMG 태그에 &lt;strong&gt;style&lt;/strong&gt; 속성에 inline style을 적용하도록 했다. 이 포스트를 참조해서 앞으로 더욱 많은 Jekyll의 플러그인이 제작되길 기대해본다.&lt;/p&gt;
 
-&lt;h1 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h1&gt;
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
 &lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;프로필 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;http://about.me/saltfactory&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
@@ -463,7 +1660,7 @@ gems:
     
       <item>
         <title>Ionic을 이용한 iOS, Android 하이브리드 앱 개발 사례</title>
-        <description>&lt;h1 id=&quot;하이브리드-앱-개발과-배포&quot;&gt;하이브리드 앱 개발과 배포&lt;/h1&gt;
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;&lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설 연구소&lt;/strong&gt;에서는 모바일 서비스를 위해 아이폰과 안드로이드 앱을 개발해서 배포하고 있었다. 우리는 아이폰 사용자와 안드로이드 사용자를 위해서 두가지 플랫폼을 개발해야 했다. 안드로이드와 아이폰은 버전과 디바이스의 파편화 때문에 많은 비용을 투자해서 예외처리를 해야했다. 제한된 개발 인력으로 두가지 디바이스를 개발해야하는 복잡한 프로세스를 개선하기 위해서 우리는 &lt;strong&gt;하이브리드 앱&lt;/strong&gt; 개발 방법을 도입하기로 결정했다. 최근 우리는 하이브리드 앱 개발 기술을 사용하여  &amp;quot;하이브레인넷 앱(ver. 2.3)&amp;quot;을 &lt;a href=&quot;https://itunes.apple.com/kr/app/haibeuleinnes/id438616285?mt=8&quot;&gt;앱스토어&lt;/a&gt;와 &lt;a href=&quot;https://play.google.com/store/apps/details?id=net.hibrain.apps.android.hibrainnet&quot;&gt;구글 플레이&lt;/a&gt;를 통해 배포했다. 우리는 하이브리드 앱을 개발하여 제품으로 배포한 과정을 블로그로 공개한다.&lt;/p&gt;
 
@@ -675,14 +1872,15 @@ gems:
 
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/widget&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h1 id=&quot;결론&quot;&gt;결론&lt;/h1&gt;
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
 
 &lt;p&gt;우리는 &lt;strong&gt;Ionic Framework&lt;/strong&gt;를 이용한 첫번째 하이브리드 앱을 &lt;a href=&quot;https://itunes.apple.com/kr/app/haibeuleinnes/id438616285?mt=8&quot;&gt;앱스토어&lt;/a&gt;와 &lt;a href=&quot;https://play.google.com/store/apps/details?id=net.hibrain.apps.android.hibrainnet&quot;&gt;구글 플레이&lt;/a&gt;를 통해 배포했다. 기존에 iOS와 Android를 혼자 개발했을 때 개발 비용이 너무 많이 필요했다. 안드로이드 파편화 그리고 iOS와 Android 개발의 다른 플랫폼을 혼자서 처리하기에는 버거운 일이였다. 그래서 우리는 개발환경을 하이브리드 개발을 해보기로 결정을 했다. 사전 조사와 테스트 앱을 만들어보고 우리가 배포하는 앱은 고성능을 필요하기 보다 관리의 편리성과 개발 시간을 단축하는 것을 주요하게 생각했기 때문에 하이브리드 앱으로 결정을 내린것이다. 하이브리드 앱 개발 프레임워크를 조사하면서 Ionic은 우리가 원하는 환경을 가지고 있었다. Ionic은 AngularJS, Cordova, Node.js 기반으로 만들어졌기 때문에 우리가 요구조건을 대부분 갖추고 있었다. 이번 프로젝트에서 우리는 Cordova를 이용해서  Network와 Persistence 플러그인 두가지를 만들었고, Ionic을 사용해서 iOS와 Android 앱을 동시에 개발하였다. 개발 시간은 기존의 네이티브 앱을 개발하는 시간에 비해 상당한 시간을 줄일 수 있었다. 우리는 이 경험을 바탕으로 Ionic으로 하이브리드 앱을 개발한 과정과 개발하면서 겪게된 문제들 그리고 그것을 해결한 방법들을 계속해서 블로그를 통해 소개할 예정이다.&lt;/p&gt;
 
-&lt;h1 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h1&gt;
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
@@ -785,6 +1983,7 @@ include /etc/nginx/sites-enabled/*;
 
 &lt;ul&gt;
 &lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
@@ -807,7 +2006,7 @@ include /etc/nginx/sites-enabled/*;
     
       <item>
         <title>docker-yobi를 이용하여 yobi 운영하기</title>
-        <description>&lt;h2 id=&quot;docker-yobi(saltfactory/yobi)&quot;&gt;docker-yobi(saltfactory/yobi)&lt;/h2&gt;
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
 
 &lt;p&gt;우리는 LXC로 서버를 운영하기 위해서 &lt;a href=&quot;http://docker.com&quot;&gt;Docker&lt;/a&gt;를 도입하기로 했다. docker를 도입해서 docker에 올리는 서비스중 첫번째로 &lt;a href=&quot;http://yobi.io&quot;&gt;Yobi&lt;/a&gt;를 적용하기로 했다. 개인연구로 사용하고 있는 랩탑은 Mac OS X를 사용하고 있기 때문에 &lt;a href=&quot;&quot;&gt;boot2docker&lt;/a&gt;를 사용하여 Dockerfile을 생성해서 GitHub에 &lt;a href=&quot;https://github.com/saltfactory/docker-yobi&quot;&gt;docker-hub&lt;/a&gt; 와 &lt;a href=&quot;https://registry.hub.docker.com/u/saltfactory/yobi/&quot;&gt;Docker Hub&lt;/a&gt;에 올렸다. 이 포스팅에서는 GitHub와 Docker Hub를 이용해서 Yobi를 사용하는 방법을 소개한다.&lt;/p&gt;
 
@@ -932,6 +2131,7 @@ docker ps
 
 &lt;ul&gt;
 &lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
@@ -951,763 +2151,6 @@ docker ps
         
         
         <category>git</category>
-        
-      </item>
-    
-      <item>
-        <title>Ubuntu에 대용량 USB 외장하드디스크 연결하여 사용하기</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;Windows의 Plug &amp;amp; Play는 운영체제게 설치된 컴퓨터에 외부 인터페이스를 연결하면 자동으로 인식하여 사용할 수 있도록 하는 기능이다. Windows의 이 기능은 플러그인을 손쉽게 사용할 수 있도록 해 컴퓨터에 대한 특별한 전문 지식이 없어도 쉽게 사용할 수 있도록 도와준다. Ubuntu는 Unix 계열 운영체제중에서 Desktop을 위한 확장 기능이 많이 지원된다. Unbutu에서 USB 외장하드디스크를 연결하여 사용할 때 어떻게 사용할 수 있는지 알아본다.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;ubuntu-외장하드디스크-연결&quot;&gt;Ubuntu 외장하드디스크 연결&lt;/h2&gt;
-
-&lt;p&gt;우리는 docker 도입을 하기 위해서 운영체제를 Ubuntu-Server 14.04 LTS 64bit 를 새로 설치하려고 했다. 기존 서버는 Ubuntu 12.04 LTS가 아니라 업데이트 지원도 빨리 끝나버려서 old release에서 업데이트를 해야만 했기 때문에 docker 도입 결정과 함께 이전 운영체제를 업그레이드 하기로 했다. 먼저 기존의 데이터를 백업 하기 위해서 외장 하드 디스크를 USB로 연결해서 &lt;code&gt;cp&lt;/code&gt;를 하면 되겠지하고 간단히 생각했다. 하지만 Ubuntu에서 USB 외장 하드 디스크가 마운트가 되지 않는 것이다. 그래서 우리는&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;ubnutu에서 USB 외장하드디스크 인식되지 않을 때, USB 외장하드디스크를 마운트해서 사용하는 방법에 대해서 알아보기로 한다.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;우리가 사용한 외장하드 디스크는 500G IDE를 USB 3.0으로 사용할 수 있는 외장하드 케이스에 연결된 것이다. 우리는 네트워크로 백업을 했지만 USB3.0으로 외장 하드디스크를 사용할 수 있는 방법을 알기 위해서 조사하기 시작했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;ubuntu-usb-mount&quot;&gt;Ubuntu USB mount&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://help.ubuntu.com/community/Mount/USB&quot;&gt;Ubuntu Mount/USB 공식문서&lt;/a&gt;를 살펴보자. 공식문서에서는 &lt;a href=&quot;http://www.gnome.org&quot;&gt;GNOME&lt;/a&gt;, GUI를 사용하는 방법에 대해서 먼저 설명하고 있지만 우리는 본체와 네트워크 케이블만 연결되어 있는 서버라서 이 방법은 패스했다.&lt;/p&gt;
-
-&lt;h3 id=&quot;수동-마운트&quot;&gt;수동 마운트&lt;/h3&gt;
-
-&lt;p&gt;처음 Ubuntu에 외장하드 디스크를 마운트하는 방법을 찾았을 때, 국내 몇개의 사이트에서 방법이 소개되어 있었지만 모두 공식 문서와 같은 내용으로 USB 하드 디스크를 수동으로 &lt;code&gt;mount&lt;/code&gt; 하는 방법이였다. 방법은 다음과 같다.&lt;/p&gt;
-
-&lt;p&gt;먼저 연결된 USB 외장하드디스크를 확인한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;fdisk -l
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;다음은 목록에서 나타나는 USB 외장하드 디스크를 해당하는 포멧으로 마운트를 한다. USB 외장하드디스크가 마운트 되어질 디렉토리를 만든다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;mkdir -p /media/external
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;보통 USB 외장하드디스크는 &lt;strong&gt;FAT&lt;/strong&gt; 방식이거나 &lt;strong&gt;NTFS&lt;/strong&gt; 방식이기 때문에 다음과 같이 할 수 있다. &lt;code&gt;fdisk -l&lt;/code&gt;에서 USB 외장하드디스크가 &lt;code&gt;/dev/sdb1&lt;/code&gt;으로 나타났다고 가정하고 살펴보자.&lt;/p&gt;
-
-&lt;p&gt;만약 USB 외장하드디스크가 &lt;strong&gt;FAT&lt;/strong&gt; 방식일 경우,&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;mount -t vfat /dev/sdb1 /media/external -o uid=1000,gid=1000,utf8,dmask=027,fmask=137
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;만약 USB 외장하드디스크가 &lt;strong&gt;NTFS&lt;/strong&gt; 방식일 경우,&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;mount -t ntfs-3g /dev/sdb1 /media/external
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이 방법은 USB를 연결했을 때 &lt;code&gt;fdisk -l&lt;/code&gt;로  디스크 목록이 보일때 가능하다. 다시 말해서 USB 외장하드디스크가 인식되어야 한다는 것이다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;우리는 &lt;code&gt;fdisk -l&lt;/code&gt;을 하더라도 USB 외장하드디스크가 목록에서 나타나지 않는 문제를 가지고 있다.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;자동-마운트&quot;&gt;자동 마운트&lt;/h3&gt;
-
-&lt;p&gt;또한 우리는 USB가 인식되면 윈도우즈 처럼 자동으로 USB 외장하드디스크가 마운트되어서 사용할 수 있도록 하는 방법을 찾는 중 Ubuntu 공식 문서에서 찾게되었다.&lt;/p&gt;
-
-&lt;p&gt;만약 Ubuntu server 운영체제를 사용하고 있다면 &lt;a href=&quot;http://packages.ubuntu.com/lucid/usbmount&quot;&gt;usbmount&lt;/a&gt; 패키지를 설치하면 USB에 외장저장매체를 연결하면 자동으로 &lt;code&gt;mount&lt;/code&gt;가 되어진다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;apt-get install usbmount
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;kernel-모듈&quot;&gt;Kernel 모듈&lt;/h2&gt;
-
-&lt;p&gt;우리가 사용하는 Linux는 각 벤더마다 linux kenel에 필요한 모듈들을 사용하는데 사용되고 있는 모듈을 살펴보려면 다음과 &lt;code&gt;cat /proc/modules&lt;/code&gt;를 사용하거나 &lt;code&gt;lsmod&lt;/code&gt; 명령어를 사용하면 된다. 아래는 &lt;code&gt;lsmod&lt;/code&gt;를 사용했을 때의 결과 예제이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Module                  Size  Used by
-snd_hda_codec_realtek   255820  1
-snd_hda_intel          24140  0
-snd_hda_codec          90901  2 snd_hda_codec_realtek,snd_hda_intel
-snd_hwdep              13274  1 snd_hda_codec
-snd_pcm                80244  2 snd_hda_intel,snd_hda_codec
-snd_timer              28659  1 snd_pcm
-snd                    55295  6 snd_hda_codec_realtek,snd_hda_intel,snd_hda_codec,snd_hwdep,snd_pcm,snd_timer
-soundcore              12600  1 snd
-snd_page_alloc         14073  2 snd_hda_intel,snd_pcm
-i915                  450979  1
-drm_kms_helper         40745  1 i915
-drm                   184133  2 i915,drm_kms_helper
-i2c_algo_bit           13184  1 i915
-video                  18951  1 i915
-lp                     13349  0
-ppdev                  12849  0
-psmouse                59039  0
-serio_raw              12990  0
-parport_pc             32111  0
-parport                36746  3 lp,ppdev,parport_pc
-r8169                  46630  0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;uas-module&quot;&gt;UAS module&lt;/h2&gt;
-
-&lt;p&gt;kenel 모듈 중에 &lt;a href=&quot;http://en.wikipedia.org/wiki/USB_Attached_SCSI&quot;&gt;UAS(USB Attached SCSI&lt;/a&gt; 가 있다. 이 모듈은 UAS 프로토콜, 다시 말해서 USB 저장매체로 데이터를 전송하는 프로토콜을 구현한 모듈인데 현재 Ubuntu에서는 USB 3.0 일 경우 문제가 있어서 UAS 모듈을 삭제한다. kenel 모듈을 삭제하는 방법은 &lt;code&gt;rmmod&lt;/code&gt; 명령어를 사용하는 것이다. 다음과 같이 uas 모듈을 삭제할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;rmmod uas
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;또는 모듈의 &lt;strong&gt;blacklist&lt;/strong&gt;를 만들어서 비활성화하는 방법도 있다. kenel 모듈의 blacklist는 &lt;code&gt;/etc/modeprobe.d&lt;/code&gt;에서 참조하는데 다음과 같이 &lt;code&gt;blacklist.conf&lt;/code&gt; 파일을 만들고 &lt;code&gt;uas&lt;/code&gt;를 blacklist로 등록한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;vi /etc/modprobe.d/blacklist.conf
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;blacklist uas
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;exfat-형식-포맷&quot;&gt;exFAT 형식 포맷&lt;/h2&gt;
-
-&lt;p&gt;이젠 Ubuntu에 USB 외장하드디스크를 연결해서 사용할 수 있는 준비를 모두 마쳤다. 우리는 모든 운영체제에서 Read/Write를 할 수 있게 500G 하드디스크를 &lt;strong&gt;FAT&lt;/strong&gt; 형식으로 포맷을 했는데, FAT 형식은 4G 이상 대용량 파일을 저장할 수 없다는 에러를 만나서 &lt;a href=&quot;http://en.wikipedia.org/wiki/ExFAT&quot;&gt;exFAT&lt;/a&gt; 형식으로 다시 포맷을 했다. Mac OS X (10.9.x) 에서는 NTFS 포멧 형식을 지원하고 있지 않는다. 그리고 Mac OS X에서는 NTFS로 포멧되어진 외장하드디스크는 read only로 마운트가 되어진다. 그래서 우리는 exFAT으로 USB 외장하드디스크를 포맷했다. Mac OS X 에서 USB 외장하드디스크를 포맷하기 위해서는 &lt;a href=&quot;http://en.wikipedia.org/wiki/Disk_Utility&quot;&gt;Disk Utility&lt;/a&gt;를 상용하면 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile6.uf.tistory.com/image/265C774453FD64EB20640A&quot; alt=&quot;exfat&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;usb-외장하드디스크-마운트&quot;&gt;USB 외장하드디스크 마운트&lt;/h2&gt;
-
-&lt;p&gt;exFAT으로 포맷되어진 USB 외장하드디스크를 Ubuntu에 연결한다. 그리고 &lt;code&gt;fdisk -l&lt;/code&gt; 명령어를 실행해보자.
-&lt;img src=&quot;http://cfile28.uf.tistory.com/image/260F553953FD64EB223CE9&quot; alt=&quot;fdisk&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;처음 우리가 USB 외장하드디스크를 연결해서 &lt;code&gt;fdisk -l&lt;/code&gt;을 실행했을 때는 디스크 목록에 외장하드디스크가 나타나지 않았는데 이젠 &lt;code&gt;/dev/sde1&lt;/code&gt; 500G 하드디스크가 목록에 나타나는 것을 볼 수 있다. 우리는 &lt;strong&gt;exFAT&lt;/strong&gt;으로 포맷했는데 Ubuntu에서 인식할 때는 &lt;strong&gt;NTFS&lt;/strong&gt;로 인식이 되는 것 같다.&lt;/p&gt;
-
-&lt;p&gt;우리는 앞에서 &lt;code&gt;usbmount&lt;/code&gt;를 설치해서 USB 외장 하드디스크가 연결되면 자동으로 &lt;code&gt;mount&lt;/code&gt; 되도록 했다. 마운트는 USB가 연결되는 순서대로 &lt;strong&gt;/media/usb순번&lt;/strong&gt;으로 마운트가 된다. 우리는 첫번째로 USB 외장 하드디스크를 연결해서 마운트를 했기 대문에 &lt;code&gt;/mnt/usb0&lt;/code&gt;으로 USB 외장 하드디스크가 마운트가 되었다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;cd /media/usb0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;touch README.md
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
-
-&lt;p&gt;작은 연구소나 개인 사무실, 개인이 연구하거나 개발할 때 PC에 Linux 서버를 설치해서 사용하는 경우가 많다. 때로는 운영하고 있던 서버를 업그레이드하거나 데이터를 백업해야하는 일이 발생한다. 요즘은 Cloud 저장소에 데이터를 백업하거나 또는 원격 서버에 백업을 하는 경우가 많지만, 네트워크 제한이나 특정한 이유로 물리적으로 다른 디스크로 데이터를 백업 받아야하는 경우가 종종 발생한다. 예전에는 하드디스크를 &lt;strong&gt;slave&lt;/strong&gt;로  마운트 시켜서 데이터를 백업했지만 최근 USB 외장 하드디스크의 용량이 커지면서 더이상 서버를 뜯어서 하드디스크를 추가로 달아서 백업하지 않고 간단히 USB 외장 하드디스크에 바로 백업할 수 있게 되었다. Linux도 많이 발전하게 되어서 kenel에 다양한 모듈이 지원되면서 간단히 USB를 연결하는 것 만으로 대용량 USB 외장 하드디스크를 바로 사용할 수 있게 되었다. 하지만, Ubuntu에서 외장 하드디스크를 연결하여 사용할 때 버그로 인해서 외장하드 인식이 불가능할 수도 있는데 우리는 &lt;code&gt;rmmod uas&lt;/code&gt;나 &lt;code&gt;blacklist uas&lt;/code&gt;를 사용해서 USB 인식의 문제를 수정했다. 또한 대용량 데이터를 백업할 때는 &lt;strong&gt;exFAT&lt;/strong&gt; 포멧을 사용하면 된다는 것을  살펴보았다. 느린 네트워크 백업이 답답하거나 디스크 풀 백업을 해야할 경우는 이젠 쉽게 USB 외장 하드디스크를 연결해서 백업해보는 것도 해결책 중에 하나라고 생각한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 27 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/series/ubuntu/mount-external-harddisk-on-ubuntu.html</link>
-        <guid isPermaLink="true">/series/ubuntu/mount-external-harddisk-on-ubuntu.html</guid>
-        
-        <category>linux</category>
-        
-        <category>ubuntu</category>
-        
-        <category>usb</category>
-        
-        
-        <category>ubuntu</category>
-        
-      </item>
-    
-      <item>
-        <title>Yobi 사용시 Safari 브라우저에서 한글폴더 문제 해결하기</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;Safari 브라우저에서 &lt;strong&gt;Yobi&lt;/strong&gt;를 사용할 때 git에 올린 &lt;strong&gt;한글 디렉토리명&lt;/strong&gt;일 경우 디렉토리 내부로 네비게이션이 정상적으로 이루어지지 못하는 문제가 있는데 이 문제를 해결하기 위한 방법을 알아본다.
-&amp;lt;!--more--&amp;gt; &lt;/p&gt;
-
-&lt;h2 id=&quot;yobi-와-windows-사용자&quot;&gt;Yobi 와 Windows 사용자&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://yobi.io&quot;&gt;Yobi&lt;/a&gt;를 프로젝트에 도입하고 난 뒤, 이전과 달라진 점은 git 활용도가 높아졌다는 것이다. git는 예전에는 git 명령어 특성상 Windows 사용자보다는 Mac OS X나 Linux 사용자들이 적극 사용했지만, Windows에 git client들이 점점 늘어나면서 Windows 사용자도 늘어나게 되었다.&lt;/p&gt;
-
-&lt;p&gt;우리 연구실에서도 Mac 사용자보다는 Windows 사용자가 많기 때문에 git의 활성화가 처음에는 어려웠지만, Yobi 도입 이후 Windows 사용자도 직관적으로 잘 사용하고 있다. 현재 개발자 뿐만 아니라 디자이너도 함께 git를 잘 사용하고 있는 것을 보면 Yobi가 국내 개발자들에 쉽게 접근할 수 있는 UI를 제공하고 있다는 것을 느낄 수 있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;yobi에서-한글처리&quot;&gt;Yobi에서 한글처리&lt;/h2&gt;
-
-&lt;p&gt;Yobi를 Windows 사용자들이 함께 사용하면서 Linux 계열의 개발자와 협업할 때는 볼 수 없었던 것을 볼 수가 있는데 바로 &lt;strong&gt;한글 폴더/파일명&lt;/strong&gt;이다. Mac이나 Linux를 사용하는 환경이라면 디렉토리명이나 파일명을 한글로 만들 생각은 좀처럼 하기 어렵다. 터미널 인터페이스에서 한글을 입력하는 것 자체가 어색하고 불편하기 때문이다. 반면, Windows는 대부분 디렉토리명으로 분류체계를 만들고 있기 때문에 디렉토리명을 알기 쉽게하기 위해서 &lt;strong&gt;한글명&lt;/strong&gt;으로 만들어 놓는 경우가 많다. 여기에더 &lt;strong&gt;&lt;em&gt;git&lt;/em&gt;&lt;/strong&gt;를 사용하게 되면 저장소에 한글이름이 그대로 적용되어 저장되어져 버리기 때문이다.&lt;/p&gt;
-
-&lt;p&gt;Yobi는 &lt;strong&gt;UTF-8&lt;/strong&gt; 기반으로 운영되어지고 있다. 즉, 소스코드, 운영체제, 웹 서버를 모두 UTF-8으로 맞추게되면 한글이 문제없이 처리되어진다.&lt;/p&gt;
-
-&lt;h2 id=&quot;yobi-사파리-브라우저-버그&quot;&gt;Yobi 사파리 브라우저 버그&lt;/h2&gt;
-
-&lt;p&gt;Yobi 환경을 모두 UTF-8로 설정을 하여 사용하더라도 &lt;strong&gt;Safari&lt;/strong&gt; 브라우저에서 &lt;strong&gt;한글 디렉토리명&lt;/strong&gt;을 클릭하면 URL 인코딩 문제가 발생해 버린다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile28.uf.tistory.com/image/27229A4553FAD06816305B&quot; alt=&quot;error&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;한글이 포함된 URL을 직접 주소창에 넣으면 한글 디렉토리명이 문제 없이 보여지며 디렉토리 내의 파일들이 보여진다. Safari 브라우저를 제외한 나머지 브라우저에서는 Yobi 에 &lt;strong&gt;한글 디렉토리명&lt;/strong&gt;을 클릭해도 정상적으로 보여지는데 Safari 브라우저에서만 &lt;strong&gt;한글 디렉토리명&lt;/strong&gt;을 클릭했을 때 정상적으로 나타나지 않는 버그를 발견했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;partial_view_folder.scala.html&quot;&gt;partial_view_folder.scala.html&lt;/h2&gt;
-
-&lt;p&gt;우리가 지금 발견한 버그는 safari 브라우저에서 한글 디렉토리 명을 클릭했을 때 생기는 문제이다. 저장소의 목록을 보여주는 코드는 yobi 프로젝트의 &lt;code&gt;/app/views/code/partial_view_folder.scala.html&lt;/code&gt; 파일이다. &lt;code&gt;partial_view_folder.scala.html&lt;/code&gt; 파일을 열어보면  &lt;strong&gt;listitem&lt;/strong&gt;을 만드는 코드는 아래와 같다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;... 생략 ...
-makeFileItem(file:org.codehaus.jackson.JsonNode, fileName:String, listPath:String) = {
-    @defining(routes.CodeApp.codeBrowserWithBranch(project.owner, project.name, URLEncoder.encode(branch, &amp;quot;UTF-8&amp;quot;), listPath).toString()) { filePath =&amp;gt;
-    @defining(fieldText(file, &amp;quot;type&amp;quot;)) { fileType =&amp;gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;cb-@listPath@fileName&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;row-fluid listitem&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-path=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getDataPath(listPath, fileName)&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;span6 filename&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-          &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getCorrectedPath(filePath, fileName)@if(fileType.eq(&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;)){#&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;cb-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;listPath&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fileName&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;}&amp;quot;&lt;/span&gt;
-                &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getFileClass(file)&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;title=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@fileName&amp;quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fileType&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;)){&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;data-type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;folder&amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
-                &lt;span class=&quot;na&quot;&gt;data-targetPath=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getDataPath(listPath, fileName)&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dynatree-icon vmiddle&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;@fileName
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;span5 commitMsg&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-            @Html(getAvatar(file))
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ml5&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@fieldText(file, &amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commitUrl&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;)&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@fieldText(file, &amp;quot;msg&amp;quot;)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;span1 commitDate&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@getFileAgoOrDate(file, &amp;quot;createdDate&amp;quot;)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-    }
-    }
-}
-...생략...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이 코드를 살펴보면 디렉토리명을 선택했을 때, 해당 디렉토리 아래의 파일 목록들을 보여주기 위해서 URL을 이동하기 위해 &lt;code&gt;&amp;lt;a href=&amp;quot;@getCorrectedPath(filePath, fileName)@if(fileType.eq(&amp;quot; folder&amp;quot;)){#cb-@listPath@fileName}&amp;quot;&lt;/code&gt; 와 같이 &lt;code&gt;&amp;lt;a/&amp;gt;&lt;/code&gt; 태그를 사용하고 있다는 것을 알 수 있다. 실제 위 코드가 모드 파싱되어 웹 페이지로 만들어지면 &lt;code&gt;&amp;lt;a href=&amp;quot;/Project1/code/master/카테고리분류&amp;quot;&lt;/code&gt; 이런 식으로 만들어진다.&lt;/p&gt;
-
-&lt;h2 id=&quot;location.href&quot;&gt;location.href&lt;/h2&gt;
-
-&lt;p&gt;Safari 브라우저 버그는 &lt;code&gt;&amp;lt;a/&amp;gt;&lt;/code&gt; 태그의 링크를 클릭하면 인코딩 문제가 발생하고, 주소창에 주소를 그대로 입력하면 정상적으로 보이는 것을 확인했기 때문에 우리는 &lt;code&gt;&amp;lt;a/&amp;gt;&lt;/code&gt; 태크로 주소를 이동하는 것 말고 &lt;code&gt;location.href&lt;/code&gt;로 주소를 변경할 수 있도록 다음과 같이 코드를 변경했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;@makeFileItem(file:org.codehaus.jackson.JsonNode, fileName:String, listPath:String) = {
-    @defining(routes.CodeApp.codeBrowserWithBranch(project.owner, project.name, URLEncoder.encode(branch, &amp;quot;UTF-8&amp;quot;), listPath).toString()) { filePath =&amp;gt;
-    @defining(fieldText(file, &amp;quot;type&amp;quot;)) { fileType =&amp;gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;cb-@listPath@fileName&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;row-fluid listitem&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-path=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getDataPath(listPath, fileName)&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;span6 filename&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-          &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- &amp;lt;a href=&amp;quot;@getCorrectedPath(filePath, fileName)@if(fileType.eq(&amp;quot; folder&amp;quot;)){#cb-@listPath@fileName}&amp;quot; --&amp;gt;&lt;/span&gt;
-          &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;onclick=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;location.href=&amp;#39;@getCorrectedPath(filePath, fileName)@if(fileType.eq(&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;)){#&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;cb-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;listPath&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fileName&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;}&amp;#39;&amp;quot;&lt;/span&gt;
-                &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getFileClass(file)&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;title=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@fileName&amp;quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;fileType&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;(&amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;)){&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;data-type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;folder&amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
-                &lt;span class=&quot;na&quot;&gt;data-targetPath=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@getDataPath(listPath, fileName)&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-                &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;dynatree-icon vmiddle&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;@fileName
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;span5 commitMsg&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-            @Html(getAvatar(file))
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;ml5&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@fieldText(file, &amp;quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;commitUrl&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;quot;)&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@fieldText(file, &amp;quot;msg&amp;quot;)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;span1 commitDate&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@getFileAgoOrDate(file, &amp;quot;createdDate&amp;quot;)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-    }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;한글 디렉토리명을 클릭해서 URL을 이동하는 대신에 &lt;code&gt;location.href&lt;/code&gt;를 사용해서 URL을 이동하게 변경한 이후에 Yobi를 다시 실행하면 다음과 같이 &lt;strong&gt;Safari&lt;/strong&gt; 브라우저에서도 정상적으로 동작하는 것을 확인할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile2.uf.tistory.com/image/233B8A3553FAD06820E0CF&quot; alt=&quot;success&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;_page.less&quot;&gt;_page.less&lt;/h2&gt;
-
-&lt;p&gt;우리는 위에서 &lt;code&gt;&amp;lt;a href=&amp;quot;&amp;quot;/&amp;gt;&lt;/code&gt; 태그를  &lt;code&gt;location.href&lt;/code&gt; 이벤트로 변경해버렸다. HTML 문서에서는 &lt;code&gt;&amp;lt;a href=&amp;quot;&amp;quot;/&amp;gt;&lt;/code&gt; 태그에 마우스 포인트를 올리면 자동으로 손가락 커서 모양이 나타게 되어 있는데 우리는 태그를 변경했기 때문에 마우스 포인트를 올려도 손가락 커서 모양이 나타나지 않는다. 그래서 우리는 stylesheet를 변경하기로 했다. Yobi는 &lt;a href=&quot;http://lesscss.org/&quot;&gt;less&lt;/a&gt;를 사용해서 dynamic하게 stylesheet를 만들어서 사용하고 있었다. 우리가 이벤트를 만든 &lt;strong&gt;listitem&lt;/strong&gt;의 &lt;strong&gt;filename&lt;/strong&gt; 아래에 있는 &lt;code&gt;&amp;lt;a/&amp;gt;&lt;/code&gt; 태그에 커서모양을 변경하기 위해서 우리는 &lt;code&gt;/app/assets/stylesheet/less/_page.less&lt;/code&gt;를 열어서 다음 스타일 속성을 수정하였다. &lt;code&gt;.listitem .filename a&lt;/code&gt; 속성을 추가했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;생략&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;depth-&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],[&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot; depth-&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;listhead&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;display&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;none&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;nc&quot;&gt;.listitem&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;relative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;nc&quot;&gt;.commitMsg&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;overflow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;span&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.dynatree-icon&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;:before&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-           &lt;span class=&quot;k&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;absolute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-           &lt;span class=&quot;k&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-           &lt;span class=&quot;k&quot;&gt;border&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1px&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;dotted&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;#ccc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-           &lt;span class=&quot;k&quot;&gt;border-width&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0px&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0px&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1px&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;생략&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;다시 Yobi를 재시작하면 서비스가 로드되면서 수정한 &lt;code&gt;.scala.html&lt;/code&gt; 파일과 &lt;code&gt;.less&lt;/code&gt; 파일이 컴파일되는 것을 확인 할 수 있을 것이다. 서비스가 완벽하게 올라간 이후 Safari 브라우저에서 &lt;strong&gt;한글 디렉토리명&lt;/strong&gt;을 클릭해보면 문제없이 한글 디렉토리가 열리고 내부에 있는 파일 목록들이 보이는 것을 확인할 수 있을 것이다. 현재 Yobi 프로젝트에 &lt;a href=&quot;https://github.com/naver/yobi/pull/773/&quot;&gt;pull request&lt;/a&gt;를 요청한 상태이다. 오픈소스로 운영되고 있는 Yobi의 장점이 아닌가 생각한다. 정확한 문제의 원인은 알 수 없지만 우리가 경험한 내용을 수정해서 프로젝트에 적용할 수 있도록 요청했다. 다른 원인으로부터 발생한 것이라면 contributor들이 또 수정해서 프로젝트에 반영할 것이다. 우선 우리는 Yobi를 사용하여서 소스코드를 관리하는데 &lt;strong&gt;한글문제&lt;/strong&gt;로 어려움을 가졌고 사내에서 수정해서 사용하게 되어 pull request를 요청했다. 아마 다음 버전에는 우리가 제시한 방법이 아니더라도 &lt;strong&gt;Safari 브라우저에서 한글 디렉토리명 문제&lt;/strong&gt;에 대해서 해결이 되어서 나올 것으로 기대가 된다.&lt;/p&gt;
-
-&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
-&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
-&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Mon, 25 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/series/git/korean-foldername-in-yobi.html</link>
-        <guid isPermaLink="true">/series/git/korean-foldername-in-yobi.html</guid>
-        
-        <category>git</category>
-        
-        <category>yobi</category>
-        
-        <category>safari</category>
-        
-        
-        <category>git</category>
-        
-      </item>
-    
-      <item>
-        <title>Yobi와 Apache 연동시 encoded slash 문제 RewriteRule로 해결하기</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;Apache는 기본으로 URLEncoding을 하게 되어 있다. 이런 이유 때문에 특수 문자열을 함번 인코딩을해서 &lt;strong&gt;%&lt;/strong&gt;와 같이 변환이 된 URL을 다시 요청하게 되면 자동으로 &lt;strong&gt;%&lt;/strong&gt;에 대한 문자를 인코딩을 하는 문제가 발생한다. Yobi와 Apache를 연동할 때 Yobi에서 변경한 인코딩 URL을 중복으로 인코딩하지 않게 하는 방법에 대해서 소개한다.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;yobi&quot;&gt;Yobi&lt;/h2&gt;
-
-&lt;p&gt;우리 연구소에서는 &lt;a href=&quot;https://about.gitlab.com/&quot;&gt;gitlab&lt;/a&gt;을 사용하여 소스코드를 관리하고 있다가 Naver Lab에서 만든 &lt;a href=&quot;https://github.com/naver/yobi&quot;&gt;Yobi&lt;/a&gt;로 프로젝트와 소스를 관리하기로 결정하고 마이그레이션 하였다. Yobi는 우리가 흔히 알고 있는 &lt;a href=&quot;https://github.com&quot;&gt;GitHub&lt;/a&gt;와 같이 git를 사용하여 소스를 관리할 때 웹에서 협업을 할 수 있는 &lt;a href=&quot;http://en.wikipedia.org/wiki/Software_configuration_management&quot;&gt;SCM&lt;/a&gt;이다. Yobi는 &lt;a href=&quot;http://www.scala-lang.org/&quot;&gt;Scala&lt;/a&gt; 기반의 &lt;a href=&quot;https://www.playframework.com/&quot;&gt;Play&lt;/a&gt; framework으로 만들어졌다. 기존의 gitlab은 Ruby기반으로 만들어져 있고 설정이 매우 까다로웠다. 하지만 Yobi는 서버에 JDK 7이 설치되어 있으면 간단하게 설치할 수 있는 장점이 있다. 더구나 우리는 HTTP를 지원하는 git 시스템을 원했기 때문에 Yobi는 우리의 필요조건을 모두 충족시켜 주었다.&lt;/p&gt;
-
-&lt;h2 id=&quot;yobi-서버-실행&quot;&gt;Yobi 서버 실행&lt;/h2&gt;
-
-&lt;p&gt;Yobi는 &lt;a href=&quot;https://github.com/naver/yobi&quot;&gt;GitHub&lt;/a&gt;에서 &lt;code&gt;clone&lt;/code&gt;을 하고 &lt;code&gt;play&lt;/code&gt;를 실행시키면 자동으로 필요한 패키지들을 자동으로 다운받고 서버가 실행된다. 시작하는 방법도 아래와 같이 메모리옵션을 지정하고 &lt;code&gt;play&lt;/code&gt;를 실행시켜면 된다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;_JAVA_OPTIONS=&amp;quot;-Xmx2048m -Xms1024m&amp;quot; play &amp;quot;start -DapplyEvolutions.default=true -Dhttp.port=9000&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;yobi와-apache-mod_proxy&quot;&gt;Yobi와 Apache mod_proxy&lt;/h2&gt;
-
-&lt;p&gt;Yobi는 Play framework를 사용하고 있기 때문에 자체 웹 서버를 동작시킬 수 있다. 만약 &lt;strong&gt;80&lt;/strong&gt;번 포트를 사용하고 싶으면 Play 서버를 시작할 때 포트번호를 80번으로 지정하면 &lt;code&gt;http://&lt;/code&gt;로 특별한 설정없이 http 서비스를 시작할 수 있다. 하지만 우리 연구실에서는 Front Web Server로 Apache를 사용하고 있었기 때문에 Apache와 Yobi를 연동하는 작업을 해야했다. 우리는 Yobi의 서버를 뒷단에서 기본포트로 서비스를 하고 외부에서 접근할 때 Apache를 통해서 들어가도록 설정했다.&lt;/p&gt;
-
-&lt;p&gt;처음 우리는 단순히 apache의 &lt;a href=&quot;http://httpd.apache.org/docs/current/mod/mod_proxy.html&quot;&gt;mod_proxy&lt;/a&gt;를 사용해서 Yobi 서버로 요청이 전달되게 했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;ProxyRequests Off
-ProxyVia Off
-ProxyPreserveHost On
-
-ProxyPass / http://127.0.0.1:9000/
-ProxyPassReverse / http://127.0.0.1:9000/
-
-&amp;lt;Proxy *&amp;gt;
-    Order deny,allow
-    Allow from all
-&amp;lt;/Proxy&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;하지만 Apache로 proxy를 사용할 때 &lt;strong&gt;encoded slash&lt;/strong&gt; 문제가 발생한다는 것을 알게 되었다.&lt;/p&gt;
-
-&lt;h2 id=&quot;encoded-slash-문제&quot;&gt;Encoded slash 문제&lt;/h2&gt;
-
-&lt;p&gt;Yobi는 branch를 선택하면 JavaScript로 branch를 URL로 표현할 때 &lt;code&gt;encodedURL()&lt;/code&gt;를 사용해서 요청한다. 만약 &lt;strong&gt;DemoApp&lt;/strong&gt;이라는 프로젝트에 &lt;strong&gt;1.0-dev&lt;/strong&gt;라는 branch가 있을 경우 Yobi는 이것을 표현하기 위해서 &lt;code&gt;http://%{HTTP_HOST}:9000/DemoApp/code/refs%2Fheads%2F2.0-dev&lt;/code&gt; 라는 URL 요청을 하게 되는 것이다.&lt;/p&gt;
-
-&lt;p&gt;만약 Apache를 사용하지 않고 Play만 사용해서 서비스를 한다면 이 URL은 문제가 되지 않는다. 하지만 Apache를 사용하게 되면 자동으로 URL 인코딩을 지원하기 때문에 이중 인코딩 문제가 발생한다. 다시 말해서 &lt;code&gt;%2F&lt;/code&gt;로 인코딩 된 URL을 Play 서버로 넘기기 위해서는 &lt;code&gt;%252F&lt;/code&gt;인코딩으로 요청을 해야하는 것이다.&lt;/p&gt;
-
-&lt;p&gt;Yobi에서 정상적인 URL 요청은 다음과 같다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;http://%{HTTP_HOST}:9000/DemoApp/code/refs%2Fheads%2F2.0-dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이 요청을 Apache를 사용해서 URL 요청을 한다고 하면 아래와 같이 요청하게 될 것이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;https://%{HTTP_HOST}:9000/DemoApp/code/refs%2Fheads%2F2.0-dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;하지만 이렇게 요청하면 페이지를 찾을 수 없다고 &lt;strong&gt;404 Not found&lt;/strong&gt; 에러를 보게 될 것이다. 이유는 Apache가 가지고 있는 자체 URL encoder 때문이다. 그래서 Yobi에서 &lt;code&gt;%2F&lt;/code&gt;를 이해하기 위해서 다음과 같이 &lt;code&gt;%252F&lt;/code&gt;로 요청을 해야한다. 왜냐면 Apache에 &lt;code&gt;%2F&lt;/code&gt;라고 입력한다고 해도 Apache 내부에서는 이것을 자동올 &lt;code&gt;/&lt;/code&gt; 인식해버리기 때문에 proxy로 넘기면 encoded URL이 넘어가지 않기 때문이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;https://%{HTTP_HOST}:9000/DemoApp/code/refs%252Fheads%252F2.0-dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이렇게 하기 위해서는 Yobi에서 URL 요청이 들어오는 것을 디코딩하는 소스 코드를 분석해서 디코딩하는 소스를 변경해야한다. 우리는 Naver에서 업데이트하는 소스코드를 &lt;code&gt;fetch&lt;/code&gt;와 &lt;code&gt;pull&lt;/code&gt;을 하는데 변경없이 적용하기 위해서 소스코드를 건드리지 않고 싶었다. 그래서 우리는 Apache의 &lt;strong&gt;mod_proxy&lt;/strong&gt;를 사용하지 않고 &lt;a href=&quot;http://httpd.apache.org/docs/current/mod/mod_rewrite.html&quot;&gt;mode_rewrite&lt;/a&gt;를 사용하기로 결정했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;yobi와-apache-mod_rewrite&quot;&gt;Yobi와 Apache mod_rewrite&lt;/h2&gt;
-
-&lt;p&gt;Apache의 &lt;a href=&quot;http://httpd.apache.org/docs/current/mod/mod_rewrite.html&quot;&gt;mod_rewrite&lt;/a&gt; URL 요청이 들어오면 특별한 형태로 URL요청을 변경하는 모듈이다.
-우리는 모든 요청을 &lt;code&gt;https&lt;/code&gt; 요청을 &lt;code&gt;http://%{HTTP_HOST}:9000&lt;/code&gt;으로 rewrite 시키도록 했다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;/refs/heads/ 요청이 들어오면 우리는 이것을 Yobi로 넘길 때 encoded URL로 변경하도록 /refs%2Fhead%2 로 URL을 rewrite 하도록 했다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;AllowEncodedSlashes On
-
-RewriteEngine On
-RewriteCond %{HTTPS} on
-RewriteRule ^(.*)/refs/heads/(.*)$ http://%{HTTP_HOST}:9000$1/refs\%2Fheads\%2F$2 [P,L,NE]
-RewriteRule .* http://%{HTTP_HOST}:9000%{REQUEST_URI} [P,L,NE]
-
-RewriteLogLevel 9
-RewriteLog ${APACHE_LOG_DIR}/servername-rewrite.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;먼저 우리는 URL의 요청에 포함되어 있는 encoded slash를 받기 위해서 &lt;strong&gt;AllowEncodedSlashes&lt;/strong&gt;를 &lt;strong&gt;On&lt;/strong&gt;으로 설정했다. 그리고 URL rewrite가 바로 되는지 확인하기 위해서 Apache의 mode_rewrite 모듈의 로깅을 하기 위해서 &lt;strong&gt;RewriteLog&lt;/strong&gt;를 설정했다. &lt;strong&gt;RewriteLogLevle&lt;/strong&gt;을 지정해서 들어오는 모든 요청을 디버깅하면서 &lt;strong&gt;RewriteRule&lt;/strong&gt;의 규칙을 설정했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;RewriteRule ^(.*)/refs/heads/(.*)$ http://%{HTTP_HOST}:9000$1/refs\%2Fheads\%2F$2 [P,L,NE]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;우리는 &lt;strong&gt;RewriteRule&lt;/strong&gt;에 옵션을 다음과 같이 사용했다.
-- &lt;strong&gt;P&lt;/strong&gt; : proxy (이 옵션을 사용하지 않으면 proxy 되는 것이 아니라 location이 변경되어 버린다)
-- &lt;strong&gt;L&lt;/strong&gt; : last
-- &lt;strong&gt;NE&lt;/strong&gt; : no escape&lt;/p&gt;
-
-&lt;p&gt;우리가 적용한 &lt;strong&gt;RewriteRule&lt;/strong&gt;이 두가지 이다. 하나는 Yobi의 branch요청을 하는 encoded slash를 처리하기 위한 것과 나머지는 모두 Request를 그대로 Yobi로 rewrite 하게 해 두었다.&lt;/p&gt;
-
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
-
-&lt;p&gt;우리는 보안문제로 HTTPS를 사용하고 있고 front web server로 Apache를 사용하고 있었기 때문에 Yobi를 내부에서 요청을 받을 수 있게 Apache의 &lt;strong&gt;mod_proxy&lt;/strong&gt;를 사용했다. 하지만 Yobi가 branch를 선택할 때 JavaScript의 &lt;code&gt;encodedURL()&lt;/code&gt;를 URL로 요청하는데 Apache의 URL encoder때문에 proxy가 될 때 정상적으로 동작하지 않는 것을 발견했다. 그래서 우리는 &lt;strong&gt;mod_rewrite&lt;/strong&gt;로 변경했다. &lt;strong&gt;RewriteRule&lt;/strong&gt;은 정규표현식을 사용해서 &lt;code&gt;%2F&lt;/code&gt;를 처리할 수 있게 rewrite를 규칙을 만들었다. Apache의 &lt;strong&gt;mod_rewrite&lt;/strong&gt;는 다양한 규칙을 사용해서 우리가 원하는 URL로 변경시킬 수 있다. 우리는 단순히 Yobi의 branch가 만드는 encoded slash를 처리했지만 mod_rewrite를 사용하면 어떠한 URL로 원하는 URL로 변경하여 요청할 수 있도록 할 수 있다. 소스코드를 변경하지 않고 웹 서버단에서 다양한 처리를 할 수 있도록 Apache는 파워풀한 URL rewrite 기능을 가지고 있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;http://httpd.apache.org/docs/current/mod/mod_proxy.html&quot;&gt;http://httpd.apache.org/docs/current/mod/mod_proxy.html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://httpd.apache.org/docs/current/mod/mod_rewrite.html&quot;&gt;http://httpd.apache.org/docs/current/mod/mod_rewrite.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
-&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
-&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Thu, 14 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/series/git/solve-redirect-encoded-slash-in-apache.html</link>
-        <guid isPermaLink="true">/series/git/solve-redirect-encoded-slash-in-apache.html</guid>
-        
-        <category>git</category>
-        
-        <category>yobi</category>
-        
-        <category>safari</category>
-        
-        
-        <category>git</category>
-        
-      </item>
-    
-      <item>
-        <title>Android 앱 개발할 때 필요없는 로그 보이지 않게 하기</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;Android를 개발할 때 IDE에서는 Android 디바이스의 모든 로그가 출력이 된다. filter를 어떻게 적용하는가에 따라서 현개 개발하고 있는 디바이스의 로그를 정확하고 간결하게 볼 수 있는데 이 포스트에서 Android를 개발하기 위해 genymotion을 사용할 때 필요없는 로그를 보이지 않게 하는 방법에 대해 소개한다.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;logcat&quot;&gt;LogCat&lt;/h2&gt;
-
-&lt;p&gt;Android &lt;a href=&quot;http://developer.android.com/tools/help/logcat.html&quot;&gt;LogCat&lt;/a&gt;은 안드로이드 앱을 개발할 때 system output으로 출력되는 로그 메카니즘이다. LogCat을 잘 다루지 않게 되면 디바이스에 출력되는 여러가지 로깅을 개발 할 때 함께 봐야하는 불편함이 생긴다. 그래서 안드로이드 앱을 개발할 때 다양한 Logging 방법을 문서로 제공하고 있다. (&lt;a href=&quot;http://developer.android.com/tools/debugging/debugging-log.html&quot;&gt;http://developer.android.com/tools/debugging/debugging-log.html&lt;/a&gt;)&lt;/p&gt;
-
-&lt;h2 id=&quot;log-객체&quot;&gt;Log 객체&lt;/h2&gt;
-
-&lt;p&gt;안드로이드 앱을 개발할 때 가장 많이 사용하는 Logging 클래스는 &lt;a href=&quot;http://developer.android.com/tools/debugging/debugging-log.html#logClass&quot;&gt;Log&lt;/a&gt; 이다. Log 클래스는 LogCat에 메세지를 출력하는 android의 utility 클래스이고 다음과 같은 메소드를 사용할 수 있다.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;v&lt;/strong&gt;(String, String) : verbose&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;d&lt;/strong&gt;(String, String) : debug&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;i&lt;/strong&gt;(String, String) : information&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;w&lt;/strong&gt;(String, String) : wranning&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;e&lt;/strong&gt;(String, STring) : error&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;예를 들면 다음과 같이 사용할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Log.i(&amp;quot;MyActivity&amp;quot;, &amp;quot;MyClass.getView() — get item number &amp;quot; + position);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 Log 객체를 사용하면 다음과 같이 LogCat에 출력이 된다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;I/MyActivity( 1557): MyClass.getView() — get item number 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;log-foramt&quot;&gt;Log Foramt&lt;/h2&gt;
-
-&lt;p&gt;LogCat은 다양한 출력 포멧을 지원한다.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;brief&lt;/strong&gt; : priority/tag 그리고 PID(프로세스 ID)를 출력한다.(default)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;process&lt;/strong&gt; : PID만 출력&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;tag&lt;/strong&gt; : priority/tag만 출력&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;raw&lt;/strong&gt; : 다른 metadata field 없이 raw log message만 출력&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;time&lt;/strong&gt; : date, invocation time, PID 출력&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;threadtime&lt;/strong&gt; : date, invocation time, priority, tag, PID, TID(thread ID)를 출력&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;long&lt;/strong&gt; : 모든 metadata field를 blank로 분리해서 출력&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;사용방법은 다음과 같다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[adb] logcat [-v &amp;lt;format&amp;gt;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;logcat-filter-설정&quot;&gt;LogCat filter 설정&lt;/h2&gt;
-
-&lt;p&gt;LogCat은 디바이스의 전체 시스템 출력을 보여주기 때문에 우리는 LogCat이 지원하고 있는 &lt;strong&gt;filter&lt;/strong&gt;를 잘 사용해야 한다. 수 많은 로깅중에 warnning 메세지를 filter하여 보고 싶을 경우는 다음과 같이 한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;adb logcat *:W
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;filter로 사용할 수 있는 priority 옵션은 다음과 같다.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;V&lt;/strong&gt; : verbose (lowest priority)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;D&lt;/strong&gt; : debug&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;I&lt;/strong&gt; : info&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;W&lt;/strong&gt; : warnning&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;E&lt;/strong&gt; : error&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;F&lt;/strong&gt; : fetal&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;S&lt;/strong&gt; : silent (highest priority, on which nothing is ever printed)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;정규표현식-사용&quot;&gt;정규표현식 사용&lt;/h2&gt;
-
-&lt;p&gt;LogCat의 filter는 옵션으로 정규표현식을 사용해서 보고 싶은 내용만 걸러서 볼 수도 있다. 우리가 프로젝트에서 &lt;a href=&quot;http://www.genymotion.com/&quot;&gt;genymotion&lt;/a&gt;을 도입했다. genymotion은 그래픽 가속기를 사용해서 기존의 Android emulator의 느린 속도를 보완해서 빠르게 디버깅을 할 수 있는 방법을 제공해준다. genymotion에 대해서는 다음 포스팅에서 자세하게 소개하겠다.&lt;/p&gt;
-
-&lt;p&gt;genymotion을 사용할 때 LogCat에서는 GPU에 대한 에러가 LogCat에 출력이 된다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile6.uf.tistory.com/image/26046D4153EAF250118695&quot; alt=&quot;eglCodecCommon error&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;이렇게 우리가 프로그램에 포함되지 않은 로깅이 디바이스의 문제로 수없이 많이 발생하기 때문에 정작 우리가 개발하면서 보고 싶은 로그를 스크롤을 하면서 찾아서 확인해야하는 불편함이 있다. 그래서 우리는 불필요한 genymotion의 GPU에 관련된 에러를 모두 제거하고 순수하게 우리가 남기고 싶은 로그만 보고 싶었다.&lt;/p&gt;
-
-&lt;p&gt;그래서 우리는 다음과 같이 LogCat에 정규 표현식 filter를 사용했다. 우리는 IntelliJ(Android Studio)를 이용해서 Android를 개발하고 있기 때문에 IntelliJ에서 제공하는 인터페이스로 LogCat의 filter를 적용했다.&lt;/p&gt;
-
-&lt;p&gt;genymotion을 사용하여 앱을 실행시키면 GPU에 관련된 에러가 포함되는데 TAG에는 &lt;strong&gt;eglCodecCommon&lt;/strong&gt;, &lt;strong&gt;OpenGLRender&lt;/strong&gt; 그리고 &lt;strong&gt;EGL_genymotion&lt;/strong&gt;가 포함된 에러가 출력이 되고 있다. 그리고 message에 &lt;strong&gt;GL_INVALID_OPERATION&lt;/strong&gt; 에러가 포함이 되어 있기 때문에 다음과 같이 filter를 적용할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile26.uf.tistory.com/image/2272B34253EAF24F130B75&quot; alt=&quot;exclude filter&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;이렇게 LogCat에 정규 표현식을 적용하면 노이즈로 포함되어있는 필요없는 로그를 모두 제거하고 우리에게 필요한 정보만 LogCat으로 출력되는 것을 확인 할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile25.uf.tistory.com/image/2276CB4253EAF2500C0600&quot; alt=&quot;remove exclude&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
-
-&lt;p&gt;LogCat은 Android 앱을 개발할 때 아주 중요한 자료가 된다. 그런데 LogCat은 system logging 메카니즘으로 우리가 출력하고 싶은 메세지 외에도 우리가 필요하지 않는 로그도 함께 출력이 된다. 이럴 때 우리는 LogCat의 filter 기능을 잘 사용하면 우리가 필요한 정보만 출력시켜 개발할 때 편리하게 진행할 수 있다. LogCat의 priority와 tag만을 사용해서 출력하는 것 이외에도 &lt;strong&gt;정규표현식&lt;/strong&gt;을 이용해서 필요없는 메세지를 보이지 않게 하거나 필요한 메세지만 출력할 수도 있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;http://developer.android.com/tools/debugging/debugging-log.html&quot;&gt;http://developer.android.com/tools/debugging/debugging-log.html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://developer.android.com/tools/help/logcat.html&quot;&gt;http://developer.android.com/tools/help/logcat.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
-&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
-&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 13 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/series/android/exclude-gpu-error-when-using-genymotion.html</link>
-        <guid isPermaLink="true">/series/android/exclude-gpu-error-when-using-genymotion.html</guid>
-        
-        <category>android</category>
-        
-        <category>genymotion</category>
-        
-        
-        <category>android</category>
-        
-      </item>
-    
-      <item>
-        <title>Jekyll을 사용하여 GitHub Pages 만들기</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;GitHub는 git 호스팅 서비스 외 다양한 개발 환경을 제공하고 있다. GitHub는 소셜 코딩 환경 뿐만아니라 프로젝트의 사이트를 만들 수 있는 기능을 제공하는데
-&lt;strong&gt;Github Pages&lt;/strong&gt;를 이용하여 Markdown 파일을 사용하여 개인 및 프로젝트 사이트를 운영할 수 있다. 이 포스트에서는 GitHub Pages를 이용하는 방법을 소개한다.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;github-pages&quot;&gt;GitHub Pages&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://pages.github.com/&quot;&gt;Github Pages&lt;/a&gt;는 github의 프로젝트를 만들 수 있게 github에서 제공하고 있는 서비스이다. 사이트를 만들기 위해서 서버를 설치하고 웹서버 환경을 구축하지 않고도 github에 웹 리소스를 리파지토리에 &lt;code&gt;git push&lt;/code&gt; 하는 것 만으로 웹 사이트를 만들 수 있다. 이 것은 소스코드만 보이는 GitHub의 Reposity를 보여주는 대신 프로젝트 사이트를 만들기에 편리하다.    웹 개발자라면 한번쯤 방문한 &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstra&lt;/a&gt; 사이트 역시 GitHub page로 만들어진 것이다. 프로젝트 리파지토리에 &lt;code&gt;gh-pages&lt;/code&gt; 브렌치를 만들고 &lt;code&gt;index.html&lt;/code&gt; 파일을 넣는 것 만으로도 프로젝트 사이트를 만들 수 있으니 정말 편리하다. GitHub Pages를 생성하는 방법은 &lt;a href=&quot;https://help.github.com/articles/user-organization-and-project-pages&quot;&gt;User, Organization, and Project Pages&lt;/a&gt;를 살펴보면 된다.&lt;/p&gt;
-
-&lt;p&gt;GitHub page를 생성하는 방법은 &lt;strong&gt;&lt;em&gt;gh-pages&lt;/em&gt;&lt;/strong&gt; branch에 &lt;code&gt;index.html&lt;/code&gt; 파일을 &lt;code&gt;git push&lt;/code&gt; 하는 것 만으로도 만들 수 있고, 다른 static website generator framework를 사용해도 된다. GitHub에서는 공식적인 Database를 지원하고 있지 않기 때문에 static website(HTML 파일)을 사용해야 한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;github-계정-페이지&quot;&gt;GitHub 계정 페이지&lt;/h2&gt;
-
-&lt;p&gt;GitHub는 프로젝트 페이지 말고도 GitHub Account Page를 만들 수 있다. 다시 말해서 GitHub의 계정이 &lt;strong&gt;&lt;em&gt;saltfactory&lt;/em&gt;&lt;/strong&gt; 라고 한다면 &lt;a href=&quot;http://saltfactory.github.io&quot;&gt;http://saltfactory.github.io&lt;/a&gt; 라는 개인 페이지를 만들 수 있는 것이다. 프로젝트 페이지와 달리 계정 페이지는 &lt;strong&gt;&lt;em&gt;gh-pages&lt;/em&gt;&lt;/strong&gt; branch를 사용하는 것이 아니라 &lt;strong&gt;&lt;em&gt;master&lt;/em&gt;&lt;/strong&gt; branch를 사용한다. 우리는 이번 포스팅에서 개인 페이지를 만드는 방법을 살펴볼 것이다. 계정 페이지를 만들기 위해서는 GitHub에 새로운 리파지토리를 생성해야한다.&lt;/p&gt;
-
-&lt;h3 id=&quot;repository-생성&quot;&gt;Repository 생성&lt;/h3&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;계정 페이지는 반드시 &lt;strong&gt;&lt;em&gt;{GitHub의 계정}&lt;/em&gt;&lt;/strong&gt;.github.io 라는 이름으로 만들어야 한다.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;다시 말해서 계정이 &lt;strong&gt;&lt;em&gt;saltfactory&lt;/em&gt;&lt;/strong&gt;라면 리파지토리 이름을 &lt;strong&gt;&lt;em&gt;saltfactory.github.io&lt;/em&gt;&lt;/strong&gt; 라고 만든다. 그러면 &lt;a href=&quot;https://github.com/saltfactory/saltfactory.github.io&quot;&gt;https://github.com/saltfactory/saltfactory.github.io&lt;/a&gt; 과 같이 GitHub에 리파지토리가 생성이 된다.&lt;/p&gt;
-
-&lt;p&gt;현재는 리파지토리가 비어져 있을 것이다. 이것을 이젠 내 컴퓨터에 &lt;code&gt;clone&lt;/code&gt;을 한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;clone https://github.com/saltfactory/saltfactory.github.io.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;jekyll&quot;&gt;Jekyll&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://wolfslittlestore.be/wp-content/uploads/2013/07/jekyll.png&quot; alt=&quot;jekyll&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;은 static websites 생성 프레임워크이다. &lt;code&gt;Ruby&lt;/code&gt;로 만들어진 이 것은 &lt;strong&gt;Markdown&lt;/strong&gt; 파일을 &lt;code&gt;_posts&lt;/code&gt; 디렉토리에 생성하는 것 만으로 멋진 static website를 만들어준다. Markdown을 사용하는 개발자에게 반가운 이야기일 것이다. 우리도 Markdown을 표준 document format으로 정하고 난 뒤에 Jekyll을 사용해서 Pages를 만들고 기존의 블로그를 이전하고 있다.&lt;/p&gt;
-
-&lt;h3 id=&quot;jekyll-설치&quot;&gt;Jekyll 설치&lt;/h3&gt;
-
-&lt;p&gt;우선 &lt;a href=&quot;https://www.ruby-lang.org/en/&quot;&gt;Ruby&lt;/a&gt;가 설치되어 있어야 한다. Ruby는 다양한 버전이 존재하는데 의존성 문제를 해결하기 위해서 &lt;a href=&quot;https://rvm.io/&quot;&gt;RVM(Ruby Version Manager)&lt;/a&gt;을 함께 설치한다. 이 블로그에서도 RVM에 대한 포스팅이 있는데 설치하는데 문제가 발생하면  &lt;a href=&quot;http://blog.saltfactory.net/search/rvm&quot;&gt;http://blog.saltfactory.net/search/rvm&lt;/a&gt; 의 글 들을 살펴보면 도움이 될 것이다.&lt;/p&gt;
-
-&lt;h3 id=&quot;rvm-설치&quot;&gt;RVM 설치&lt;/h3&gt;
-
-&lt;p&gt;RVM 설치는 아래와 간단히 설치할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;curl -sSL https://get.rvm.io | bash -s stable --ruby
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;ruby-2.1.1-설치&quot;&gt;Ruby 2.1.1 설치&lt;/h3&gt;
-
-&lt;p&gt;Mac OS X에는 &lt;strong&gt;&lt;em&gt;ruby 1.9.3&lt;/em&gt;&lt;/strong&gt; 버전이 기본적으로 설치되어 있다. 하지만 GitHub에서 사용하는 Ruby 버전은 &lt;strong&gt;&lt;em&gt;ruby 2.1.1&lt;/em&gt;&lt;/strong&gt; 이다. RVM이 설치되면 Rubyㄹㄹ 설치한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;rvm install 2.1.1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;그리고 기존의 &lt;strong&gt;&lt;em&gt;ruby 1.9.3&lt;/em&gt;&lt;/strong&gt;을 사용하는 것이 아니라 &lt;strong&gt;&lt;em&gt;ruby 2.1.1&lt;/em&gt;&lt;/strong&gt;을 기본으로 사용하기 위해 이것을 디폴트로 지정한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;rvm --default use 2.1.1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&quot;gemfile-생성&quot;&gt;Gemfile 생성&lt;/h3&gt;
-
-&lt;p&gt;우리가 위에서 &lt;code&gt;clone&lt;/code&gt;한 &lt;code&gt;saltfactory.github.io&lt;/code&gt; 디렉토리로 이동한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;cd saltfactory.github.io/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;지금부터 우리는 Jekyll을 사용해서 계정 페이지를 만들기 위해 필요한 라이브러리들을 설치할 것이다. Node.js가 &lt;strong&gt;&lt;em&gt;npm&lt;/em&gt;&lt;/strong&gt;이 있는 것 처럼 Ruby는 &lt;a href=&quot;https://rubygems.org/&quot;&gt;gem&lt;/a&gt;이 있다. 필요한 라이브러리들을 &lt;strong&gt;&lt;em&gt;Gemfile&lt;/em&gt;&lt;/strong&gt; 안에 작성하고 &lt;code&gt;bundle install&lt;/code&gt; 이라는 명령어로 필요한 라이브러리들을 한번에 설치할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;GitHub는 Jekyll을 사용하기 위한 &lt;a href=&quot;https://pages.github.com/versions/&quot;&gt;의존성 버전&lt;/a&gt;을 업데이트하여 알려주고 있다.&lt;/p&gt;
-
-&lt;p&gt;우리가 설치할 때만 해도 아래와 같이 &lt;strong&gt;&lt;em&gt;ruby 2.1.1&lt;/em&gt;&lt;/strong&gt; 버전에 &lt;strong&gt;&lt;em&gt;jekyll 1.5.1&lt;/em&gt;&lt;/strong&gt; 버전을 사용했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;https://rubygems.org&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1.5.1&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;kramdown&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1.3.1&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;liquid&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2.5.5&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;maruku&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.7.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rdiscount&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2.1.7&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;RedCloth&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;4.2.9&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jemoji&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.1.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-mentions&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.0.9&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-redirect-from&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.3.1&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-sitemap&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.3.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;github-pages&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;20&amp;#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;오늘 확인 했을 때 다음과 같이 버전이 업그레이드 되었고 더 많은 라이브러리가 추가 되었다. 아래 내용을 &lt;code&gt;Gemfile&lt;/code&gt;에 입력하고 저장한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;https://rubygems.org&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2.2.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-coffeescript&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1.0.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-sass-converter&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1.2.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;kramdown&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;1.3.1&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;liquid&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2.6.1&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;maruku&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.7.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rdiscount&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2.1.7&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;redcarpet&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;3.1.2&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;RedCloth&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;4.2.9&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;pygments.rb&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.6.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jemoji&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.3.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-mentions&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.1.3&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-redirect-from&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.4.0&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;jekyll-sitemap&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;0.5.1&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;github-pages&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;22&amp;#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Gemfile을 저장하고 나면 필요한 라이브러리들을 설치한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;bundle install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;기존에는 &lt;a href=&quot;http://nokogiri.org/&quot;&gt;nokogiri&lt;/a&gt;를 사용하지 않았는데 이번 GitHub pages dependency versions에서는 nokogiri가 의존성이 있는 것으로 확인되었다. 만약 다음과 같이 에러가 발생한다면 nokogiri가 XML 라이브러리가 필요해서 생기는 문제이다.
-&lt;img src=&quot;http://cfile3.uf.tistory.com/image/22399C4553E4867B2D006F&quot; alt=&quot;nokogiri install error&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;이 문제를 만나게 되면 &lt;a href=&quot;http://brew.sh/&quot;&gt;Homebrew&lt;/a&gt;를 사용해서 XML C 라이브러인 &lt;strong&gt;&lt;em&gt;libiconv&lt;/em&gt;&lt;/strong&gt;를 설치한다. homebrew에서 libiconv를 찾아보자.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew search libiconv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;만약 아래와 같이 libiconv를 찾을 수 없다면 메세지가 나오면 Homebrew의 저장소를 추가해야한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Apple distributes libiconv with OS X, you can find it in /usr/lib.
-Some build scripts fail to detect it correctly, please check existing
-formulae for solutions.
-homebrew/dupes/libiconv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew tap homebrew/dupes/libiconv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 &lt;code&gt;brew tap&lt;/code&gt;을 하면 새로운 리파지토리가 추가되는 것을 확인할 수 있을 것이다. 이제 libiconv가 설치가 될 것이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew install libiconv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;마지막으로 nokogiri를 다시 설치한다. 다음과 같이 nokogiri가 정상적으로 설치가 되는 것을 확인할 수 있다.
-&lt;img src=&quot;http://cfile23.uf.tistory.com/image/26306D3353E4867B0506FC&quot; alt=&quot;nokogiri installed&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;이제 Jekyll을 사용할 모든 준비가 끝났다.&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyll-생성&quot;&gt;Jekyll 생성&lt;/h2&gt;
-
-&lt;p&gt;이제 터미널에서 &lt;code&gt;jekyll&lt;/code&gt; 명령어를 사용할 수 있다. 현재 우리는 GitHub에서 &lt;code&gt;clone&lt;/code&gt;한 &lt;code&gt;saltfactory.github.io/&lt;/code&gt; 디렉토리 안에 있다. 여기에 우리는 jekyll을 추가할 것이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;jekyll new . --force
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이렇게 jekyll을 새롭게 생성하면 디렉토리 안에 다음과 같은 파일들이 생성이 될 것이다.
-&lt;img src=&quot;http://cfile3.uf.tistory.com/image/232C903C53E4867B151368&quot; alt=&quot;after jekyll new&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;만약  다음과 같이 &lt;strong&gt;&lt;em&gt;LSI&lt;/em&gt;&lt;/strong&gt;에 대한 경고가 나오면 다음과 같이 &lt;a href=&quot;http://www.gnu.org/software/gsl/&quot;&gt;GSL&lt;/a&gt;을 설치한다. 이것은 C 연산 라이브리인데 이것을 사용하면 10배 정도 더 빠르게 연산이 가능하다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Notice: for 10x faster LSI support, please install &lt;a href=&quot;http://rb-gsl.rubyforge.org/&quot;&gt;http://rb-gsl.rubyforge.org/&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew install gsl
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;gsl 설치가 완료되면 &lt;code&gt;brew link&lt;/code&gt;를 만들어서 &lt;code&gt;/usr/local&lt;/code&gt;에 추가한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;brew link gsl
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;만약 권한 문제로 링크가 만들어지지 않으면 다음과 같이 권한을 재 설정하고 다시 &lt;code&gt;brew link gsl&lt;/code&gt;를 한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo chown -R `whoami` /usr/local
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;그리고 &lt;strong&gt;&lt;em&gt;rb-gsl&lt;/em&gt;&lt;/strong&gt; 을 설치한다.
-&lt;code&gt;
-gem install rb-gsl
-&lt;/code&gt;`&lt;/p&gt;
-
-&lt;p&gt;이미 우리는 static websites를 만들 준비를 모두 마친것이다. jekyll 서버를 실행시켜보자. &lt;code&gt;--watch&lt;/code&gt; 옵션은 서버가 실행되어 있을때 파일이 변경되면 서버 재시작 없이 자동으로 변경된 것을 반영하기 위해서이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;jekyll serve --watch
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;http://cfile1.uf.tistory.com/image/275ED83A53E4867B1F960C&quot; alt=&quot;jekyll serve&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Jekyll 서버가 정상적으로 시작되면 &lt;a href=&quot;http://localhost:4000&quot;&gt;http://localhost:4000&lt;/a&gt; 을 브라우저에서 확인한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile6.uf.tistory.com/image/23400A4053E4867B39483B&quot; alt=&quot;preview default&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;서버가 실행되면 디렉토리에는 자동적으로 static page 들이 만들어진다. &lt;code&gt;tree&lt;/code&gt; 명령어를 사용해서 확인해보자&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;tree
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;http://cfile9.uf.tistory.com/image/2644BA3F53E4867B07D5C0&quot; alt=&quot;tree after run&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;_post&lt;/code&gt; 디렉토리 안에 Markdown 으로 되어 있는 파일을 Jekyll이 자동으로 디렉토리를 만들면서 정적 HTML 파일을 생성한 것을 확인할 수 있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;_config.yml-설정&quot;&gt;_config.yml 설정&lt;/h2&gt;
-
-&lt;p&gt;Jekyll의 모든 설정은 &lt;code&gt;_confg.yml&lt;/code&gt; 파일에 저장한다. 이제 우리에 맞는 설정으로 바꾸어 보자. &lt;strong&gt;&lt;em&gt;Jeyll 2.0&lt;/em&gt;&lt;/strong&gt; 이상 버전 부터는 &lt;code&gt;pygments: true&lt;/code&gt; 속성이 변경되어 &lt;code&gt;highlighter&lt;/code&gt;로 이름이 바뀌었고 값으로 &lt;code&gt;pygments&lt;/code&gt;를 지정한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;saltfactory.net&lt;/span&gt;
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;saltfactory@gmail.com&lt;/span&gt;
-
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;twitter_username&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;saltfactory&lt;/span&gt;
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;github_username&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;saltfactory&lt;/span&gt;
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;facebook_username&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;salthub&lt;/span&gt;
-
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;markdown&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;redcarpet&lt;/span&gt;
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;redcarpet&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;extensions&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p-Indicator&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;no_intra_emphasis&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;fenced_code_blocks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;autolink&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;strikethrough&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;superscript&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;with_toc_data&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;tables&amp;quot;&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;highlighter&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;pygments&lt;/span&gt;
-
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;permalink&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;pretty&lt;/span&gt;
-
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;safe&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;lsi&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-
-&lt;span class=&quot;l-Scalar-Plain&quot;&gt;gems&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;jekyll-redirect-from&lt;/span&gt;
-  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;jemoji&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;다시 Jekyll 서버 를 실행시켜보자. &lt;code&gt;_config.yml&lt;/code&gt; 파일은 &lt;code&gt;--watch&lt;/code&gt; 옵션이 적용되지 않기 때문에 이 파일을 수정하면 Jekyll 서버를 다시 실행시켜야 한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile26.uf.tistory.com/image/24172A3C53E4867B30F4B3&quot; alt=&quot;restart jekyll&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile22.uf.tistory.com/image/2425854153E4867B061EB3&quot; alt=&quot;post view&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;블로그-포스트-만들기&quot;&gt;블로그 포스트 만들기&lt;/h2&gt;
-
-&lt;p&gt;Jekyll은 &lt;strong&gt;Markdown&lt;/strong&gt; 파일을 자동으로 정적 페이지로 만들어준다고 앞에서 이야기 했었다. &lt;code&gt;_post&lt;/code&gt; 디렉토리에 Markdown 파일을 하나 추가해 보자. 파일을 생성할 때 다음 규칙을 지킨다.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;파일이름은 &lt;strong&gt;&lt;em&gt;YYY-MM-dd-{영문제목}.md&lt;/em&gt;&lt;/strong&gt; 형태로 만든다.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://jekyllrb.com/docs/frontmatter/&quot;&gt;Front Matter&lt;/a&gt;를 작성한다. Front Matter는 Jekyll이 정적 페이지를 만들때의 메타 정보를 기입하는 곳이다. 자세한 정보는 &lt;a href=&quot;http://jekyllrb.com/docs/frontmatter/&quot;&gt;링크&lt;/a&gt;를 참조한다.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## Jekyll
-
-![jekyll](http://wolfslittlestore.be/wp-content/uploads/2013/07/jekyll.png)
-
-[Jekyll](http://jekyllrb.com/)은 static websites 생성 프레임워크이다. `Ruby`로 만들어진 이 것은 **Markdown** 파일을 `_posts` 디렉토리에 생성하는 것 만으로 멋진 static website를 만들어준다. Markdown을 사용하는 개발자에게 반가운 이야기일 것이다. 우리도 Markdown을 표준 document format으로 정하고 난 뒤에 Jekyll을 사용해서 Pages를 만들고 기존의 블로그를 이전하고 있다.ndex.html 파일을 git push 하는 것 만으로도 만들 수 있고, 다른 static website generator framework를 사용해도 된다. GitHub에서는 공식적인 Database를 지원하고 있지 않기 때문에 static website(HTML 파일)을 사용해야 한다.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 &lt;code&gt;_post&lt;/code&gt; 디렉토리에 Markdown을 추가하면 Jekyll은 자동으로 새로운 정적 페이지를 만들고 적용한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile9.uf.tistory.com/image/242C733553E4867B249A75&quot; alt=&quot;new post&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile8.uf.tistory.com/image/2605303D53E4867B020FF6&quot; alt=&quot;example&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;github-에-적용하기&quot;&gt;GitHub 에 적용하기&lt;/h2&gt;
-
-&lt;p&gt;이제 모든 Jekyll로 계정 페이지를 만드는 일이 모두 끝났다. 이제 GitHub 적용하기 위해서는 모든 파일을 GitHub의 저장소에 &lt;code&gt;push&lt;/code&gt; 하면 된다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git add .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git commit -m &amp;quot;first import&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;마지막으로 GitHub에 계정 페이지가 만들어졌는지 확인해보자 &lt;a href=&quot;http://saltfactory.github.io&quot;&gt;http://saltfactory.github.io&lt;/a&gt; 를 브라우저에서 열어보면 우리가 로컬에서 &lt;code&gt;jekyll serve --watch&lt;/code&gt;로 확인한 페이지가 그대로 적용된 것을 보게 될 것이다.&lt;/p&gt;
-
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;GitHub Pages&lt;/em&gt;&lt;/strong&gt;는 프로젝트 사이트를 만들 수 있게 제공하는 GitHub의 서비스이다. GitHub는 이름 답게 모든 것을 &lt;code&gt;git&lt;/code&gt;로 처리를 한다. GitHub에 프로젝트 사이트를 만들기 위해서는 &lt;code&gt;gh-pages&lt;/code&gt; branch를 만들어서 정적 페이지를 만들어 &lt;code&gt;git push&lt;/code&gt;를 하면 된다. 이 때 정적 사이트를 만들기 위해서 &lt;strong&gt;&lt;em&gt;Jekyll&lt;/em&gt;&lt;/strong&gt;을 사용 할 수 있다. Jekyll은 Markdown으로 작성된 파일을 자동으로 정적 페이지를 만들어주는 static website generator framework이다. GitHub Pages는 프로젝트 페이지 뿐만 아니라 &lt;strong&gt;계정 페이지&lt;/strong&gt;를 만들 수 있는데 &lt;strong&gt;&lt;em&gt;{계정이름}.github.io&lt;/em&gt;&lt;/strong&gt;라는 리파지토리를 생성하고 &lt;code&gt;master&lt;/code&gt; branch에 정적 파일을 &lt;code&gt;git push&lt;/code&gt;하여 만들 수 있다.&lt;/p&gt;
-
-&lt;p&gt;우리는 웹 사이트를 제작하기 위해서 비산 웹 서비스 환경을 구축하거나 호스팅 서비스를 사용해야하는데 GitHub Pages를 사용하면 무료로 자신만의 사이트를 구축할 수 있으며 &lt;code&gt;git&lt;/code&gt;를 사용하여 컨텐츠 이력을 관리하고 archive할 수 있다. Jekyll을 사용하여 복잡하지 않는 방법으로 Markdown 형식으로 작성한 글을 블로그나 웹 서비스 형태로 만들어 낼 수도 있다. 이 포스팅에서는 GitHub Pages를 생성하는 방법과 Jekyll을 사용하여 정적 사이트를 만들어서 GitHub Pages에 적용하는 방법을 살펴보았다. Jekyll이 Ruby 기반으로 만들어져서 설치하는데 약간의 복잡함이 있지만 이 과정을 지나면 간편하게 나만의 웹 서비스를 마들어 낼 수 있을 것이다.&lt;/p&gt;
-
-&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://rvm.io/&quot;&gt;https://rvm.io/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://help.github.com/articles/using-jekyll-with-pages&quot;&gt;https://help.github.com/articles/using-jekyll-with-pages&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://pages.github.com/versions/&quot;&gt;https://pages.github.com/versions/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://blog.saltfactory.net/search/rvm&quot;&gt;http://blog.saltfactory.net/search/rvm&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/5528839/why-does-installing-nokogiri-on-mac-os-fail-with-libiconv-is-missing&quot;&gt;http://stackoverflow.com/questions/5528839/why-does-installing-nokogiri-on-mac-os-fail-with-libiconv-is-missing&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jekyll/jekyll/issues/652&quot;&gt;https://github.com/jekyll/jekyll/issues/652&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
-&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
-&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 08 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/series/jekyll/upgrade-github-pages-dependency-versions.html</link>
-        <guid isPermaLink="true">/series/jekyll/upgrade-github-pages-dependency-versions.html</guid>
-        
-        <category>jekyll</category>
-        
-        <category>git</category>
-        
-        <category>ruby</category>
-        
-        
-        <category>jekyll</category>
         
       </item>
     

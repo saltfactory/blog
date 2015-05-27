@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>popup 창에서 리다이렉트 이후 window.opener 사라지는 문제 해결하기</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/javascript/access-opener-after-redirecting-popup-window-using-iframe.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>popup 창에서 리다이렉트 이후 window.opener 사라지는 문제 해결하기</h1>
+    <p class="meta">Mar 13, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p>웹 프로그램을 개발할 때 현재 열려 있는 페이지를 그대로 유지하면서 사용자에게 다른 액션을 유도하기 위해서 우리는 <strong>Popup</strong>으로 새로운 창을 열도록 개발하는 경우가 있다. 예를 들어서 <strong>i-PIN</strong> 인증을 처리하는 경우 회원가입 화면에서 i-PIN 인증 화면을 Popup으로 열어서 사용자 인증을 거친 이후 인증이 완료되면 열었던 창으로 결과를 던져주는 경우가 있다. JavaScript로 Popup을 사용하여 새로운 창을 열고 Popup에서 처리한 결과를 Popup을 열게한 <strong>window.opener</strong>에 접근해서 이벤트를 전달하는 것은 어렵지않게 이미 알려진 방법으로 해결할 수 있다. 하지만 특정 브라우저에서 Popup한 창에 열려진 사이트가 <strong>Redirect</strong>를 하여 다른 host로 이동을 할 경우 window.opener 객체를 잃게 되버리는 문제를 발견했다. 이번 포스팅은 JavaScript로 Popup을 사용하는 방법 중에 Popup의 호스트가 이동후 opener에 접근할 수 있는 방법에 대해서 소개한다.</p>
+
+<!--more-->
+
+<blockquote>
+<p>설명의 편의를 위해 Popup을 생성하여 열게한 창을 <strong>부모창</strong>, Popup으로  새롭게 열려진 창을 <strong>자식창</strong>이라고 정의하고 설명한다.</p>
+</blockquote>
+
+<h2 id="javascript로-popup-열기">JavaScript로 Popup 열기</h2>
+
+<p>JavaScript로 Popup 창을 여는 방법은 여러가지가 있지만 가장 간단하게 다음과 같이 할 수 있다.
+<strong>부모창</strong> 에서 <code>window.open()</code> 메소드를 사용하여 <strong>자식창</strong>을 새롭게 만들 수 있다. 이 때 <strong>자식창</strong>의 고유 이름을 지정하거나 <code>_self</code>, <code>_blank</code>와 같이 예약된 이름으로 만들 수 있고 <strong>자식창</strong>의 속성을 부여할 수 있다.</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;parentWin.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">&quot;onPopupWindow()&quot;</span><span class="nt">&gt;</span>팝업창 열기<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// filename : parentWin.js</span>
+
+<span class="kd">function</span> <span class="nx">onPopupWindow</span><span class="p">(){</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&quot;popup.html&quot;</span><span class="p">,</span> <span class="s2">&quot;_blank&quot;</span><span class="p">,</span> <span class="s2">&quot;top=10, left=10, width=400, height=400&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="자식창에서-부모창-접근">자식창에서 부모창 접근</h2>
+
+<p>Popup으로 열린 <strong>자식창</strong>에서 특정 작업이 처리된 이후 <strong>부모창</strong>에 데이터를 넘겨주거나 이벤트를 처리해야할 때 다음과 같이 <a href="http://www.w3schools.com/jsref/prop_win_opener.asp">window.opener</a> 객체를 이용하여 접근할 수 있다. 예를 들어 <strong>자식창</strong>에서 <strong>부모창</strong>에 열려있는 페이지를 다른 페이로 이동시키고 싶을 경우 <strong>자식창</strong>에서 다음과 같이 할 수 있다.</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;childWin.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">&quot;doRedirectOpener()&quot;</span><span class="nt">&gt;</span>부모창 페이지 이동<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// filename : childWin.js</span>
+
+<span class="kd">function</span> <span class="nx">doRedirectOpener</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">parentWindow</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">opener</span><span class="p">;</span>
+    <span class="nx">parentWindow</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s1">&#39;http://blog.saltfactory.net&#39;</span>
+<span class="p">};</span>
+</code></pre></div>
+<p><strong>자식창</strong>에서 <strong>부모창</strong>에 접근하기 위해서는 <code>window.opener</code>를 참조하면 <strong>부모창</strong>의 윈도우객체를 참조할 수 있다. 위 예제는 <code>window.opener</code>를 이용해 <strong>부모창</strong>의 <code>window</code>객체를 접근해 <code>window.location.href</code> 값을 수정하여 새로운 HOST로 부모창의 페이지를 이동하게 한 예제이다.</p>
+
+<h2 id="자식창의-host가-리다이렉트-되는-경우">자식창의 HOST가 리다이렉트 되는 경우</h2>
+
+<p>만약 Popup으로 <strong>자식창</strong>을 Popup으로 열었는데 특정 일을 처리하고 난 이후 <strong>자식창</strong>의 HOST가 변경될 경우를 생각해보자. 예를 들어 <strong>i-PIN</strong> 인증창을 Poup으로 연다고 가정하자.</p>
+
+<p><strong>자식창</strong>의 플로우는 다음과 같다.
+설명의 편의를 위해서 우리 호스트는 <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a> 이라고 하고 i-PIN 인증 업체 호스트는 <a href="http://i-pin.org">http://i-pin.org</a> 이라고 한다.</p>
+
+<ol>
+<li><strong>부모창</strong>에서 <strong>자식창</strong>을 popup으로 연다. 이때 URL은 나의 HOST의 <code>child.html</code>이다</li>
+<li>checkIPIN.html : 필요한 데이터를 조합해서 <strong>i-PIN</strong> 인증 업체의 URL <code>iPin.html</code>으로 리다이렉트를 한다.</li>
+<li><strong>iPinMain.html</strong> : 외부 업체 사이트에서 필요한 작업을 처리하고 결과를 나의 HOST의 <code>result.html</code>으로 리다이렉트 한다.</li>
+<li>result.html : 외부에서 전달한 값을 가지고 <strong>부모창</strong>에 접근하여 결과를 액션을 취한다.</li>
+</ol>
+
+<p><img src="http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-13%20at%204_35_04%20PM.png?m=1426232233" alt=""></p>
+
+<p>이와 같은 경우 최종적으로 <strong>자식창</strong>에서 결과를 <strong>부모창</strong>에 전달하기 위해서 <code>window.opener</code>를 사용하면 <code>undefined</code> 에러를 발생시킨다.
+다시 말해서 HOST가 변경되면서 처음 <strong>자식창</strong>이 열렸을 때의 <code>window.opener</code>가 유지가 되지 않고 변경이 되는 문제를 가지게 되는 것이다. 이 문제는 Internet Explore의 보안설정에 의해서 발생한다. 이 문제를 해결하기  위해서 사용자에게 보안 설정을 해지하거나 변경해야한다고 공지할 수는 없기 때문에 우리는 이 문제를 해결하기 위한 방법을 찾게 되었다.</p>
+
+<h2 id="popup창을-iframe으로-열기">Popup창을 iframe으로 열기</h2>
+
+<p><strong>자식창</strong>이 Popup으로 열려서 URL이 다른 HOST로 이동하게 되면 <code>window.opener</code>를 유지할 수 없는 문제를 해결하기 위해서 <a href="http://www.w3schools.com/tags/tag_iframe.asp">iframe</a>을 이용하여 <strong>자식창</strong>의 HOST는 변경하지 않고 <code>iframe</code>안에서만 페이지가 변경될 수 있도록 실험하였다. <strong>자식창</strong>의 <code>window</code>객체는 변경되지 않기 때문에 <strong>자식창</strong>에서는 <strong>부모창</strong>을 접근할 수 있는 <code>window.opener</code>를 잃지 않을 것으로 생각했다. 결과 페이지인 <code>result.html</code> 페이지 안에서 <code>iframe</code>에 접근하면 <code>iframe</code>을 가지고 있는 <strong>자식창</strong>을 접근할 수 있고, <strong>자식창</strong>에서 <strong>부모창</strong>으로 접근할 수 있기 때문이다.</p>
+
+<p><img src="http://assets.hibrainapps.net/images/var/albums/posts/Screen%20Shot%202015-03-13%20at%204_37_03%20PM.png?m=1426232233" alt=""></p>
+
+<p><strong>부모창</strong>에서 <strong>자식창</strong>을 열때 <code>iframe</code>을 만들고 <code>iframe</code>안에서 <strong>자식창</strong> URL인 <code>http://blog.saltfactory.net/child.html</code>을 열도록 하였다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// filename : parentWin.js</span>
+
+<span class="kd">function</span> <span class="nx">onPopupWindow</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">win</span> <span class="o">=</span>  <span class="nb">window</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s1">&#39;_blank&#39;</span><span class="p">,</span> <span class="s2">&quot;top=10, left=10, width=400, height=400&quot;</span><span class="p">);</span>
+    <span class="nx">win</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;&lt;iframe width=&quot;100%&quot;, height=&quot;100%&quot; src=&quot;http://blog.saltfactory.net/child.html&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>child.html</code>에서는 내부적으로 <code>http:///i-pin.org/iPin.html</code>로 페이지를 전환후에 작업을 모두 처리한 이후 결과를 <code>http://blog.saltfactory.net/result.html</code>으로 다시 리다이렉트를 시켜주었다. 결과 받은 <code>result.html</code>은 다음과 같은 소스코드를 가지고 있다.</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;child-resultWin.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">&quot;onCloseSendResultToOpener()&quot;</span><span class="nt">&gt;</span>이 창을 닫고 회원가입을 계속 진행합니다.<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// filename : child-resultWin.js</span>
+
+<span class="kd">function</span> <span class="nx">onCloseSendResultToOpener</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">childWindow</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">parent</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">parentWindow</span> <span class="o">=</span> <span class="nx">childWindow</span><span class="p">.</span><span class="nx">opener</span><span class="p">;</span>
+    <span class="nx">parentWindow</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s1">&#39;http://blog.saltfactory.net/account.html&#39;</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>다시 말해서 <strong>i-PIN</strong> 인증창이 <strong>자식창</strong> 안의 <code>iframe</code>안에 열려있고, 처리가 완료된 이후 <code>result.html</code>도 <strong>자식창</strong>의 <code>iframe</code> 안에 열려 있는 것이다. <strong>자식창</strong>에서 리다이렉트하는 모든 사이트들은 <strong>부모창</strong>에서 <strong>자식창</strong>을 열때 만들어 놓은 <code>iframe</code>안에서 동작하고 있기 때문에 마지막 결과를 받은 <code>result.html</code>에서 <code>iframe</code>으로 접근하고, <code>iframe</code>에서는  <strong>자식창</strong>에 접근하고 마지막으로 <strong>자식창</strong>에서 <strong>부모창</strong>으로 접근할 수 있는 것이다.</p>
+
+<h2 id="결론">결론</h2>
+
+<p><strong>부모창</strong>에서 JavaScript를 이용하여 <strong>자식창</strong>을 Popup으로 열게되면 <strong>자식창</strong>에서 <code>window.opener</code>를 참조하여  <strong>부모창</strong> 에 접근할 수 있다. 하지만 <strong>자식창</strong>에 다른 HOST로 리다이렉트가 되는 경우 <code>window.opener</code>객체가 사라지는 문제를 발견했다. 이 문제를 해결하기 위해서 <strong>자식창</strong>을 Popup으로 열때 <code>iframe</code>을 생성하여 <code>iframe</code> 내부에서 페이지가 열리고 다른 HOST로 리다이렉트 되게 하였다. 마지막 결과를 처리하는 최종 <strong>자식창</strong>의 페이지에서 <strong>부모창</strong>에 접근하기 위해서 <code>iframe</code>을 매개체로 상위 객체로 접근하게 되면 <strong>자식창</strong>의 페이지가 다른 HOST로 리다이렉트 될 때 <code>window.opener</code> 객체가 <code>undefined</code>되는 문제를 해결 할 수 있었다.</p>
+
+<h2 id="참고">참고</h2>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/7120534/window-opener-is-null-after-redirect">http://stackoverflow.com/questions/7120534/window-opener-is-null-after-redirect</a></li>
+<li><a href="http://stackoverflow.com/questions/5656349/close-child-window-redirect-parent-window">http://stackoverflow.com/questions/5656349/close-child-window-redirect-parent-window</a></li>
+<li><a href="http://abcoder.com/javascript/maintain-reference-to-popup-window-over-page-refresh-or-redirect-in-javascript-solved">http://abcoder.com/javascript/maintain-reference-to-popup-window-over-page-refresh-or-redirect-in-javascript-solved</a></li>
+</ul>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>
