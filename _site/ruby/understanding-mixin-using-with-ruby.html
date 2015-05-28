@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ruby로 살펴보는 Mixin 이해</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/ruby/understanding-mixin-using-with-ruby.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ruby로 살펴보는 Mixin 이해</h1>
+    <p class="meta">Nov 22, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p>Ruby를 처음 접하게 된 것은 순수하게 컴퓨터전공을 하는 나의 학부시절 &quot;Programming Languages Concepts&quot;라는 과목의 과제로 조별로 각각 겹치지 않는 프로그램언어에 대한 조사를 해서 발표하는 시간 때문이였다. python, perl, xml, php, java 등 이미 익숙한 프로그래밍 언어에서 제외되어서 결국 찾게된 것이 Ruby Programming Lanaguage 였다. 처음은 그냥 이름이 마음에 들었는데 Perl과 Python의 조합으로 이루어진것 같은 이 언어는 모든게 객체인 이게 바로 진짜 객체 언어야 라고 박수를 치면서 Ruby의 매력에 점점 빠져들게 되었다. 얼마 지나지 않아서 Ruby on Rails가 scaffold를 이용해서 5분안에 블로그를 만드는 동영상이 인터넷에서 커다란 이슈를 만들었고 이후 agile 기반의 빠른 웹 개발 프레임워크로 웹 개발자들에게 가장 인기 있는 언어로 등극하게 되었다. 비록 학부 과제 때문에 Ruby를 알게 되었지만 Ruby의 빠르게 개발할 수 있고 확장성이 좋고 유연하며 코드량을 줄일 수 있다는 이유로 지금도 서버 프로그램은 대부분 Ruby로 만들고 있다.</p>
+
+<p>오늘 Ruby를 다시 찾게 된 이유는 바로 <a href="http://en.wikipedia.org/wiki/Mixin">Mixin</a> 이라는 개념 때문이다. 연구소에서 Java Web Application framework로 Spring MVC framework를 선택했고 수석 연구원께서 ROO를 적극적으로 도입하려고 해서 ROO에 대해서 찾아보았다. 그러던 도중에 ROO가 Mixin으로 구현되었다는 특징을 보게 되어서 Mixin의 개념을 회고하기 위해서 Ruby의 Mixin을 소개하려고 한다.</p>
+
+<!--more-->
+
+<h3 id="상속">상속</h3>
+
+<p>먼저 Java에서 상위 클래스의 속성을 그대로 상속받아서 확장된 서브 클래스를 만들어 사용하는 것에 익숙하다.</p>
+
+<p><img src="http://cfile22.uf.tistory.com/image/0252F24E50ACDC6536BAF2" alt=""></p>
+
+<p>Java 코드로 살펴보면 <code>Number</code>의 <code>intValue</code> 메소드를 상속받아서 <code>BigInteger</code>는 <code>inteValue</code> 메소드를 가지고 있지만, <code>stringfy</code>라는 <code>value</code> 값을 문자열로 출력하게 하는 메소드를 추가했다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="kp">public</span> <span class="k">class</span> <span class="nc">Number</span> <span class="p">{</span>
+    <span class="kp">protected</span> <span class="n">int</span> <span class="n">value</span><span class="p">;</span>
+
+    <span class="kp">public</span> <span class="n">void</span> <span class="n">intValue</span> <span class="p">(</span><span class="n">int</span> <span class="n">value</span><span class="p">){</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kp">public</span> <span class="k">class</span> <span class="nc">BigInteger</span> <span class="n">extends</span> <span class="no">Number</span> <span class="p">{</span>
+    <span class="kp">public</span> <span class="no">BigInteger</span><span class="p">(</span><span class="n">int</span> <span class="n">value</span><span class="p">){</span>
+        <span class="k">super</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kp">public</span> <span class="nb">String</span> <span class="n">stringfy</span><span class="p">(){</span>
+        <span class="nb">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+            <span class="n">str</span> <span class="o">=</span> <span class="s2">&quot;One&quot;</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">2</span><span class="p">){</span>
+            <span class="n">str</span> <span class="o">=</span> <span class="s2">&quot;Two&quot;</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">3</span><span class="p">){</span>
+            <span class="n">str</span> <span class="o">=</span> <span class="s2">&quot;Three&quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>또는 Java에서는 추상클래스를 만들고 그것을 상속받아서 구현체를 만들어 가는 것 또 한 Java 객체 지향 프로그램에 익숙한 클래스의 사용 패턴이다.</p>
+
+<p><img src="http://cfile3.uf.tistory.com/image/154D813E50ACDF0432B24C" alt=""></p>
+
+<p>하지만 현실의 세계에서는 객체가 단일 상속만 이루어지지 않는다. 예를 들어 엄마, 아빠에게서 서로 좋은 점만 닮은 특징을 가져와서 같이 사용하고 싶은 경우가 충분히 있을 수 있다. 개발자와 디자이너의 메소드를 각각 가져와서 유니콘 같은 슈퍼개발자를 만들고 싶어한다면 Java와 같은 단일 상속만 지원하는 프로그래밍 언어에서는 절대 유니콘을 만들 수 없게 된다.</p>
+
+<h3 id="mixin">Mixin</h3>
+
+<p>Mixin은 이러한 한계를 해결할 수 있는 개발 패턴이다. 즉 클래스에 새로운 특징을 더 추가해서 여러가지 기능을 필요한 곳에서 가져와서 새로운 클래스를 만드는 것이다. 우리가 지금까지 목말라해온 다중 상속의 문제를 아주 간단하게 해결할 수 있는 도깨비 방망이 같은 것이다.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/0362363F50ACDFB01002D1" alt=""></p>
+
+<p>과연 Ruby는 어떻게 이런것이 가능할까? 루비는 <strong>Class</strong>와 비슷한 <strong>Module</strong> 이라는 것을 가지고 있다. Module는 Class와 비슷하게 메소드, 상수, 모듈, 클래스를 포함할 수 있다. 그러나 Class와 달리 모듈을 상속받아서 객체를 생성할 수는 없다. 하지만 이 Module의 인스턴스 메소드를 클래스에서 사용할 수 있다. 이렇게 상속을 하지 않고도 여러개의 Class가 같은 Module을 mixin해서 사용하거나 여러개의 Module을 하나의 클래스에 mixin하여 사용할 수 있다. 위에서 작성한 Java 코드의 한계를 Ruby에서는 이렇게 해결을 하였다.</p>
+
+<p>예제 코드는 <code>Math</code>와 <code>Stringfy</code>라는 두가지 Module를 가지고 있고, <code>Number</code>라는 클래스를 상속받아서 만든 <code>BigInteger</code>에 Mixin을 해서 객체에 모듈의 메소드를 추가하는 예제이다.</p>
+
+<p>Math 모듈은 <code>add</code>라는 메소드를 가지고 있는데 두 수를 더하는 값을 <code>BigInteger</code>에 초기 값으로 넘겨주는 메소드이다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># filename : Math.rb</span>
+
+<span class="k">module</span> <span class="nn">Math</span>
+  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">value_one</span><span class="p">,</span> <span class="n">value_two</span><span class="p">)</span>
+    <span class="no">BigInteger</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">value_one</span><span class="o">+</span><span class="n">value_two</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p><code>Stringfy</code> 모듈은 <code>stringfy</code>라는 메소드를 가지고 있는데 <code>@value</code>라는 객체 변수의 값에 따라서 문자열을 반환해주는 메소드이다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#filename : Stringfy.rb</span>
+
+<span class="k">module</span> <span class="nn">Stringfy</span>
+  <span class="k">def</span> <span class="nf">stringfy</span>
+    <span class="k">if</span> <span class="vi">@value</span> <span class="o">==</span> <span class="mi">1</span>
+      <span class="s2">&quot;One&quot;</span>
+    <span class="k">elsif</span> <span class="vi">@value</span> <span class="o">==</span> <span class="mi">2</span>
+      <span class="s2">&quot;Two&quot;</span>
+    <span class="k">elsif</span> <span class="vi">@value</span> <span class="o">==</span> <span class="mi">3</span>
+      <span class="s2">&quot;Three&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p><code>Number</code> 클래스는 <code>inteValue</code>라는 메소드를 가지고 있는데 이것은 <code>@value</code>객체를 반환하는 메소드이다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># filename : Number.rb</span>
+
+<span class="k">class</span> <span class="nc">Number</span>
+  <span class="k">def</span> <span class="nf">intValue</span>
+    <span class="vi">@value</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>위의 <code>Number</code> 클래스를 상속해서 <code>BigInteger</code> 클래스를 만드는데 이 클래스에 <code>Stringfy</code>를 mixin하고 <code>Math</code> 메소드를 확장했다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#filename : BigInteger.rb</span>
+
+<span class="nb">require</span> <span class="s1">&#39;Stringfy&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;Math&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;Number&#39;</span>
+
+<span class="k">class</span> <span class="nc">BigInteger</span> <span class="o">&lt;</span> <span class="no">Number</span>
+  <span class="kp">include</span> <span class="no">Stringfy</span>
+  <span class="kp">extend</span> <span class="no">Math</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="vi">@value</span> <span class="o">=</span> <span class="n">value</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>테스트를 해보자. 아래 코드는 단순하게 <code>BigInteger</code>를 사용해서 생성자에 10이라는 값을 넣고 객체를 생성해서 <code>Number</code>가 가지고 있었던 <code>intValue</code>로<code>@value</code>객체 변수의 값을 출력하는 코드이다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#filename test.rb</span>
+<span class="nb">require</span> <span class="s1">&#39;BigInteger&#39;</span>
+
+<span class="n">bigint1</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint1</span><span class="o">.</span><span class="n">intValue</span>
+</code></pre></div>
+<p>단순히 <code>BigInteger</code>가 가지고 있는 생성자 메소드인 <code>initialize</code> 에서 받은 value 값을 객체 변수 <code>@value</code>에 할당했다가 출력하는 Java와 같은 단순 상속의 예제이다.</p>
+
+<p><img src="http://cfile30.uf.tistory.com/image/1828F63E50ACE7A1210AF8" alt=""></p>
+
+<p>다음은 Math를 Mixin으로 추가된 <code>Math</code>의 <code>add</code>를 사용해서 <code>BigInteger</code> 객체를 생성해보자.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#filename test.rb</span>
+<span class="nb">require</span> <span class="s1">&#39;BigInteger&#39;</span>
+
+<span class="n">bigint1</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint1</span><span class="o">.</span><span class="n">intValue</span>
+
+<span class="n">bigint2</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint2</span><span class="o">.</span><span class="n">intValue</span>
+</code></pre></div>
+<p>Mixin으로 Math의 <code>add</code>가 실행되었는데 이 때 입력받은 두 인자값은 Math의 <code>add</code> 메소드안에 포함된 클래스 <code>BigInteger.new(a+b)</code>로 두 인자 값을 더해서 객체를 생성시키는 것이다. 그래서 결국은 <code>BigInteger</code>의 객체변수 <code>@value</code>에 두 인자를 더한 2의 값이 저장되어 있다.</p>
+
+<p><img src="http://cfile23.uf.tistory.com/image/1675473F50ACE7DF317B14" alt=""></p>
+
+<p>여기 생성된<code>bigint2</code>는 <code>Math</code> 뿐만 아니라<code>Stringfy</code>도 Mixin되어 있기 때문에 <code>Stringfy</code>의 <code>stringfy</code> 메소드를 사용할 수 있다. 결과는 <code>BigInteger</code>의 객체인 bigint2의 객체변수(@value)가 2이기 때문에 <code>Stringfy</code>의 인스턴스 메소드 <code>stringfy</code> 안에 <code>@value</code>를 비교해서 해당 문자열을 반환하는 메소드가 실행이 된 것이다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#filename test.rb</span>
+<span class="nb">require</span> <span class="s1">&#39;BigInteger&#39;</span>
+
+<span class="n">bigint1</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint1</span><span class="o">.</span><span class="n">intValue</span>
+
+<span class="n">bigint2</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint2</span><span class="o">.</span><span class="n">intValue</span>
+</code></pre></div>
+<p><img src="http://cfile30.uf.tistory.com/image/187ADD4150ACE8F121EB8C" alt=""></p>
+
+<p>마지막 테스트로 생성된 객체에다 새로운 Module을 하나더 mixin 해보기로 하자. <code>BigInteger</code>로 생성한 객체 <code>bigint2</code>에 <code>format</code>이라는 메소드를 가진 Module을 Mixin했다. 그리고 <code>bigint2</code>에 mixin된 module의 메소드인 <code>format</code>으로 객체의 객체변수 <code>@value</code> 값 앞에 <code>$</code>를 붙여서 출력시키도록 했다.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1">#filename test.rb</span>
+<span class="nb">require</span> <span class="s1">&#39;BigInteger&#39;</span>
+
+<span class="n">bigint1</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint1</span><span class="o">.</span><span class="n">intValue</span>
+
+<span class="n">bigint2</span> <span class="o">=</span> <span class="no">BigInteger</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">bigint2</span><span class="o">.</span><span class="n">intValue</span>
+<span class="nb">puts</span> <span class="n">bigint2</span><span class="o">.</span><span class="n">stringfy</span>
+
+<span class="k">module</span> <span class="nn">CurrencyFormatter</span>
+  <span class="k">def</span> <span class="nf">format</span>
+    <span class="s2">&quot;$</span><span class="si">#{</span><span class="vi">@value</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">bigint2</span><span class="o">.</span><span class="n">extend</span> <span class="no">CurrencyFormatter</span>
+<span class="nb">puts</span> <span class="n">bigint2</span><span class="o">.</span><span class="n">format</span>
+</code></pre></div>
+<p><img src="http://cfile9.uf.tistory.com/image/143D6A3E50ACEA69285F04" alt=""></p>
+
+<p>그럼 <code>CurrecyFormatter</code>를 Mixin하지 않은<code>bigint1</code>이라는 <code>BigInteger</code>로 만든 객체는 과연 <code>format</code>이라는 메소드를 가지고 있을까? 아래와 같이 Mixin되지 않는 객체에서 format 메소드를 불렀기 때문에 에러가 발생한다.</p>
+
+<p><img src="http://cfile23.uf.tistory.com/image/2033E53D50ACEAEE04FD64" alt=""></p>
+
+<p>결과가 놀랍지 않는가? 마치 JavaScript의 prototype 마냥 Module을 이용해서 무한정 메소드를 추가할 수 있게 되었다. 심지어 클래스로 생성된 객체에도 mixin이 가능하다는 것이다. 이런 이유로 Ruby는 Module과 Class를 잘 이용해서 유연하고 확정성 좋은 모듈과 라이브러리를 만들어서 쉽게 다양한 프로젝트에서 코드를 재사용할 수 있는 장점을 가지고 있다.</p>
+
+<h2 id="결론">결론</h2>
+
+<p>객체 지향 언어의 장점은 클래스를 만들어서 다른 프로그램을 작성할 때 그 클래스를 재사용할 수 있다는 것이다. 하지만 클래스가 많아지고 여러자기 클래스의 속성들을 조합해서 하나의 클래스고 상속해서 코드도 줄이고 코드를 재사용하고 싶지만, Java와 같은 객체 지향 언어에서는 다중 상속을 할 수가 없다. 하지만 Mixin을 지원하는 객체지향 언어는 다중 클래스를 상속해서 객체를 만든는 것과 같은 방법을 Mixin을 이용해서 할 수 있다. 클래스와 객체에 여러개의 메소드를 가진 Module을 Mixin시켜서 Module이 가지고 있는 메소드를 클래스로 생성한 객체에서 멤버 메소드인것 처럼 객체의 변수와 모듈의 메소드를 서로 연결하여 하나의 클래스인것 처럼 사용 할 수 있다. 이러한 Mixin의 장점은 중복 코드를 제거하고 코드의 유연성을 높여서 기능별로 모듈을 만들어서 필요할 때 마치 레고 블럭을 맞추듯 필요한 모듈을 클래스에 조립해서 필요한 메소드를 사용할 수 있다는 것이다. ROO가 이런 Mixin으로 구현되어 있다는데 Ruby의 Mixin과 구현 방법은 다를지 몰라도 Mixin 패턴으로 개발이 되었다는 말은 클래스에 다른 모듈이나 클래스의 멤버 메소드나 멤버변수가 injection 된다는 이야기로 상상해볼 수 있을 것 같다. 좀더 자세한 내용은 ROO를 실험하고 테스트한 뒤 다시한번 Ruby의 Mixin과 비교해서 포스팅할 예정이다.</p>
+
+<h2 id="참고">참고</h2>
+
+<ol>
+<li><a href="http://www.silversoft.net/docs/dp/hires/chap1fso.htm">http://www.silversoft.net/docs/dp/hires/chap1fso.htm</a></li>
+<li><a href="http://lambert.tistory.com/165">http://lambert.tistory.com/165</a></li>
+<li><a href="http://juixe.com/techknow/index.php/2006/06/15/mixins-in-ruby/">http://juixe.com/techknow/index.php/2006/06/15/mixins-in-ruby/</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Mixin">http://en.wikipedia.org/wiki/Mixin</a></li>
+</ol>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>
