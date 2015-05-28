@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Android 앱 개발할 때 필요없는 로그 보이지 않게 하기</title>
+    <title>맥에서 Doxygen을 이용하여 대용량 Java 프로젝트 클래스 다이어그램 문서 만들기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/android/exclude-gpu-error-when-using-genymotion.html">
+    <link rel="canonical" href="/series/java/create-java-diagram-using-doxygen-on-macosx.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -205,102 +205,98 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Android 앱 개발할 때 필요없는 로그 보이지 않게 하기</h1>
-    <p class="meta">Aug 13, 2014</p>
+    <h1>맥에서 Doxygen을 이용하여 대용량 Java 프로젝트 클래스 다이어그램 문서 만들기</h1>
+    <p class="meta">Jan 24, 2014</p>
   </header>
 
   <article class="post-content">
   <h2 id="서론">서론</h2>
 
-<p>Android를 개발할 때 IDE에서는 Android 디바이스의 모든 로그가 출력이 된다. filter를 어떻게 적용하는가에 따라서 현개 개발하고 있는 디바이스의 로그를 정확하고 간결하게 볼 수 있는데 이 포스트에서 Android를 개발하기 위해 genymotion을 사용할 때 필요없는 로그를 보이지 않게 하는 방법에 대해 소개한다.</p>
+<p>Java 개발에서 IntelliJ를 개발 IDE로 사용하고 있다. IntelliJ는 eclipse보다 안정성을 자랑하고 무엇보다 빠른 indexing를 제공하고 있기 때문에 개발할때 code assist를 가볍게 사용할 수 있는 장점을 가지고 있다. 이클립스에서 자바 파일이 많아지면 reindexing하는 시간 때문에 점한번 잘못 찍었다가는 eclipse 전체가 먹통이 되는 현상을 만날 수 있다. 그럼 IntelliJ는 그런경우가 없을까? 물론 IntelliJ에서도 메모리 문제가 발생하기도 한다. 보고서에 클래스 다이어그램을 넣기 위해서 IntelliJ에서 제공하고 있는 클래스 다이어그램 생성 메뉴를 눌렀을 때 이런 메세지를 발견했다.</p>
+
+<p><img src="http://cfile9.uf.tistory.com/image/2730794852E0DC570A26F2" alt=""></p>
 
 <!--more-->
 
-<h2 id="logcat">LogCat</h2>
+<p>IntelliJ는 Java 개발의 최강의 IDE이다. 자바파일에서 자동으로 UML을 생성시켜주는 기능은 개발 후 보고서를 작성할 때 정말 유용하다. 그런데 이번 Android 프로젝트를 진행하면서 클래스 관계가 복잡해지다 보니 UML이 엄청 크고 복잡하게 만들어졌다. export로 png 파일을 뽑으려고 하니 이런 메모리 문제를 만나게 되었다. 그래서 Doxygen으로 클래스다이어그램을 생성하기로 했다.</p>
 
-<p>Android <a href="http://developer.android.com/tools/help/logcat.html">LogCat</a>은 안드로이드 앱을 개발할 때 system output으로 출력되는 로그 메카니즘이다. LogCat을 잘 다루지 않게 되면 디바이스에 출력되는 여러가지 로깅을 개발 할 때 함께 봐야하는 불편함이 생긴다. 그래서 안드로이드 앱을 개발할 때 다양한 Logging 방법을 문서로 제공하고 있다. (<a href="http://developer.android.com/tools/debugging/debugging-log.html">http://developer.android.com/tools/debugging/debugging-log.html</a>)</p>
+<h3 id="doxygen-다운로드">Doxygen 다운로드</h3>
 
-<h2 id="log-객체">Log 객체</h2>
+<p>첫번째로 Doxygen을 다운받는다. 소스파일을 받아서 명령어로 사용해도 되지만, 맥에서 사용한다면 application 파일을 받아서 바로 할 수 있다. 이 포스팅을 작성할 때 doxygen-1.8.6.dmg 가 가장 최근 파일이다. 다음 링크에서 맥용 doxygen을 다운 받는다.
+<a href="http://www.stack.nl/%7Edimitri/doxygen/download.html">http://www.stack.nl/~dimitri/doxygen/download.html</a></p>
 
-<p>안드로이드 앱을 개발할 때 가장 많이 사용하는 Logging 클래스는 <a href="http://developer.android.com/tools/debugging/debugging-log.html#logClass">Log</a> 이다. Log 클래스는 LogCat에 메세지를 출력하는 android의 utility 클래스이고 다음과 같은 메소드를 사용할 수 있다.</p>
+<p><img src="http://cfile4.uf.tistory.com/image/2347F94552E0DEC72A1F2B" alt=""></p>
 
-<ul>
-<li><strong>v</strong>(String, String) : verbose</li>
-<li><strong>d</strong>(String, String) : debug</li>
-<li><strong>i</strong>(String, String) : information</li>
-<li><strong>w</strong>(String, String) : wranning</li>
-<li><strong>e</strong>(String, STring) : error</li>
-</ul>
+<p>dmg 파일을 마운트해서 Doxygen 을 Applications에 드래그한다. Doxygen을 실행 시켰을 때 인증되지 않은 소프트웨어라는 메세지가 나오면서 실행되지 않을 때는 실행파일에서 오른쪽 마우스를 열고 팝업 메뉴에서 open을 선택해서 실행하면 실행할 수 있다. Doxygen을 실행하면 다음과 같은 화면이 나타난다. Doxygen은 아직 레티나 디스플레이를 적용하지 않아서 레티나 디스플레이에서는 글자가 깨어져 보인다. 레티나가 아닌 화면에서는 선명한 폰트로 나타날 것이다.</p>
 
-<p>예를 들면 다음과 같이 사용할 수 있다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Log.i(&quot;MyActivity&quot;, &quot;MyClass.getView() — get item number &quot; + position);
+<p><img src="http://cfile22.uf.tistory.com/image/2714234452E0DF8C23EBE6" alt=""></p>
+
+<h3 id="doxygen-디렉토리-선택">Doxygen 디렉토리 선택</h3>
+
+<p>Doxygen은 크게 세가지 디렉토리를 선택한다. 첫째로 Doxygen의 작업 디렉토리, 두번째로 Doxygen을 이용해서 문서를 만들 소스파일이 있는 디렉토리, 셋째로 Doxygen에서 생성한 파일들이 만들어지는 디렉토리를 설정한다.</p>
+
+<p><strong>Step 1:Specify the working directory from which oxygen will run</strong> 에 있는 빈칸이 Doxygen 작업 디렉토리를 입력하는 곳이다.
+<strong>Step 2: 에서 Specify the directory the scan for source code</strong> 가 문서를 만들 소스파일이 있는 디렉토리이다. 우린 Java 파일을 가지고 문서를 만들기 때문에 Java 파일이 있는 디렉토리를 설정한다.
+<strong>Step 2: 에서 Specify the directory where Doxygen should put the generated documentation</strong> 이 Doxygen으로 문서가 만들어지는 디렉토리를 설정하는 곳이다.</p>
+
+<p>다음은 중요한 것이 소스디렉토리 밑에 있는 모든 파일을 검사해서 문서를 만들기 위해서 Scan recursively를 체크한다.</p>
+
+<p><img src="http://cfile29.uf.tistory.com/image/211FDB3452E1BE1B176A31" alt=""></p>
+
+<h3 id="문서화할-언어-선택">문서화할 언어 선택</h3>
+
+<p>다음은 Wizard 탭의 Mode를 선택한다. 우리는 Java 문서를 만들기 때문에 Java언어 optimize를 선택한다.</p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/2736FD4F52E1BD70131237" alt=""></p>
+
+<h3 id="실행">실행</h3>
+
+<p>이제 run 탭을 눌러서 &quot;Run Doxygen&quot; 버튼을 클릭해서 문서를 만든다.</p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/2178464C52E1BE4717BB60" alt=""></p>
+
+<p>이렇게만 하면 간단하고 빠르게 문서가 만들어진것이다. Show HTML output 버튼을 눌러보자.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/2151533A52E1BE9406DF90" alt=""></p>
+
+<p>이렇게 클래스 다이어그램과 Java 문서가 빠르게 만들어 진것을 확인할 수 있게 된다. Doxygen에서 그래프를 만들 때는 Doxygen이 가지고 있는 built-in class diagram generator를 이용해서 만드는 상속 그래프만 만들어 낼 수 있다. Doxygen은 GraphViz를 지원하는데 이것을 사용하면 참조되고 있는 그래프까지 표현을 할 수 있다.</p>
+
+<p><img src="http://cfile3.uf.tistory.com/image/244A144552E1BF512CC590" alt=""></p>
+
+<h3 id="graphviz-설치">GraphViz 설치</h3>
+
+<p>GraphViz에 관한 설명은 <a href="http://www.graphviz.org">http://www.graphviz.org</a> 에서 자세히 참조해보기 바란다.
+맥에서 GraphViz를 설치하기 위해서는 여러가지 방법이 있지만 Homebrew를 사용하면 간단하게 설치할 수 있다. Homebrew에 관한 설명은 다음 링크를 참조한다. (<a href="http://blog.saltfactory.net/109">http://blog.saltfactory.net/109</a>)</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">brew install graphviz
 </code></pre></div>
-<p>위와 같이 Log 객체를 사용하면 다음과 같이 LogCat에 출력이 된다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">I/MyActivity( 1557): MyClass.getView() — get item number 1
-</code></pre></div>
-<h2 id="log-foramt">Log Foramt</h2>
+<p><img src="http://cfile1.uf.tistory.com/image/22641D4152E1C08B480AD6" alt=""></p>
 
-<p>LogCat은 다양한 출력 포멧을 지원한다.</p>
+<h3 id="graphviz-설정">GraphViz 설정</h3>
 
-<ul>
-<li><strong>brief</strong> : priority/tag 그리고 PID(프로세스 ID)를 출력한다.(default)</li>
-<li><strong>process</strong> : PID만 출력</li>
-<li><strong>tag</strong> : priority/tag만 출력</li>
-<li><strong>raw</strong> : 다른 metadata field 없이 raw log message만 출력</li>
-<li><strong>time</strong> : date, invocation time, PID 출력</li>
-<li><strong>threadtime</strong> : date, invocation time, priority, tag, PID, TID(thread ID)를 출력</li>
-<li><strong>long</strong> : 모든 metadata field를 blank로 분리해서 출력</li>
-</ul>
+<p>이젠 Doxygen에서 GrpahViz를 사용하기 위해서 설정을 한다. Wizard 탭에서 Diagrams을 선택하면 기본적으로 Use built-in class diagram generator를 사용해서 그래프를 그렸는데, Use dot tool from the GraphViz package를 사용한다고 체크한다.</p>
 
-<p>사용방법은 다음과 같다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[adb] logcat [-v &lt;format&gt;]
-</code></pre></div>
-<h2 id="logcat-filter-설정">LogCat filter 설정</h2>
+<p><img src="http://cfile25.uf.tistory.com/image/2223E74952E1C11138296B" alt=""></p>
 
-<p>LogCat은 디바이스의 전체 시스템 출력을 보여주기 때문에 우리는 LogCat이 지원하고 있는 <strong>filter</strong>를 잘 사용해야 한다. 수 많은 로깅중에 warnning 메세지를 filter하여 보고 싶을 경우는 다음과 같이 한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">adb logcat *:W
-</code></pre></div>
-<p>filter로 사용할 수 있는 priority 옵션은 다음과 같다.</p>
+<p>다음은 클래스 다어그램을 그릴것이기 때문에 Expert에서 Dot을 선택해서 다음과 같이 설정한다.</p>
 
-<ul>
-<li><strong>V</strong> : verbose (lowest priority)</li>
-<li><strong>D</strong> : debug</li>
-<li><strong>I</strong> : info</li>
-<li><strong>W</strong> : warnning</li>
-<li><strong>E</strong> : error</li>
-<li><strong>F</strong> : fetal</li>
-<li><strong>S</strong> : silent (highest priority, on which nothing is ever printed)</li>
-</ul>
+<p><img src="http://cfile9.uf.tistory.com/image/243A914952E1C1B70ECDEE" alt=""></p>
 
-<h2 id="정규표현식-사용">정규표현식 사용</h2>
+<p>brew로 설치한 패키지는 /usr/local/bin에 실행 파일이 링크가 되어 있다. 그래서 GraphViz에서 dot을 이용해서 그래프를 만들기 위해서는 dot path를 설정해줘야한다.</p>
 
-<p>LogCat의 filter는 옵션으로 정규표현식을 사용해서 보고 싶은 내용만 걸러서 볼 수도 있다. 우리가 프로젝트에서 <a href="http://www.genymotion.com/">genymotion</a>을 도입했다. genymotion은 그래픽 가속기를 사용해서 기존의 Android emulator의 느린 속도를 보완해서 빠르게 디버깅을 할 수 있는 방법을 제공해준다. genymotion에 대해서는 다음 포스팅에서 자세하게 소개하겠다.</p>
+<p><img src="http://cfile24.uf.tistory.com/image/27031A3652E1C1CF2C71BD" alt=""></p>
 
-<p>genymotion을 사용할 때 LogCat에서는 GPU에 대한 에러가 LogCat에 출력이 된다.</p>
+<h3 id="실행">실행</h3>
 
-<p><img src="http://cfile6.uf.tistory.com/image/26046D4153EAF250118695" alt="eglCodecCommon error"></p>
+<p>이제 run 탭에가서 다시 실행을 해보자. output html을 살펴보면 Doxygen이 GraphViz를 사용해서 그래프가 정상적으로 그려진 것을 확인할 수 있다.</p>
 
-<p>이렇게 우리가 프로그램에 포함되지 않은 로깅이 디바이스의 문제로 수없이 많이 발생하기 때문에 정작 우리가 개발하면서 보고 싶은 로그를 스크롤을 하면서 찾아서 확인해야하는 불편함이 있다. 그래서 우리는 불필요한 genymotion의 GPU에 관련된 에러를 모두 제거하고 순수하게 우리가 남기고 싶은 로그만 보고 싶었다.</p>
+<p><img src="http://cfile5.uf.tistory.com/image/245B213A52E1C24C323C38" alt=""></p>
 
-<p>그래서 우리는 다음과 같이 LogCat에 정규 표현식 filter를 사용했다. 우리는 IntelliJ(Android Studio)를 이용해서 Android를 개발하고 있기 때문에 IntelliJ에서 제공하는 인터페이스로 LogCat의 filter를 적용했다.</p>
-
-<p>genymotion을 사용하여 앱을 실행시키면 GPU에 관련된 에러가 포함되는데 TAG에는 <strong>eglCodecCommon</strong>, <strong>OpenGLRender</strong> 그리고 <strong>EGL_genymotion</strong>가 포함된 에러가 출력이 되고 있다. 그리고 message에 <strong>GL_INVALID_OPERATION</strong> 에러가 포함이 되어 있기 때문에 다음과 같이 filter를 적용할 수 있다.</p>
-
-<p><img src="http://cfile26.uf.tistory.com/image/2272B34253EAF24F130B75" alt="exclude filter"></p>
-
-<p>이렇게 LogCat에 정규 표현식을 적용하면 노이즈로 포함되어있는 필요없는 로그를 모두 제거하고 우리에게 필요한 정보만 LogCat으로 출력되는 것을 확인 할 수 있다.</p>
-
-<p><img src="http://cfile25.uf.tistory.com/image/2276CB4253EAF2500C0600" alt="remove exclude"></p>
-
-<h2 id="결론">결론</h2>
-
-<p>LogCat은 Android 앱을 개발할 때 아주 중요한 자료가 된다. 그런데 LogCat은 system logging 메카니즘으로 우리가 출력하고 싶은 메세지 외에도 우리가 필요하지 않는 로그도 함께 출력이 된다. 이럴 때 우리는 LogCat의 filter 기능을 잘 사용하면 우리가 필요한 정보만 출력시켜 개발할 때 편리하게 진행할 수 있다. LogCat의 priority와 tag만을 사용해서 출력하는 것 이외에도 <strong>정규표현식</strong>을 이용해서 필요없는 메세지를 보이지 않게 하거나 필요한 메세지만 출력할 수도 있다.</p>
+<p>Doxygen은 빠르게 문서화를 만들어줄 수 있는 도구이다. 뿐만 아니라 큰 프로젝트에서 IDE에서 자동으로 다어그램을 만들 때는 메모리 문제가 많이 나타나는데 이것 또한 doxygen으로 문제를 해결할 수 있게 된다. Doxygen는 이 포스팅에서 설명하지 않은 많은 옵션들이 있다. 옵션을 수정하면서 테스트해 보길 권하고 싶다. call에 관련된 그래프를 만들어 낼 수 있으며 보다 디테일한 문서를 만들어 낼 수 있는 장점을 가진 좋은 툴이기 때문이다.</p>
 
 <h2 id="참고">참고</h2>
 
 <ol>
-<li><a href="http://developer.android.com/tools/debugging/debugging-log.html">http://developer.android.com/tools/debugging/debugging-log.html</a></li>
-<li><a href="http://developer.android.com/tools/help/logcat.html">http://developer.android.com/tools/help/logcat.html</a></li>
+<li><a href="http://www.doxygen.org">http://www.doxygen.org</a></li>
 </ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>
