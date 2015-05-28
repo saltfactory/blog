@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Android 앱 개발할 때 필요없는 로그 보이지 않게 하기</title>
+    <title>크롬 브라우저에서 로컬 file경로 Sencah Application을 실행하기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/android/exclude-gpu-error-when-using-genymotion.html">
+    <link rel="canonical" href="/series/sencha/open-local-file-from-chrome-to-sencha.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -217,102 +217,48 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Android 앱 개발할 때 필요없는 로그 보이지 않게 하기</h1>
-    <p class="meta">Aug 13, 2014</p>
+    <h1>크롬 브라우저에서 로컬 file경로 Sencah Application을 실행하기</h1>
+    <p class="meta">Feb 14, 2013</p>
   </header>
 
   <article class="post-content">
-  <h2 id="서론">서론</h2>
-
-<p>Android를 개발할 때 IDE에서는 Android 디바이스의 모든 로그가 출력이 된다. filter를 어떻게 적용하는가에 따라서 현개 개발하고 있는 디바이스의 로그를 정확하고 간결하게 볼 수 있는데 이 포스트에서 Android를 개발하기 위해 genymotion을 사용할 때 필요없는 로그를 보이지 않게 하는 방법에 대해 소개한다.</p>
+  <p>Sencha Application은 web application을 개발하는 프레임워크라는 사실을 이젠 많은 개발자들이 알고 센차터치의 잠재력을 높이 평가하고 있다. 이러한 sencha application을 실행하기 위해서는 간단하게 html 파일과 javascript, css 파일만 있으면 브라우저에서 원격지에 파일을 업로드하지 않고 실행하면서 개발을 할 수 있다. 오페라 브라우저도 webkit engine을 포용하는 지금 시점에서 웹 어플리케이션은 webkit insepector로 개발하는 것이 이젠 거의 표준인 것으로 생각하기 때문에 chrome browser로 개발을 하는 사람들이 많아졌다.</p>
 
 <!--more-->
 
-<h2 id="logcat">LogCat</h2>
-
-<p>Android <a href="http://developer.android.com/tools/help/logcat.html">LogCat</a>은 안드로이드 앱을 개발할 때 system output으로 출력되는 로그 메카니즘이다. LogCat을 잘 다루지 않게 되면 디바이스에 출력되는 여러가지 로깅을 개발 할 때 함께 봐야하는 불편함이 생긴다. 그래서 안드로이드 앱을 개발할 때 다양한 Logging 방법을 문서로 제공하고 있다. (<a href="http://developer.android.com/tools/debugging/debugging-log.html">http://developer.android.com/tools/debugging/debugging-log.html</a>)</p>
-
-<h2 id="log-객체">Log 객체</h2>
-
-<p>안드로이드 앱을 개발할 때 가장 많이 사용하는 Logging 클래스는 <a href="http://developer.android.com/tools/debugging/debugging-log.html#logClass">Log</a> 이다. Log 클래스는 LogCat에 메세지를 출력하는 android의 utility 클래스이고 다음과 같은 메소드를 사용할 수 있다.</p>
-
-<ul>
-<li><strong>v</strong>(String, String) : verbose</li>
-<li><strong>d</strong>(String, String) : debug</li>
-<li><strong>i</strong>(String, String) : information</li>
-<li><strong>w</strong>(String, String) : wranning</li>
-<li><strong>e</strong>(String, STring) : error</li>
-</ul>
-
-<p>예를 들면 다음과 같이 사용할 수 있다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Log.i(&quot;MyActivity&quot;, &quot;MyClass.getView() — get item number &quot; + position);
+<p>sencha touch 테스트를 위해서 다음과 같이 간단히 sencha touch application을 sencha command로 만들어보겠다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd $SENCHA_HOME
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">sencha generate app TestApp ../TestApp
 </code></pre></div>
-<p>위와 같이 Log 객체를 사용하면 다음과 같이 LogCat에 출력이 된다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">I/MyActivity( 1557): MyClass.getView() — get item number 1
+<p><img src="http://cfile24.uf.tistory.com/image/16369543511CE478136FFA" alt=""></p>
+
+<p>이젠 테스트로 만든 Sencha Projects 디렉토리에서 index.html 파일을 chrome에서 열어보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd ../TestApp
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">open -a &quot;Google Chrome&quot; index.html
 </code></pre></div>
-<h2 id="log-foramt">Log Foramt</h2>
+<p><img src="http://cfile30.uf.tistory.com/image/154D7144511CE5410F116E" alt=""></p>
 
-<p>LogCat은 다양한 출력 포멧을 지원한다.</p>
-
-<ul>
-<li><strong>brief</strong> : priority/tag 그리고 PID(프로세스 ID)를 출력한다.(default)</li>
-<li><strong>process</strong> : PID만 출력</li>
-<li><strong>tag</strong> : priority/tag만 출력</li>
-<li><strong>raw</strong> : 다른 metadata field 없이 raw log message만 출력</li>
-<li><strong>time</strong> : date, invocation time, PID 출력</li>
-<li><strong>threadtime</strong> : date, invocation time, priority, tag, PID, TID(thread ID)를 출력</li>
-<li><strong>long</strong> : 모든 metadata field를 blank로 분리해서 출력</li>
-</ul>
-
-<p>사용방법은 다음과 같다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[adb] logcat [-v &lt;format&gt;]
+<p>chrome 브라우저가 열리면서 다음과 같이 Cross origin requests are only supported for HTTP 에러를 발생하면서 Sencha Application이 실행이 되지 않는다. Safari 브라우저로 열어보자</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">open -a &quot;Safari&quot; index.html
 </code></pre></div>
-<h2 id="logcat-filter-설정">LogCat filter 설정</h2>
+<p><img src="http://cfile2.uf.tistory.com/image/121DDB42511CE5AC1FB5F1" alt=""></p>
 
-<p>LogCat은 디바이스의 전체 시스템 출력을 보여주기 때문에 우리는 LogCat이 지원하고 있는 <strong>filter</strong>를 잘 사용해야 한다. 수 많은 로깅중에 warnning 메세지를 filter하여 보고 싶을 경우는 다음과 같이 한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">adb logcat *:W
+<p>Safari 브라우저에서는 문제 없이 실행이 되는 것을 확인할 수 있다. 위와 같은 문제는 Chrome 브라우저에서 file 경로로 브라우저에서 열게되었을때 access file policy 제한으로 발생하는 문제이다. 그래서 Chrome 브라우저를 실행할 때 다음과 같이 옵션을 추가한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">--args --allow-file-access-from-files
 </code></pre></div>
-<p>filter로 사용할 수 있는 priority 옵션은 다음과 같다.</p>
+<p>열려 있는 Chrome 프로세스를 완전히 종료를 한다. (만약 프로세스가 완벽하게 중지되지 않으면 오션을 추가해도 반영이 되지 않는다는 오류 메세지를 보게 될 것이다.) 그리고 옵션을 추가해서 Chrome을 열어보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --allow-file-access-from-files index.html
+</code></pre></div>
+<p><img src="http://cfile21.uf.tistory.com/image/17318043511CE72C25884C" alt=""></p>
 
-<ul>
-<li><strong>V</strong> : verbose (lowest priority)</li>
-<li><strong>D</strong> : debug</li>
-<li><strong>I</strong> : info</li>
-<li><strong>W</strong> : warnning</li>
-<li><strong>E</strong> : error</li>
-<li><strong>F</strong> : fetal</li>
-<li><strong>S</strong> : silent (highest priority, on which nothing is ever printed)</li>
-</ul>
+<p><img src="http://cfile4.uf.tistory.com/image/2715A03A511CE7350678E4" alt=""></p>
 
-<h2 id="정규표현식-사용">정규표현식 사용</h2>
-
-<p>LogCat의 filter는 옵션으로 정규표현식을 사용해서 보고 싶은 내용만 걸러서 볼 수도 있다. 우리가 프로젝트에서 <a href="http://www.genymotion.com/">genymotion</a>을 도입했다. genymotion은 그래픽 가속기를 사용해서 기존의 Android emulator의 느린 속도를 보완해서 빠르게 디버깅을 할 수 있는 방법을 제공해준다. genymotion에 대해서는 다음 포스팅에서 자세하게 소개하겠다.</p>
-
-<p>genymotion을 사용할 때 LogCat에서는 GPU에 대한 에러가 LogCat에 출력이 된다.</p>
-
-<p><img src="http://cfile6.uf.tistory.com/image/26046D4153EAF250118695" alt="eglCodecCommon error"></p>
-
-<p>이렇게 우리가 프로그램에 포함되지 않은 로깅이 디바이스의 문제로 수없이 많이 발생하기 때문에 정작 우리가 개발하면서 보고 싶은 로그를 스크롤을 하면서 찾아서 확인해야하는 불편함이 있다. 그래서 우리는 불필요한 genymotion의 GPU에 관련된 에러를 모두 제거하고 순수하게 우리가 남기고 싶은 로그만 보고 싶었다.</p>
-
-<p>그래서 우리는 다음과 같이 LogCat에 정규 표현식 filter를 사용했다. 우리는 IntelliJ(Android Studio)를 이용해서 Android를 개발하고 있기 때문에 IntelliJ에서 제공하는 인터페이스로 LogCat의 filter를 적용했다.</p>
-
-<p>genymotion을 사용하여 앱을 실행시키면 GPU에 관련된 에러가 포함되는데 TAG에는 <strong>eglCodecCommon</strong>, <strong>OpenGLRender</strong> 그리고 <strong>EGL_genymotion</strong>가 포함된 에러가 출력이 되고 있다. 그리고 message에 <strong>GL_INVALID_OPERATION</strong> 에러가 포함이 되어 있기 때문에 다음과 같이 filter를 적용할 수 있다.</p>
-
-<p><img src="http://cfile26.uf.tistory.com/image/2272B34253EAF24F130B75" alt="exclude filter"></p>
-
-<p>이렇게 LogCat에 정규 표현식을 적용하면 노이즈로 포함되어있는 필요없는 로그를 모두 제거하고 우리에게 필요한 정보만 LogCat으로 출력되는 것을 확인 할 수 있다.</p>
-
-<p><img src="http://cfile25.uf.tistory.com/image/2276CB4253EAF2500C0600" alt="remove exclude"></p>
-
-<h2 id="결론">결론</h2>
-
-<p>LogCat은 Android 앱을 개발할 때 아주 중요한 자료가 된다. 그런데 LogCat은 system logging 메카니즘으로 우리가 출력하고 싶은 메세지 외에도 우리가 필요하지 않는 로그도 함께 출력이 된다. 이럴 때 우리는 LogCat의 filter 기능을 잘 사용하면 우리가 필요한 정보만 출력시켜 개발할 때 편리하게 진행할 수 있다. LogCat의 priority와 tag만을 사용해서 출력하는 것 이외에도 <strong>정규표현식</strong>을 이용해서 필요없는 메세지를 보이지 않게 하거나 필요한 메세지만 출력할 수도 있다.</p>
+<p>이렇게 Chrome 브라우저를 열때 file access policy 제한을 풀어서 index.html을 실행하면 앞에서 봤던 문제 없이 Sencha Application을 Chrome에서 file 경로로 실행할 수 있게 된다.</p>
 
 <h2 id="참고">참고</h2>
 
 <ol>
-<li><a href="http://developer.android.com/tools/debugging/debugging-log.html">http://developer.android.com/tools/debugging/debugging-log.html</a></li>
-<li><a href="http://developer.android.com/tools/help/logcat.html">http://developer.android.com/tools/help/logcat.html</a></li>
+<li><a href="http://stackoverflow.com/questions/14776281/chrome-disable-web-security-cant-open-file">http://stackoverflow.com/questions/14776281/chrome-disable-web-security-cant-open-file</a></li>
 </ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>

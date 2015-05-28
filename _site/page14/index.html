@@ -7,7 +7,7 @@
     <title>saltfactory's series</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/page2/">
+    <link rel="canonical" href="/series/page14/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -218,66 +218,14 @@
   <ul class="posts">
     
     <li>
-      <a class="post-link" href="/series/docker/sharing-directory-on-boot2docker-using-with-ssfs.html">Mac과 Docker 상호간 디렉토리 공유하기 (Boot2Docker에서 VOLUME 사용)</a>
-      <span class="post-date">Mar 6, 2015</span>
+      <a class="post-link" href="/series/spring/solving-lost-hibernate-connection-mysql-in-springframework.html">Springframework에서 MySQL 커네션을 잃어버리는 문제 해결</a>
+      <span class="post-date">Nov 9, 2011</span>
 
       <p class="excerpt">
         
 
-Mac에서 Docker를 사용하기 위해서는 Boot2Docker를 사용해야한다. Boot2Docker는 VirtualBox를 사용하기 때문에 Docker에 바로 로컬디렉토리를 공유폴더로 지정하기 위해서는 VirtualBox를 통해서 사용해야한다. 이러한 이유로 Docker에서 VOLUME을 사용하는 방법과 다른 방법이 필요하다. 이 포스트에서는 ssfs를 사용하여 Boot2Docker에서 Mac과 Docker 상호간 디렉토리를 공유하는 방법에대해 소개한다.
- <a href="/series/docker/sharing-directory-on-boot2docker-using-with-ssfs.html">[본문보기]</a>
-      </p>
-
-    </li>
-    
-    <li>
-      <a class="post-link" href="/series/jekyll/introduce-jekyll-img-converter.html">jekyll-img-converter 플러그인 제작 및 배포 (Markdown문서 이미지 사이즈 변환하기)</a>
-      <span class="post-date">Nov 12, 2014</span>
-
-      <p class="excerpt">
-        
-jekyll-img-converter는 Markdown의 이미지  문법(syntax)를 HTML으로 변환 시킬 때  이미지의 사이즈를 inline style로 추가해서 변환 시키는 Jekyll의 플러그인이다.
-
- <a href="/series/jekyll/introduce-jekyll-img-converter.html">[본문보기]</a>
-      </p>
-
-    </li>
-    
-    <li>
-      <a class="post-link" href="/series/ionic/create-hybrid-app-using-ionic.html">Ionic을 이용한 iOS, Android 하이브리드 앱 개발 사례</a>
-      <span class="post-date">Oct 13, 2014</span>
-
-      <p class="excerpt">
-        
-
-하이브레인넷 부설 연구소에서는 모바일 서비스를 위해 아이폰과 안드로이드 앱을 개발해서 배포하고 있었다. 우리는 아이폰 사용자와 안드로이드 사용자를 위해서 두가지 플랫폼을 개발해야 했다. 안드로이드와 아이폰은 버전과 디바이스의 파편화 때문에 많은 비용을 투자해서 예외처리를 해야했다. 제한된 개발 인력으로 두가지 디바이스를 개발해야하는 복잡한 프로세스를 개선하기 위해서 우리는 하이브리드 앱 개발 방법을 도입하기로 결정했다. 최근 우리는 하이브리드 앱 개발 기술을 사용하여  &quot;하이브레인넷 앱(ver. 2.3)&quot;... <a href="/series/ionic/create-hybrid-app-using-ionic.html">[본문보기]</a>
-      </p>
-
-    </li>
-    
-    <li>
-      <a class="post-link" href="/series/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html">Nginx와 git 연동 시 The remote end hung up unexpectedly 에러 문제 해결</a>
-      <span class="post-date">Sep 12, 2014</span>
-
-      <p class="excerpt">
-        
-
-Nginx와 git 연동 시 git push 명령어를 실행할 때, The remote and hung up unexpectedly 라는 에러를 보여주면서 git push가 정상적으로 동작하지 않는 문제를 만날 수 있다. 이것은 NginX에서 POST의 크기의 제한 때문에 발생하는 문제이다.
-Nginx의 문제를 파악하고 NginX의 설정을 변경하여 이 문제를 해결하는 방법에 대해서 알아본다.
- <a href="/series/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html">[본문보기]</a>
-      </p>
-
-    </li>
-    
-    <li>
-      <a class="post-link" href="/series/git/running-yobi-on-docker.html">docker-yobi를 이용하여 yobi 운영하기</a>
-      <span class="post-date">Aug 28, 2014</span>
-
-      <p class="excerpt">
-        
-
-우리는 LXC로 서버를 운영하기 위해서 Docker를 도입하기로 했다. docker를 도입해서 docker에 올리는 서비스중 첫번째로 Yobi를 적용하기로 했다. 개인연구로 사용하고 있는 랩탑은 Mac OS X를 사용하고 있기 때문에 boot2docker를 사용하여 Dockerfile을 생성해서 GitHub에 docker-hub 와 Docker Hub에 올렸다. 이 포스팅에서는 GitHub와 Docker Hub를 이용해서 Yobi를 사용하는 방법을 소개한다.
- <a href="/series/git/running-yobi-on-docker.html">[본문보기]</a>
+Springframework에서 MySQL을 사용할 때 특정 시점이 지나면 자동으로 커넥션을 잃어버리는 문제가 있다. 이 문제는 Springframework에서 아무런 오랜시간 동안 데이터요청이 없으면 커넥션과 풀링을 해지하는 기능을 가지고 있기 때문인데 이 문제를 해결하기 위한 방법을 소개한다.
+ <a href="/series/spring/solving-lost-hibernate-connection-mysql-in-springframework.html">[본문보기]</a>
       </p>
 
     </li>
@@ -287,11 +235,11 @@ Nginx의 문제를 파악하고 NginX의 설정을 변경하여 이 문제를 �
 
   <div class="pagination">
   
-    <a href="/series/index.html" class="previous">Previous</a>
+    <a href="/series/page13" class="previous">Previous</a>
   
-  <span class="page_number ">Page: 2 of 14</span>
+  <span class="page_number ">Page: 14 of 14</span>
   
-    <a href="/series/page3" class="next">Next</a>
+    <span class="next">Next</span>
   
   </div>
 
