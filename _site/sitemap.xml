@@ -165,6 +165,10 @@
     <lastmod>2014-02-10T00:00:00+09:00</lastmod>
   </url>
   <url>
+    <loc>/node/web-scraping-using-with-node-and-phantomjs.html</loc>
+    <lastmod>2014-02-07T00:00:00+09:00</lastmod>
+  </url>
+  <url>
     <loc>/linux/change-prompt-in-terminal.html</loc>
     <lastmod>2012-02-03T00:00:00+09:00</lastmod>
   </url>
@@ -257,6 +261,9 @@
   </url>
   <url>
     <loc>/99/</loc>
+  </url>
+  <url>
+    <loc>/224/</loc>
   </url>
   <url>
     <loc>/225/</loc>
