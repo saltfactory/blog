@@ -4,7 +4,7 @@ title: node-gallery3을 이용하여 Gallery3 REST API 사용하기
 category: node
 tags: [javascript, node, node.js, gallery3, api, rest]
 comments: true
-redirect : /266/
+redirect_from : /266/
 ---
 
 ## 서론

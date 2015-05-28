@@ -4,7 +4,7 @@ title : Jekyll을 사용하여 GitHub Pages 만들기
 category : jekyll
 tags : [jekyll, git, ruby]
 comments : true
-redirect : /256/
+redirect_from : /256/
 ---
 
 ## 서론

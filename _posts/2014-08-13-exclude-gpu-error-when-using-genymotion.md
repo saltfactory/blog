@@ -4,7 +4,7 @@ title : Android 앱 개발할 때 필요없는 로그 보이지 않게 하기
 category : android
 tags : [android, genymotion]
 comments : true
-redirect : /257/
+redirect_from : /257/
 ---
 
 ## 서론

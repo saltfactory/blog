@@ -4,7 +4,7 @@ title : Nginx와 git 연동 시 The remote end hung up unexpectedly 에러 문�
 category : nginx
 tags : [nginx, git]
 comments : true
-redirect : /262/
+redirect_from : /262/
 ---
 
 ## 서론

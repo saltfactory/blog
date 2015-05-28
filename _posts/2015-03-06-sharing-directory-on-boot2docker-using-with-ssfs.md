@@ -4,7 +4,7 @@ title: Mac과 Docker 상호간 디렉토리 공유하기 (Boot2Docker에서 VOLU
 category: docker
 tags: [mac, docker, boot2docker, volumn, ssfs]
 comments: true
-redirect : /265/
+redirect_from : /265/
 ---
 
 ## 서론

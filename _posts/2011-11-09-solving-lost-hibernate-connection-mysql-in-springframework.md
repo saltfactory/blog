@@ -4,7 +4,7 @@ title : Springframework에서 MySQL 커네션을 잃어버리는 문제 해결
 category : spring
 tags : [spring,java,srpingframework,hibernate,mysql,connection]
 comments : true
-redirect : /59/
+redirect_from : /59/
 ---
 
 ## 서론

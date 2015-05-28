@@ -4,7 +4,7 @@ title : Yobi 사용시 Safari 브라우저에서 한글폴더 문제 해결하�
 category : git
 tags : [git, yobi, safari]
 comments : true
-redirect : /259/
+redirect_from : /259/
 ---
 
 ## 서론

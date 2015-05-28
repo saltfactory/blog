@@ -4,7 +4,7 @@ title : docker-yobi를 이용하여 yobi 운영하기
 category : git
 tags : [docker, git, yobi]
 comments : true
-redirect : /261/
+redirect_from : /261/
 ---
 
 ## 서론

@@ -4,7 +4,7 @@ title : util-extend를 이용하여 Object 확장하기
 category : node
 tags : [node, javascript, extend, object, util-extend]
 comments : true
-redirect : /231/
+redirect_from : /231/
 ---
 
 ## 서론

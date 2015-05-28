@@ -4,7 +4,7 @@ title : Yobi와 Apache 연동시 encoded slash 문제 RewriteRule로 해결하�
 category : git
 tags : [git, yobi, safari]
 comments : true
-redirect : /258/
+redirect_from : /258/
 ---
 
 ## 서론

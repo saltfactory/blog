@@ -4,7 +4,7 @@ title : Ionic을 이용한 iOS, Android 하이브리드 앱 개발 사례
 category : ionic
 tags : [android, ios, hybrid, html5, ionic]
 comments : true
-redirect : /263/
+redirect_from : /263/
 ---
 
 ## 서론

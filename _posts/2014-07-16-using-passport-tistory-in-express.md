@@ -2,6 +2,7 @@
 layout: post
 title: passport-tistory와 express를 사용하여 Tistory 인증 구현
 category: passport-tistory
+tags: [node, passport, passport-tistory, expressjs, tistory]
 comments: true
 redirect_from: /251/
 ---

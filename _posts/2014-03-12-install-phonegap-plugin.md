@@ -4,7 +4,7 @@ title : PhoneGap 프로젝트에 플러그인 설치하기기 (PhoneGap CLI, Plu
 category : hybridapp
 tags : [phonegap, hybrid, mobile, android, plugins]
 comments : true
-redirect : /233/
+redirect_from : /233/
 ---
 
 ## 서론

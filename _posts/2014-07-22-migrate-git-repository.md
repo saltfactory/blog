@@ -4,7 +4,7 @@ title : Git 원격 저장소 변경하기
 category : git
 tags : [git]
 comments : true
-redirect : /250/
+redirect_from : /250/
 ---
 
 ## 서론

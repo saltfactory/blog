@@ -4,7 +4,7 @@ title : Mac OS X에서 docker 설치하기(시작하기)
 category : docker
 tags : [docker, mac, linux]
 comments : true
-redirect : /255/
+redirect_from : /255/
 ---
 
 ## 서론

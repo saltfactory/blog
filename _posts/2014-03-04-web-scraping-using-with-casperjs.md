@@ -4,7 +4,7 @@ title : Casper.js를 이용하여 웹사이트 데이터가져오기
 category : node
 tags : [node, javascript, casper, casper.js]
 comments : true
-redirect : /232/
+redirect_from : /232/
 ---
 
 ## 서론

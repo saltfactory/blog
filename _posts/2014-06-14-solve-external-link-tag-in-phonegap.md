@@ -2,6 +2,7 @@
 layout: post
 title: PhoneGap(Cordova) 외부 링크(a link) 새창으로 열기
 category: hybridapp
+tags: [phonegap, cordova, link, browser]
 comments: true
 redirect_from: /243/
 ---

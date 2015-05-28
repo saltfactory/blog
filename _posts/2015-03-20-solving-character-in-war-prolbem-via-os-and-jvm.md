@@ -4,8 +4,7 @@ title: 개발용 PC와 운영체제 인코딩 설정 따른 톰캣 WAR 파일 �
 category: Java
 tags: [java, jvm, tomcat, character, utf-8, war]
 comments: true
-comments: true
-redirect : /269/
+redirect_from : /269/
 ---
 
 ## 서론

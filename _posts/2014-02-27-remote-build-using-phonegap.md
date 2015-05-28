@@ -4,7 +4,7 @@ title : PhoneGap의 Remote Build로 멀티플랫폼 하이브리드 앱 반들�
 category : hybridapp
 tags : [phonegap, cordova, remote build, hybrid, hybridapp]
 comments : true
-redirect : /229/
+redirect_from : /229/
 ---
 
 ## 서론

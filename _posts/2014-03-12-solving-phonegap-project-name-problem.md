@@ -4,7 +4,7 @@ title : PhoneGap 프로젝트 생성할 때 id, Project Name 변경되지 않는
 category : hybridapp
 tags : [phonegap, hybrid, cordova]
 comments : true
-redirect : /234/
+redirect_from : /234/
 ---
 
 ## 서론

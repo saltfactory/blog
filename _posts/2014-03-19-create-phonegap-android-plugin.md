@@ -4,7 +4,7 @@ title : PhoneGap Android 플러그인 개발
 category : hybridapp
 tags : [phonegap, hybrid, mobile, android, plugins]
 comments : true
-redirect : /236/
+redirect_from : /236/
 ---
 
 ## 서론

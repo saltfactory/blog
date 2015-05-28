@@ -4,7 +4,7 @@ title : Mac OS X에서 Automator를 이용하여 온라인사전 검색 서비�
 category : hybridapp
 tags : [phonegap, cordova, remote build, hybrid, hybridapp]
 comments : true
-redirect : /230/
+redirect_from : /230/
 ---
 
 ## 서론

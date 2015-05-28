@@ -1,10 +1,10 @@
 ---
 layout: post
-title : util-extend를 이용하여 Object 확장하기
-category : node
-tags : [node, javascript, extend, object, util-extend]
+title : PhoneGap과 Node.js를 이용하여 하이브리드 앱 개발환경 구축하기
+category : hybridapp
+tags : [phonegap, node, nodejs, hybridapp, hybrid]
 comments : true
-redirect : /228/
+redirect_from : /228/
 ---
 
 ## 서론

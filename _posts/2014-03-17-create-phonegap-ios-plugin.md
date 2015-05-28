@@ -4,7 +4,7 @@ title : PhoneGap iOS 플러그인 개발
 category : HybridApp
 tags : [phonegap, hybrid, mobile, ios, plugins]
 comments : true
-redirect : /235/
+redirect_from : /235/
 ---
 
 ## 서론

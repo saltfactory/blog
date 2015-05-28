@@ -4,7 +4,7 @@ title: jekyll-img-converter 플러그인 제작 및 배포 (Markdown문서 이�
 category: jekyll
 tags: [jekyll, ruby, markdown, plugin]
 comments: true
-redirect : /264/
+redirect_from : /264/
 excerpt_separator : <!--more-->
 ---
 

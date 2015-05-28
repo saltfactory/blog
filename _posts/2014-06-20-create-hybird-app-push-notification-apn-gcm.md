@@ -2,6 +2,7 @@
 layout: post
 title: PhoneGap(Cordova) 앱 푸시 (Push Notification) 알람서비스 APN, GCM 구현
 category: hybridapp
+tags: [phonegap, cordova, push, apn, gcm]
 comments: true
 redirect_from: /245/
 ---

@@ -4,7 +4,7 @@ title: popup 창에서 리다이렉트 이후 window.opener 사라지는 문제 
 category: javascript
 tags: [javascript, opener, window]
 comments: true
-redirect : /268/
+redirect_from : /268/
 ---
 
 ## 서론
