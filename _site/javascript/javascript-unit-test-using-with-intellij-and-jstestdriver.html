@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Jekyll Markdown 파일의 front matter를 제외하고 HTML변환하기</title>
+    <title>IntelliJ와 JSTestDriver를 이용하여 JavaScript 단위테스트하기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/mark2html/mark2html-v.0.0.5-upgrade.html">
+    <link rel="canonical" href="/series/javascript/javascript-unit-test-using-with-intellij-and-jstestdriver.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -231,83 +231,97 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Jekyll Markdown 파일의 front matter를 제외하고 HTML변환하기</h1>
-    <p class="meta">Aug 5, 2014</p>
+    <h1>IntelliJ와 JSTestDriver를 이용하여 JavaScript 단위테스트하기</h1>
+    <p class="meta">Oct 18, 2012</p>
   </header>
 
   <article class="post-content">
   <h2 id="서론">서론</h2>
 
-<p><a href="https://github.com/saltfactory/mark2html">mark2html</a> <strong><em>0.0.5</em></strong> 버전은 <a href="http://jekyllrb.com/">Jekyll</a>의 <a href="http://jekyllrb.com/docs/frontmatter/">front matter</a> 가 포함된 Markdown 파일에서 front matter를 skip하고 렌더링 할 수 있는 옵션 <code>-skip-front-matter</code>를 추가 하였다.</p>
+<p>Javascript가 더이상 팝업이나 만들어주는 웹 페이지 embed script code가 아니라 웹 어플리케이션을 만드는 고수준 언어로 인식되면서 기존의 다양한 어플리케이션 개발 방법론으로 Javascript 개발에 적용되고 있다. 이 블로그에서 QUnit을 이용해서 브라우저에서 Javascript를 단위 테스트하는 방법(<a href="http://blog.saltfactory.net/194)%EC%9D%84">http://blog.saltfactory.net/194)을</a> 소개한적이 있다. 보통 Java 웹 프로그램을 개발하면서 Javascript를 View를 개발하면서 많이 개발할 것으로 예상이 된다. (물론 고급 방법은 MVC를 분업해서 View만 다른 IDE를 통해서 개발하겠지만 작은 연구소나 중소기업에서는 웹 프로그래머들이 Java 웹 프로그램도 개발하고 front-end 개발도 동시에 할 것이다.)</p>
+
+<p>그래서 IntelliJ에서 Javascript를 단위 테스트하는 방법을 소개하려고 한다. IDE는 보통 자신이 가지고 있는 Testing Tool이 포함이 되어 있다. IntelliJ의 JetBrain에서 Javascript Application 개발 툴로 WebStorm이 있는데 이 IDE에는 JSTestDriver라는 Javascript Testing Tool이 포함이 되어 있다. 하지만  IntelliJ는 Java Application 개발 툴로 JSTestDriver가 없기 때문에 Plugins으로 설치를 해야한다.  </p>
 
 <!--more-->
 
-<h2 id="jekyll">Jekyll</h2>
+<h2 id="jstestdriver">JSTestDriver</h2>
 
-<p><img src="http://wolfslittlestore.be/wp-content/uploads/2013/07/jekyll.png" alt="jekyll"></p>
+<p>js-test-driver는 remote javascript testing 툴로 다양한 브라우저에 Javascript가 동작하는 것을 캡처링하여 단위 테스트를 하는 테스팅 툴이다. js-test-driver는 오픈소스 프로젝트로 <a href="http://code.google.com/p/js-test-driver/">http://code.google.com/p/js-test-driver/</a> 에서 보다 자세한 자료를 참고할 수 있다.</p>
 
-<p><a href="http://jekyllrb.com">Jekyll</a>은 static website(blog) 프레임워크이다.</p>
+<p><img src="http://cfile29.uf.tistory.com/image/197E1D39507F93CE15EF3E" alt=""></p>
 
-<blockquote>
-<p>Jekyll은 static website(blog)를 만들 때 <strong><em>Markdown</em></strong> 파일을 사용해서 HTML 페이지를 만든다.  </p>
-</blockquote>
+<p>js-test-driver는 IntelliJ 뿐만 아니라 eclipse에서도 plugins을 설치해서 Javascript를 테스트 할 수 있다. 연구소에서 IntelliJ를 Java 개발 IDE로 선택해서 개발하고 있기 때문에 이 포스팅에서는 IntelliJ에서 Javascript를 js-test-driver를 이용해서 단위 테스트하는 방법을 소개한다.
+IntelliJ에는 800개가 넘는 plugins이 존재하고 있다. IntelliJ에 Plugins을 추가로 설치하고 싶으면 다음과 같이 Preferences의 Plugins 화면을 연다.</p>
 
-<p>다시 말해서 Jekyll은 Markdown만 있으면 웹 사이트와 블로그를 서비스를 쉽게 만들 수 있다는 말이다. 더이상 기존의 웹 프로그램을 하듯 HTML을 생성할 필요도 없고, 데이터베이스 연결을 고민할 필요가 없다. 단순하게 Markdown으로 글을 작성하면 Jekyll 안에서 자동으로 static HTML 파일이 생성이 되기 때문이다. Jekyll은 GitHub에서 공식적으로 <a href="https://pages.github.com/">GitHub Pages</a>를 만드는 방법에 소개를 하면서 더욱 유명해지기 시작했다. <a href="http://en.wikipedia.org/wiki/GitHub">GitHub</a>는 Ruby로 만들어져 있고 Jekyll 역시 Ruby로 만들어져 있기 때문에 Jekyll로 만든 디렉토리를 모두 GitHub 저장소에 올려두고 push를 하는 것 만으로 쉽게 GitHub를 이용한 웹사이트나 블로그를 만들 수 있다. Jekyll로 GitHub site를 사용해서 웹 서비스를 만드는 방법은 이 후에 자세히 포스팅 할 예정이다.</p>
+<p><img src="http://cfile22.uf.tistory.com/image/181D2134507F95D70D62B7" alt=""></p>
 
-<h2 id="front-matter">Front Matter</h2>
+<p>plugins 화면에서 Browse repositories 버튼을 선택한다. 그러면 설치 가능한 plugins를 목록들이 나오는데 JSTestDriver를 검색한다.</p>
 
-<p><a href="http://jekyllrb.com/docs/frontmatter/">Front Matter</a>는 Jekyll이 Makrdown을 해석할때 사용하는 메타정보를 표현하는 것으로 Markdown 파일이 시작하는 첫 부분에 <a href="http://en.wikipedia.org/wiki/YAML">YAML</a> 포멧으로 작성된 것이다. front matter는 <code>---</code>으로 시작해서 <code>---</code>를 끝으로 이 사이에 정보를 YAML 포멧으로 저장한다.</p>
+<p><img src="http://cfile23.uf.tistory.com/image/143E8533507F96542CFA56" alt=""></p>
 
-<p>예를 들면 다음과 같이 Markdown 파일이 시작하는 첫 부분에 front matter를 추가하는 것이다. 아래 내용은 Jekyll이 자동으로 category에 맞는 디렉토리에 파싱된 HTML을 post 라는 레이아웃으로 저장할 것이다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">---
-layout : post
-category : articles
-tags : [mark2html, node, markdown]
-title : mark2html 버전 0.0.5 업그레이드 소개
----
-</code></pre></div>
-<p>이것은 Markdown의 표준 마커업이 아니다. Jekyll이나 다른 서비스에서 적용할 수 있는 문법으로 기본적인 Markdown 파서는 front matter를 해석하지 못하는 문제가 발생한다.</p>
+<p>JSTestDriver를 선택해서 오른쪽 마우스 버튼을 클릭해서 install 메뉴를 선택하면 IntelliJ가 재시작되면서 JSTestDriver plugins이 설치가 된다.
+단위 테스트를 위해서 프로젝트를 생성하고 간단한 코드를 만들어보자. src/Person.js 파일을 생성한다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm"> *</span>
+<span class="cm"> * filename : Person.js</span>
+<span class="cm"> */</span>
 
-<h2 id="-skip-front-matter-옵션">-skip-front-matter 옵션</h2>
-
-<p><strong><em><a href="mailto:mark2html@0.0.5">mark2html@0.0.5</a></em></strong> 에서는 Jekyll에서 생성하여 사용하는 front matter가 포함된 Markdown 파일을 HTML 으로 변환하기 위해서 <code>-skip-front-matter</code> 옵션을 추가하였다. 이 옵션을 사용하면 Jekyll에 사용하고 있는 Markdown을 HTML으로 변환할 때 front matter를 생략하고 나머지 Markdown 내용만 변환할 수 있다.
-사용 방법은 다음과 같다.</p>
-
-<h3 id="명령어-옵션으로-사용할-때">명령어 옵션으로 사용할 때</h3>
-
-<p><code>mark2html</code> 명령어가 없다면 npm으로 설치한다.
-<code>
-npm install -g mark2html
-</code>
-Markdown 파일에 front matter가 포함되어 있다면 <code>mark2html</code> 명령어에 <code>-skip-front-matter</code> 옵션을 함께 사용한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">mark2html -skip-front-matteer -s /Users/saltfactory/blogs/blog.saltfactory.net/posts/2014-08-25-mark2html-v.0.0.5-upgrade.md
-</code></pre></div>
-<h3 id="node-모듈료-사용할-때">node 모듈료 사용할 때</h3>
-
-<p>모듈을 찾을 수 없다면 로컬 모듈로 <code>mark2html</code>을 설치한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">npm install mark2html
-</code></pre></div>
-<p><code>mark2html.convert()</code>를 사용때 적용하는 옵션에 <code>skipFrontMatter</code>를 <code>true</code>로 지정한다.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">mark2html</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mark2html&#39;</span><span class="p">);</span>
-
-<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">src</span><span class="o">:</span> <span class="s1">&#39;/Users/saltfactory/blogs/blog.saltfactory.net/posts/2014-08-25-mark2html-v.0.0.5-upgrade.md&#39;</span><span class="p">,</span>
-    <span class="nx">destDir</span><span class="o">:</span> <span class="s1">&#39;/User/saltfactory/DropBox/Blog/output&#39;</span><span class="p">,</span>
-    <span class="nx">skipFrontMatter</span><span class="o">:</span><span class="kc">true</span>
+<span class="kd">var</span> <span class="nx">Person</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;saltfactory&quot;</span><span class="p">;</span>
 <span class="p">};</span>
 
-<span class="nx">mark2html</span><span class="p">.</span><span class="nx">convert</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+<span class="nx">Person</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></div>
+<p>그리고 Person 객체를 테스트하기 위해서 test/PersonTest.js 파일을 생성한다. 테스트는 간단하게 Person 객체의 이름을 가져와서 문자열과 같은지 assertion을 하는 것이다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm"> *</span>
+<span class="cm"> * filename : PersonTest.js</span>
+<span class="cm"> */</span>
+
+<span class="nx">PersonTest</span> <span class="o">=</span> <span class="nx">TestCase</span><span class="p">(</span><span class="s2">&quot;PersonTest&quot;</span><span class="p">);</span>
+
+<span class="nx">PersonTest</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">testGetName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">aPerson</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+    <span class="nx">assertEquals</span><span class="p">(</span><span class="nx">aPerson</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="s2">&quot;saltfactory&quot;</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Javascript Test 파일까지 만들었으면 이제 IntelliJ에서 JSTestDriver를 이용해서 테스트파일을 실행시켜야한다. IntelliJ의 Run/Debug Configurations를 열기 위해서 Run 버튼 옆에 설정 버튼을 선택한다. Run/Debug Configurations 창이 열리면 왼쪽 상단의 + 버튼을 눌러서 TestDriver를 하나 생성한다. 우리가 테스트할 객체 이름이 Person 이기 때문에 PersonTest라고 이름을 정한다. Test는 Javascript test file을 실행시키기 원하기 때문에 Test에서 Javascript test file 항목을 선택한다. 그리고 JS test file에서 위에서 생성한 PersonTest.js 파일을 선택한다.</p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/036C783C507F994D15985B" alt=""></p>
+
+<p>이제 설정이 마쳤으니 Javascript로 생성한 Person 객체를 테스트해 보자. 그런데 바로 테스트가 진행이 되지 않을 것이다. 이유는 js-test-driver는 브라우저에서 javascript를 동작하는 것을 캡처링하기 때문에 브라우저를 캡처링하기 위한 디버깅 서버가 동작해야하기 때문이다.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/15184D3A507F9A53022CDE" alt=""></p>
+
+<p>그럼 디버깅 서버를 동작하고 브라우저와 연결하자. JS TestDriver Server 탭을 선택한다. Js TestDriver Server가 나타나면 왼쪽의 실행 버튼을 누른다. 그러면 There are no browsers captured 라는 메세지인데 이것은 디버깅 서비가 어떤 브라우저와 연결할지를 정하지 않아서이다. chrome을 선택해보자. 그럼 실제로 chrome 브라우저에서 동작하는 것을 캡처링 하겠다는 의미이고 chrome 과 js-test-driver의 화면은 다음과 같이 보이게 된다.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/16400335507F9B7F1B7F75" alt=""></p>
+
+<p><img src="http://cfile29.uf.tistory.com/image/206E1133507F9BB91AC0B1" alt=""></p>
+
+<p>다시 IntelliJ에 가서 PersonTest.js를 테스팅하기 위해서 PersonTest 로 지정한 Run/Debug를 실행한다. 만약 단위 테스트에서 문제가 발생하지 않으면 초록색이 나타나면서 에 문구가 나타나지 않는다.</p>
+
+<p><img src="http://cfile5.uf.tistory.com/image/033E0E35507F9CC424540E" alt=""></p>
+
+<p>만약 단위테스트가 실패로 떨어지게 되면 붉은색으로 나타나면서 원인까지 분석해준다.</p>
+
+<p><img src="http://cfile22.uf.tistory.com/image/125BAA36507F9D0F0E1C92" alt=""></p>
+
+<p>이제 Java application 개발에만 사용했던 IntelliJ를 View를 만들면서 Javascript를 개발하는데 사용할 수 있게 되었다.</p>
+
 <h2 id="결론">결론</h2>
 
-<p>현재 blog는 Tistory 기반으로 사용하고 있지만 이 서비스는 Markdown을 사용하기에 적합하지는 않기 때문에 GitHub pages를 사용하여 블로그를 이전하려고 준비하고 있다. mark2html은 Markdown 파일을 Tistory에 포스팅하기 위해서 만들게 된 변환 모듈인데 이 것을 Jekyll에서 생성한 Markdown에 적용을 할 때, front matter 때문에 문제가 발생하였다. 지금은 Jekyll를 사용하여 GitHub를 만들어가고 있기 때문에 front matter가 저장된 Markdown들이 많이 있다. 이것을 표준 Markdown 형태로 변환해서 mark2html으로 HTML을 만들어서 Tistory에 올리기 위해서 mark2html에 <code>-skip-front-matter</code> 옵션을 추가하였다. 이 기능을 추가하고 난 이후 이젠 Jekyll에서 Markdown을 사용하여 static page를 만들기도 하고 특별한 작업없이 사용한 Markdown을 기존의 표준 Markdown으로 Archive 하는데 동일하게 사용할 수 있게 되었다.</p>
+<p>IntelliJ는 매우 강력한 Java IDE 이다. IntelliJ는 수많은 plugins를 가지고 있는데 Javascript Application IDE 에 들어 있는 JSTestDriver를 plugins으로 설치해서 Java를 개발하면서 Javascript 코드를 단위테스트할 수 있다. IntelliJ의 안정성과 빠른성능으로 보다 쾌적하게 Javascript를 개발할 수 있을 뿐만 아니라, JSTestDriver로 단위테스트를 할 수 있어서 Javascript의 코드 품질을 높일 수 있을 것으로 예상된다.</p>
 
 <h2 id="참고">참고</h2>
 
 <ol>
-<li><a href="http://jekyllrb.com/docs/frontmatter/">http://jekyllrb.com/docs/frontmatter/</a></li>
-<li><a href="https://github.com/saltfactory/mark2html">https://github.com/saltfactory/mark2html</a></li>
-<li><a href="http://stackoverflow.com/questions/15207069/remove-yaml-header-from-markdown-file">http://stackoverflow.com/questions/15207069/remove-yaml-header-from-markdown-file</a></li>
+<li>Javascript 테스트 1. QUnit을 이용해서 Javascript 단위테스트하기 (Unit Test)</li>
+<li><a href="http://code.google.com/p/js-test-driver/">http://code.google.com/p/js-test-driver/</a></li>
+<li><a href="http://code.google.com/p/js-test-driver/">http://code.google.com/p/js-test-driver/</a></li>
+<li><a href="http://confluence.jetbrains.net/display/WI/Getting+Started+with+JsT">http://confluence.jetbrains.net/display/WI/Getting+Started+with+JsT</a></li>
 </ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>
