@@ -257,8 +257,16 @@
     <lastmod>2012-09-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/java-method-size-limit-in-rhino.html</loc>
+    <loc>/javascript/java-method-size-limit-in-rhino.html</loc>
     <lastmod>2012-09-26T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/javascript/developing-javascript-without-browser-using-with-envjs.html</loc>
+    <lastmod>2012-09-26T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/javascript/javascript-unit-test-using-with-qunit.html</loc>
+    <lastmod>2012-09-24T00:00:00+09:00</lastmod>
   </url>
   <url>
     <loc>/linux/change-prompt-in-terminal.html</loc>
@@ -353,6 +361,12 @@
   </url>
   <url>
     <loc>/99/</loc>
+  </url>
+  <url>
+    <loc>/194/</loc>
+  </url>
+  <url>
+    <loc>/195/</loc>
   </url>
   <url>
     <loc>/196/</loc>

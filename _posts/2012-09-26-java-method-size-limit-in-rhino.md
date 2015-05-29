@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Rhino에서 64K 넘는 대용량 JavaScript 로드할 때 발생하는 문제와 Java method size limit
-category: node
+category: javascript
 tags: [javascript, node]
 comments: true
 redirect_from: /196/

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Envjs를 이용하여 브라우저 없이 JavaScript 개발하기</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/javascript/developing-javascript-without-browser-using-with-envjs.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Envjs를 이용하여 브라우저 없이 JavaScript 개발하기</h1>
+    <p class="meta">Sep 26, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p>자바스크립트에 대한 불안정성의 선입견은 아무래도 다른 VM을 가진 언어보다는 훨씬 오해를 많이 받는다. 그 중에 하나가 바로 Javascript는 브라우저에서만 동작한다는 오해이다. 지금은 개발자들 사이에서 nodejs가 어느정도 인지도가 있기 때문에 더이상 javascript가 브라우저의 자바스크립트 엔진으로 돌아가는 front-end 개발 언어로만 인식되지 않고 있다. nodejs를 이용해서 서버 프로그램을 하고, 임베디드 프로그램까지 개발을 할 수 있는 시대가 왔기 때문이다.</p>
+
+<p>우리 연구소에서는 지금 프로젝트 개발을 하면서 이 Javascript에 대한 오해와 그 오해를 풀기 위한 조사들을 계속 하고 있는 중이다. 그래서 오류없는 Javascript 어플리케이션을 개발하는 것이 우리의 가장 큰 목표이다. 처음 우리가 가진 Javascript의 오해는 바로 브라우저에서만 Javascript를 개발할 수 있다는 것이였는데 일전에 Javascript에서 Callback 구현하기 글에서 Rhino를 소개하면서 Rhino의 쉘에서 Javscript를 디버깅할 수 있다는 것을 포스팅하였다. 이번 포스팅은 브라우저 없이 Javasctipt를 개발하는 연장선으로 Envjs를 소개하려고 한다.</p>
+
+<h2 id="envjs">Envjs</h2>
+
+<p>Envjs는  브라우저 시뮬레이터 환경을 자바스크립트로 구현하여 브라우저 없이 Javascript를 개발할 수 있는 환경을 제공한다.
+그런데 Rhino에서도 브라우저 없이 Javascript를 디버깅할 수 있었는데 Envjs 가 왜 언급하는지 궁금해 할 수 도 있다. Envjs는 말 그대로 브라우저 시뮬레이터와 같은 기능이다. 즉, 브라우저가 HTML의 DOM을 렌더링하여 그 엘리먼트를 Javascript에서 접근하거나 이벤트를 등록할 수 있는데, Envjs에 그러한 시뮬레이셔을 할 수 있다는 것이다.</p>
+
+<p>Envjs를 테스트하기 위해서 Envj를 다운 받는다. 해당 사이트에서 다운로드를 해도 되고 github에서 최근 소스를 받을 수도 있다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">git clone https://github.com/thatcher/env-js.git
+</code></pre></div>
+<p>우리는 이미 Rhino에서 브라우저 없이 Javascript 디버깅하는 연습을 해보았다. 그럼 Rhino에서 브라우에서 할 수 있는 , 브라우저가 가지고 있는 속성을 사용할 수 있는지 확인해보자. Rhino에서 Javascript 개발에 사용할 test.html 파일을 만들어보자.</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;h1</span> <span class="na">id=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;</span>Test Rhino and Envjs<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>다운받은 env-js 안에는 rhino라는 디렉토리에 rhino의 javascript runtime jar가 있다.  rhino에서 Javscript를 사용할 이 test.html 파일을 window.location으로 지정을 할 것이다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd env-js/
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">java -jar rhino/js.jar
+js&gt; window.location = &quot;test.html&quot;
+</code></pre></div>
+<p>하지만 rhino에서는 window란 것이 선언되어 있지 않다고 Javascript Runtime Exception을 발생한다.</p>
+
+<p><a href="http://cfile6.uf.tistory.com/image/185D844050624F3006B85E">http://cfile6.uf.tistory.com/image/185D844050624F3006B85E</a></p>
+
+<p>Envjs에서는 Rhino에서 addon 처럼 사용할 수 있는 env.rhino.js를 배포하고 있는데 다음 링크에서 다운 받을 수 있다. 다음 경로에서 <code>env.rhino.1.2.js</code> 파일을 다운 받는다. (현재 이 포스팅을 할 때 env.rhino.1.2.js 이였지만 이후에 버전이 높아질 수 있다.) <a href="http://www.envjs.com/release/envjs-1.2">http://www.envjs.com/release/envjs-1.2</a>
+다운 받은  <code>env.rhino.1.2.js</code> 파일은 <code>env-js/rhino/env.rhino.1.2.js</code>로 이동 했다. 이제 rhino에서 <code>env.rhino.1.2.js</code>를 로드한다. 그리고 test.html 파일 안에 있는 <code>&lt;h1 id=&quot;title&quot;&gt;</code> 엘리먼트에 접근해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; load(&#39;rhino/env.rhino.1.2.js&#39;);
+js&gt; window.location = &quot;test.html&quot;;
+js&gt; var title = document.getElementById(&quot;title&quot;);
+js&gt; print (title)
+js&gt; print (title.innerHTML);
+</code></pre></div>
+<p>어떠한가 놀랍지 않은가? 브라우저 없이 HTML의 DOM Element를 javascript로 엑세스해서 Element의  객체와 객체의 속성들을 사용할 수 있게 되었다. 눈에는 보이지 않지만 Envjs와 Rhino 두가지의 환경이 Browser와 Javascript runtime  환경을 만들어주고 있는 것이다. 혹시 Javascript가 로드된 HTML의 속성을 읽을 수만 있을까? 반대로 DOM Element에 HTML을 삽입을 해보았다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; document.getElementById(&quot;title&quot;).innerHTML = &quot;Envjs is browser simulator&quot;;
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; print (document.getElementById(&quot;title&quot;).innerHTML);
+</code></pre></div>
+<p>Envjs는 거의 완벽한 브라우저 시뮬레이션을 할 수 있게 환경을 제공하고 있다. (여기서 거의라는 말은 다직 테스트하지 않은 meda 접근들을 말한다.)</p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/151C6C3A506252550EE1E1" alt=""></p>
+
+<p>Envjs가 브라우저라면 혹시 로컬의 파일말고 원격에 있는 웹 문서도 열수 있어야 할 것이다. 그래서 테스트를 해보았다. Envjs가 로컬파일을 로드하는 것이 아니라 다른 외부 URL을 열수 있는지 다음과 같이 이 블로그 URL으로 테스트를 해보았다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; load (&#39;rhino/env.rhino.1.2.js&#39;);
+js&gt; window.location = &quot;http://blog.saltfactory.net&quot;
+js&gt; var overview = document.getElementById(&quot;overview&quot;);
+js&gt; var blog_title = overview.getElementsByTagName(&#39;h1&#39;)[0].innerHTML;
+js&gt; console.log (blog_title);
+</code></pre></div>
+<p><a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a> 의 HTML 문서 코드의 일부이다. 만약 Envjs가 브라우저와 동일하게 동작한다면 이 URL에서 HTML 문서를 열어서 파싱한 후에 DOM Element에 대한 해석을 하고 있을 것이다.</p>
+
+<p><img src="http://cfile8.uf.tistory.com/image/126DDA3750625800226251" alt=""></p>
+
+<p>결과는 예상대로 다음과 같이 외부 URL을 window.location 속성으로 인식해서 HTML 문서를 로드해서 Javascript로 HTML 의 Element에 접근이 가능하게 되었다.</p>
+
+<p><img src="http://cfile4.uf.tistory.com/image/115FA536506257441D7ECD" alt=""></p>
+
+<p><a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a> 이라는 문서에는 여러가지 javascript 파일이 포함되어 있다. 그중에서 jQuery 가 포함되어 있는데 envjs에서 로드한 HTML 문서에 포함된 jQuery를 사용할 수 있는지 테스트를 해보자. 위에 document에 접근하기 위한 selector를 jQuery의 selector로 변경해서 테스트해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; var blog_title = $(&quot;#overview h1:first&quot;).html();
+js&gt; console.log (blog_title);
+</code></pre></div>
+<p><img src="http://cfile24.uf.tistory.com/image/163F713B50625B83338F63" alt=""></p>
+
+<p>역시나 Envjs가 브라우저와 동일하게 동작하기 때문에 원격 URL에서 읽은 HTML 문서에 포함된 javascript 까지 사용할 수 있다는 것을 확인할 수 있다. 원격에 있는 javascript 말고 로컬의 javascript를 추가로 불러들여서 원격 HTML 문서에 바로 테스트를 할 수 있다. 추가적으로 로컬에 있는 javascript 파일을 로드하기 위해서는 env.rhino.js 파일을 로드한 것 처럼 load() 함수를 이용하면 된다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; load([&#39;file1.js&#39;, file2.js&#39;, .... ]);
+</code></pre></div>
+<h2 id="결론">결론</h2>
+
+<p>Javascript는 더 이상 브라우저에서만 돌아가는 스크립트 언어가 아니다. Rhino등 CLI 기반의 shell을 이용해서 Javascript 프로그램을 작성할 수 있다. 하지만 Javascript는 Javascript  자체의 사용보다는 HTML의 프로퍼티나 속성 값을 변화 시키면서 좀더 다양한 웹 어플리케이션을 만들 수 있다. Rhino의 CLI는 Javscript Runtime 환경을 만들어주지만 인터넷 브라우저의 환경은 아니다. 이를 해결할 수 있는 것이 Envjs 이다. Envjs는 브라우저 없이 웹 프로그램이 가능할 수 있도로고 브라우저 시물레이션 환경을 제공해주는 순수 Javascript로 만들어진 Javascript 라이브러리이다. Envjs 자체가 Javascript이기 때문에 Rhino에서 로드될 수 있고 Envjs가 브라우저 시물레이션을 할 수 있기 때문에 Envjs를 로드한 Rihno에서 HTML 문서를 열거나 엑세스 할 수 있게 되기 때문에 브라우저 없이도 Javascript를 개발할 수 있는 환경을 구축할 수 있게 된다. 더구나, 원격 HTML 문서에 앞으로 추가될 Javascript 파일을 로컬에서 생성해서 디버깅을 할 수 도 있다. 원격 HTML 파일 문서를 열어서 load()함수를 이용해서 추가될 Javascript 파일을 디버깅하고 에러 없이 어플리케이션 개발이 완료되면 원격 서버에 Javascript 파일을 추가하면 되기 때문에 이미 동작하고 있는 HTML 문서에 오류를 만들거나 동작에 문제가 생기지 않고 차츰차츰 Javascript 코드를 추가하면서 웹 서비스를 마이그레이션 할 수 있는 장점도 얻을 수 있을 것이다.</p>
+
+<h2 id="참고">참고</h2>
+
+<ol>
+<li><a href="http://www.envjs.com/doc/guides">http://www.envjs.com/doc/guides</a></li>
+<li><a href="http://ejohn.org/blog/bringing-the-browser-to-the-server/">http://ejohn.org/blog/bringing-the-browser-to-the-server/</a></li>
+</ol>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>
