@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>JavaScript에서 var를 사용하는 이유</title>
+    <title>JavaScript에서 Callback 구현하기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/javascript/why-used-var-in-javascript.html">
+    <link rel="canonical" href="/series/javascript/implement-callback-in-javascript.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -255,56 +255,74 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>JavaScript에서 var를 사용하는 이유</h1>
-    <p class="meta">Sep 22, 2012</p>
+    <h1>JavaScript에서 Callback 구현하기</h1>
+    <p class="meta">Sep 20, 2012</p>
   </header>
 
   <article class="post-content">
   <h2 id="서론">서론</h2>
 
-<p>자바스크립트(Javascript)를 도입할 때 어떤 개발자는 Javascript의 유연성에 매력을 느끼고 어떤 개발자는 Javascript에서 발생하는 에러 때문에 Javascript에 알레르기를 보이기도 한다. Javascript는 여러가지 특수한 성질 때문에 매우 유연해서 이식성 높은 프로그램을 만들 수 있지만, 그만큼 다른 언어에 비해서 디버깅하기 어렵다. Javascript 언어의 특별한 특징 중에서 오늘은 자바스크립트의 변수에 대해서 이야기를 하려고 한다.</p>
+<p>프로그램을 이벤트 기반으로 만들게 되면 한 프로세스로 모든 일이 끝날 때 까지 기다리지 않고 처리된 일이 이벤트를 발생시키거나 다른 일을 비동기적으로 할 수 있다. 이렇게 비동기적으로 일을 처리할 때는 Callback이나 Listener, delegate 등으로 구현할 수 있다. Callback에 대한 소개와 Java로 구현된 코드를 Java에서 Interface를 사용하여 Callback 구현하기 아티클에서 간단히 살펴보았는데, 이 포스팅에서는 Javascript에서 Callback을 구현하는 방법에 대해서 소개한다.</p>
 
 <!--more-->
 
-<h2 id="변수선언">변수선언</h2>
+<h2 id="rhino">Rhino</h2>
 
-<p>보통 프로그래밍 언어들은 변수를 선언하고 사용을 하는 것이 일반적이다. Javascript도 다른 프로그래밍 언어처럼 변수 선언을 하고 사용할 수 있다. 하지만, javascript는 변수를 선언하지 않고도 사용할 수 있다.</p>
-
-<p>변수 선언 없이 변수를 사용하는 것은 다른 언어에서도 간혹 볼 수 있을 것이다. Ruby 에서는 변수 선언없이 모든 객체를 변수로 할당(assign) 할 수 있다.</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+<p>Javascript는 브라우저의 Javascript 엔진이 있어야 해석이 가능하지만 최근 CLI (Command Line Interface)로 사용할 수 있는 툴들이 존재한다. 이 포스팅에서 사용할 CLI 툴은 Mozilla의 Rhino를 사용할 것이다. Java로 구현된 Rhino는 Javascript와 Java의 객체를 서로 사용할 수 있는 기능도 지원된다. Rhino에 대해서는 다른 포스팅에서 소개하도록 하고 여기서는 Javascript를 debugging 하기 위해서만 사용할 것이다. <a href="https://developer.mozilla.org/en-US/docs/Rhino">https://developer.mozilla.org/en-US/docs/Rhino</a> 에서 최신버전의 Rhino를 다운받는다. 압축파일을 해지하면 js.jar 파일을 실행한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">java -jar js.jar
 </code></pre></div>
-<p>이렇게 Ruby에서는 변수의 타입과 변수를 선언하지 않아도 사용할 수 있다. 그리고 함수 안에서 로컬 변수를 사용하는 예제를 살펴보면 다음과 같다.</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">sum</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-    <span class="k">return</span> <span class="n">result</span>
-<span class="k">end</span>
+<p><img src="http://cfile29.uf.tistory.com/image/20761234505AC645252194" alt=""></p>
+
+<p>이렇게 Rhino의 CLI 로 사용하면 Javascript를 테스트 할 수 있다.</p>
+
+<p>Callback을 만들기 위해서 피호출자가(Callee)가 호출자(Caller)를 호출해서 호출자(Caller)에서 구현한 메소드를 서브루틴 안에서 사용할 수 있어야한다. 앞의 포스팅과 비슷한 방법으로 Callback을 구현해보자.</p>
+
+<h2 id="javascript-callback">JavaScript Callback</h2>
+
+<p>우선 CallbackEvent.java에 해당되는 객체를 만든다. 이 객체는 함수형태를 가지고 있고 callback_method 를 가지고 있다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">CallbackEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">callback_method</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></div>
-<p>하지만 변수의 사용범위 (scope)는 메소드 안에서만 사용이 가능하다. irb (Interactive Ruby Shell)을 이용해서 확인을 해보자.</p>
+<p>다음은 EventRegistration.java에 해당되는 객체를 만든다. 여기서 do_work는 호출자(Caller)에서 구현된 callback_method를 do_work에서 호출하도록 구현되어져 있다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">EventRegistration</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callbackEvent</span><span class="p">){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">callbackEvent</span> <span class="o">=</span> <span class="nx">callbackEvent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">do_work</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">callbackEvent</span><span class="p">.</span><span class="nx">callback_method</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>마지막으로 Callback을 테스트할 EvnetApplication.java에 해당되는 객체를 만든다. 여기서 CallbackEvent 객체를 생성하고 call_method를 구현하여 eventRegistration 객체를 생성할때 등록시킨다. 그러면 EventRegistration에 do_work가 호출자(Caller)에서 구현해서 등록한 callback_method를 실행하게 되는 것이다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">EventApplication</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">callbackEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CallbackEvent</span><span class="p">();</span>
+        <span class="nx">callbackEvent</span><span class="p">.</span><span class="nx">callback_method</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="nx">print</span><span class="p">(</span><span class="s1">&#39;call callback method from caller&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
 
-<p><img src="http://cfile10.uf.tistory.com/image/1623C23F505D95F90E0745" alt=""></p>
+        <span class="kd">var</span> <span class="nx">eventRegistration</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventRegistration</span><span class="p">(</span><span class="nx">callbackEvent</span><span class="p">);</span>
+        <span class="nx">eventRegistration</span><span class="p">.</span><span class="nx">do_work</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>위 코드를 Rhino의 CLI에서 작성하고 실행시켜보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">var eventApplication = new EventApplication();
+eventApplication.main();
+</code></pre></div>
+<p>그러면 우리가 예상하듯 외부에서 구현한 CallbackMethod가 피호출자(callee)에서  호출자(caller)를 호출해서 서브루틴에서 메소드를 실행할 수 있게 되었다.</p>
 
-<p>irb에서 Ruby의 변수에 숫자를 할당할때 미리 선언하지 않고 바로 사용할 수 있는 것을 확인 할 수 있다. 또한 함수를 정의해서 그 안에 result라는 로컬변수를 선언해서 사용할 때 함수 안에 들어있는 로컬변수의 범위가 함수 안에서만 사용가능하고 외부에서는 로컬 변수에 접근할 수 없는 것을 확인 할 수 있다. Ruby에선느 전역변수일 경우 $변수를 사용한다.</p>
-
-<p>그럼 Javascript에서 변수 선업 없이 사용하고 변수의 유효범위를 확인해보자. 브라우저에서 테스트해도 좋고 Mozilla의 Rhino의 Javascript Shell CLI를 이용해서 테스트해도 상관없다. Rhino를 사용하는 방법은 <a href="http://blog.saltfactory.net/192">Javascript에서 Callback 구현하기</a> 글에서 간단하게 소개한 적이 있으니 참조해보길 바란다. 위의 코드를 Javascript로 똑같이 구현하면 다음과 같이 구현 할 것이다.</p>
-
-<p><img src="http://cfile6.uf.tistory.com/image/205F673A505D989D059F13" alt=""></p>
-
-<p>그런데 Javascript 코드를 잘 살펴보면 result의 scope가 sum 이라는 함수 안에서 사용했는데 sum 함수 밖에서 result를 출력시켰는데 sum 안에서 사용한 로컬 변수인 result에 값이 출력되는 것을 볼 수 있다.</p>
-
-<p>이것은 Javascript 에서 변수 선언 없이 바로 사용하게 되면 비록 함수내의 로컬변수로 사용되더라도 모든 변수들은 암묵적으로 전역 프로퍼티가 되어 버린다. 그래서 이러한 속성 때문에 다른 라이브러리들의 변수 명이 같거나, 다른 Javascript에서 사용하는 변수 명을 덮어쓰게되어 오류가 발생하기도 한다. 오류가 발생하지 않더라도 다른 값이 들어가서 원하는 결과가 나오지 않을 수도 있다. 그럼 Javascript에서 어떻게 변수를 선언해서 사용해야 할까? 위 코드를 다음과 같이 var를 이용해서 변수를 선언해서 사용하면 된다.</p>
-
-<p><img src="http://cfile8.uf.tistory.com/image/11266B3E505DACE70F3480" alt=""></p>
-
-<p>암묵적 전역 프로퍼티로 되어버린 코드와 달리 함수 안에 로컬변수를 var로 선언하게 되면 그 변수의 scope는 함수 밖에 영향을 끼치지 못하고 함수 내 로컬변수로 사용 할 수 있게 된다.</p>
+<p><img src="http://cfile24.uf.tistory.com/image/177E9733505ACDB60BF4BE" alt=""></p>
 
 <h2 id="결론">결론</h2>
 
-<p>Javascript는 브라우저에서 DOM과 Event를 처리하기 위한 간단한 스크립트 언어라고만 생각하던 이전의 웹 환경이 이제는 Javascript가 C#이나 Java 처럼 어플리케이션을 개발할 수 있는 레벨로 변해있다. 시대가 변해서 Javascript 언어가 변경된 것이 아니라 지금까지 웹 환경과 Javascript에 대한 깊은 관심이 없었다가 클라이언트, 모바일 환경 개발 패러다임이 변경되면서 HTML5과 Javascript 그리고 CSS3의 비중이 매우 커지게 되었다. 단순하게 팝업이나 뛰우던 Javascript 코그다 이제는 웹 어플리케이션을 만들어내는 중요한 언어가 되었다. 웹 페이지에서 Javascript 에러가 발생해서 페이지가 로딩되거나 띵띵 거리면서 오류 창을 만들어내도 사용자들이 대충 쓸거라는 생각을 하면 더이상 사용자는 그 서비스를 (웹 어플리케이션을) 사용하지 않으려 할 것이다. 그래서 Javascript가 견고하고 최적화 될 수 있게 기초부터 학습해가려고 한다. 하이브리드 웹을 공부하면서 Javascript의 시각이 달라졌고 Objective-C나 Java 만큼 좋은 자료구조와 알고리즘으로 만들어질 수 있게 노력해야하는 것도 느꼈다. 이 블로그에서는 앞으로도 Javascript에 대한 이야기를 계속할 예정이다.</p>
+<p>Javascript는 객체지향 언어이지만 클래스가 없는 언어이다. 그렇지만 객체지향 언어이기 때문에 객체지향 언어가 사용하는 프로그래밍 패턴을 사용할 수 있다. Callback 는 Command Pattern에 분류되는데 외부에서 Callback을 구현해서 프로그램이 동작하는 가운데 서브루틴에서 외부에서 구현한 함수를 서브루틴에서 비동기적으로 사용할수 있기 때문에 코드의 재사용과 확장성이 매우 좋다. Javascript의 클로저(closure) 특징을 잘 사용하면 C나 Java에서 사용하는 콜백루틴을 구현하여 사용할 수 있다. Javascript는 이제 웹 컨텐츠를 어플리케이션 수준으로 만들수 있는 고수준 언어로 자리잡고 있고, 많은 언어에서 Javascript의 특징들을 들여오고 있다. 뿐만 아니라 OOP 개발자들이 Javascript 언어 개발에 집중하게 되면서 여러가지 개발 패턴과 라이브러리들이 존재하고 공유하게 되어지고 있는데 우리도 확장성 가능하고 유연한 코드를 개발하기 위해서 프로그램 개발 패턴을 익혀둘 필요가 있을 것 같다는 생각이 든다.</p>
 
 <h2 id="참고">참고</h2>
 
-<p>1.Stoyan Stefanov,김준기,변유진, O&#39;REILLY, &quot;Javascript Patterns&quot;, p.13~14</p>
+<ol>
+<li><a href="http://www.impressivewebs.com/callback-functions-javascript/">http://www.impressivewebs.com/callback-functions-javascript/</a></li>
+<li><a href="http://stackoverflow.com/questions/2190850/javascript-create-custom-callback">http://stackoverflow.com/questions/2190850/javascript-create-custom-callback</a></li>
+</ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>
 
