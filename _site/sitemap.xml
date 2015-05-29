@@ -285,6 +285,14 @@
     <lastmod>2012-09-10T00:00:00+09:00</lastmod>
   </url>
   <url>
+    <loc>/ruby/solving-gem-path-error.html</loc>
+    <lastmod>2012-09-08T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/android/speed-up-android-emulator-using-with-haxm-x86.html</loc>
+    <lastmod>2012-09-07T00:00:00+09:00</lastmod>
+  </url>
+  <url>
     <loc>/linux/change-prompt-in-terminal.html</loc>
     <lastmod>2012-02-03T00:00:00+09:00</lastmod>
   </url>
@@ -377,6 +385,12 @@
   </url>
   <url>
     <loc>/99/</loc>
+  </url>
+  <url>
+    <loc>/187/</loc>
+  </url>
+  <url>
+    <loc>/188/</loc>
   </url>
   <url>
     <loc>/189/</loc>
