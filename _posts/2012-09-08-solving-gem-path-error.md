@@ -13,6 +13,8 @@ RVM(Ruby Version Manager)는 하나의 머신(Mac, PC, Linux 등)에 여러버�
 
 ![](http://cfile10.uf.tistory.com/image/120DC941504AA5CC0416F0)
 
+<!--more-->
+
 ## GEM_PATH 에러
 
 ruby 1.9.3 버전이 릴리즈된지 시간이 지났기 때문에 rvm 으로 1.9.3을 설치하려고 하니 다음과 같음 문제가 발생했다. 이상하게 GEM_PATH 문제를 발생하면서 Ruby 1.9.3-head 버전은 설치되었지만 WARN을 발생하였다.
@@ -59,7 +61,7 @@ rvm reinstall ruby 1.9.3-head --with-gcc=clang
 rvm install ruby-1.9.3 --with-gcc=clang
 ```
 
-## 참고
+## 참조
 
 1. http://stackoverflow.com/questions/9439502/rvm-install-ruby-installation-error
 

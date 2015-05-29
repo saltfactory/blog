@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Markdown 파일을 HTML 파일로 변환할 때 IMG 사이즈 변환</title>
+    <title>느린 안드로이드 에뮬레이터 대신 Android x86을 이용하여 개발환경 구축하기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/mark2html/mark2html-v.0.0.4-upgrade.html">
+    <link rel="canonical" href="/series/android/speed-up-android-emulator-using-with-x86.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -267,72 +267,91 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Markdown 파일을 HTML 파일로 변환할 때 IMG 사이즈 변환</h1>
-    <p class="meta">Jul 29, 2014</p>
+    <h1>느린 안드로이드 에뮬레이터 대신 Android x86을 이용하여 개발환경 구축하기</h1>
+    <p class="meta">Sep 6, 2012</p>
   </header>
 
   <article class="post-content">
   <h2 id="서론">서론</h2>
 
-<p>Markdown에서 이미지 태그를 표현하기 위한 표기법을 사용할 때 가장 큰 단점은 아미지 사이즐르 지정할 수 없다는 것이다. 이 포스트에서는 Markdown 문서를 HTML로 변경할 때 Markdown에 포함된 이미지를 HTML로 변환할 때 이미지 사이즈를 지정할 수 있는 방법을 소개한다.</p>
+<p><img src="http://cfile10.uf.tistory.com/image/203C2944504838932BA4E4" alt=""></p>
 
-<!--more-->
+<p>iOS를 개발하면서 Android를 개발할 때 가장 불편한 것이 바로 느린 emulator 문제이다. iOS의 simulator는 실제 디바이스 만큼은 아니지만 빌드하고 개발하는데 큰 불편함 없이 사용할 수 있기 때문에 개발 속도에 큰 영향을 미치지 않지만, android emulator는 참... 난감할 정도로 반응속도가 늦기 때문에 개발할 때 디바이스에 연결해서 개발하고 emulator는 거의 사용하지 않는다. 한동안 iOS만 개발하다가 안드로이드 개발을 시작하려고하니 당장 emulator 때문에 답답한데 android x86를 VM에 설치할 수 있다는 자료들을 읽게 되었다. android x86는 Mac OS X x86과 비슷하게 x86 시스템에 Android 운영체제를 포팅하는 일종의 개발자 운동이다. OSX x86는 해킨이라는 말을 사용하지만 android x86는 오픈소스 기반으로 개발자들이 다양한 디바이스에 포팅하는 운동이 벌어지고 있다. 이렇게 VM에 설치된 android를 개발용으로 사용할 수 있다는 자료들을 접하게 되었다. 그래서 이번 포스팅은 Android를 VM에 설치해서 안드로이드 앱을 개발하는 방법에 대해서 소개하려고 한다.</p>
 
-<h2 id="mark2html@0.0.4"><a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a></h2>
-
-<p>mark2html을 <strong><em>0.0.4</em></strong>버전으로 업그레이드 했다. 이번 업데이트에는 Makrdown에서 HTML으로 변환할 때 이미지의 크기 등 style을 적용할 수 있는 기능이 추가 되었다.</p>
-
-<p><a href="http://saltfactory.net/mark2html">mark2html</a>은 현재 개발되고 있는 사이드 프로젝트이다. Markdown을 사용하여 Tistory 블로그에 포스팅을 하기 위해서 시작된 이 프로젝트는 틈틈히 업데이트를 하고 있다. 이전 블로그들은 모두 스타일이 적용된 HTML으로 되어 있기 때문에 Markdown의 속성을 사용할 수도 없고, 다른 곳에 이전할 때도 기존의 HTML으로 작성된 포스팅과 Markdown을 사용하여 포스팅하는 글의 이질감을 느껴야한다. 그래서 시간이 날 때마다 Markdown으로 작성하지 않은 포스팅을 Markdown으로 변환해서 저장하는 작업을 하고 있다.</p>
-
-<h2 id="기존-html-문서를-markdown으로-변환할때-문제점">기존 HTML 문서를 Markdown으로 변환할때 문제점</h2>
-
-<p>Markdown을 사용해서 HTML 문서를 만들어내지 않은 기존의 HTML 문서를 가지고 Markdown으로 변환하는데는 몇가지 문제점이 있다.</p>
+<p>이번 포스팅에서는 3가지 툴이 필요하다.</p>
 
 <ol>
-<li><strong><em>기존의 HTML에서 Markdown이 변환할 때의 약속된 HTML태그를 찾기 어렵다.</em></strong> : 예를 들어, <code>### 제목</code> 이라고 Markdown으로 작성을 하면 이 문자열은 <code>&lt;h3&gt;제목&lt;/h3&gt;</code>로 변환이 된다. 하지만 기존 WYSIWYG을 사용해서 제목을 지정하거나 글자 크기를 변경했다면 <code>&lt;p style=&quot;font-size:24pt;&quot;&gt;제목&lt;/p&gt;</code>와 같은 형태로 저장이 되어 있기 때문에 Markdown과 HTML 간의 변환을 위한 약속된 태그를 사용해서 변경할 없다. 그래서 사람이 copy &amp; paste 를 할 수 밖에 없다. ~만약 기존의 문서를 Markdown으로 변환해서 사용하려면 빨리 마이그레이션하길 권한다. 포스팅이 꽤 많아져서 Markdown으로 변환하는데 시간이 많이 걸릴거라 생각된다.~</li>
-<li><strong><em>Markdown은 이미지 사이즈를 정할 수 없다</em></strong> : Markdown은 이미지의 <code>src</code>,<code>alt</code>,<code>title</code> 속성만 지정할 수 있기 때문에 기존에 포스팅에 이미지가 특별한 사이즈로 지정했을때 이것을 Markdown으로 변경하면 이미지 사이즈를 특별하게 지정할 수 없게 된다. 반대로 Markdonw에서 이미지를 나타낼때 특정 사이즈로 변경하고 싶을 경우 css로 global하게 지정할 수 밖에 없다.</li>
+<li>eclipse (안드로이드 앱을 개발하기 위해서 필요)</li>
+<li>VirtualBox ( android-x86 이미지를 VM에 설치하기 위해서 필요, Oracle의 VM인 VirtualBox는 무료이다)</li>
+<li>Android x86 (VMLite에서 공개한 Android v4 vm 이미지)</li>
 </ol>
 
-<h2 id="img-style-지정-필요">IMG style 지정 필요</h2>
+<p>eclipse의 설치 및 사용 방법은 이미 대부분의 블로그를 통해서 익혔다고 생각하고 VirtualBox 설치부터 소개한다.</p>
 
-<p>Markdown을 사용해서 이미지를 표현하려고 하는데 Markdown이 이미지 사이즈를 지정할 수 없기 때문에 큰 이미지를 그대로 HTML에 나타나서 어려움이 발생했다. <strong>Retina MacBook Pro</strong>를 사용하고 있는데 레티나에서 스크린 캡쳐를 하게되면 보통 이미지보다 2배가 커진다. 레티나 아이폰도 마찬가지 이다. <code>320px</code>로 표현하면 충분한데 캡쳐 받은 이미지가 <code>640px</code>이기 때문에 컨텐츠에 엄청 크게 이미지가 나타나버린다. 그래서 Markdown에서 이미지를 표현할 때 Markdown 문법에 틀리지 않으면서 style을 추가하면 좋겠다는 생각이 들었다.</p>
+<h2 id="virtualbox-설치">VirtualBox 설치</h2>
 
-<h2 id="img-속성">IMG 속성</h2>
+<p>VirtualBox 는 Mac 뿐만 아니라 PC(Windows), Linux 설치 파일을 제공하고 있기 때문에 VirtualBox VM을 가지고 Mac/PC/Linux 에서 모두 개발이 가능하다. 흔히 알고 있는 VMWare, Parallels 보다 기능이나 성능은 좋지 못하지만 개발을 하거나 연구를 하는데 사용하는데는 전혀 제한이 없는 무료 VM이다.</p>
 
-<p>HTML의 <code>IMG</code> 태그의 속성은 <code>src</code>, <code>alt</code>, <code>title</code>을 가지고 있다.
-- <strong><em>src</em></strong> : 이미지의 URI 소스 값이다.
-- <strong><em>alt</em></strong> : 이미지가 나타나지 않는 경우 이미지를 설명하는 텍스트이다. 이미지가 나타나지 않을 때 alt가 나타난다. 이 값은 이미지가 나타나는 경우에 화면에 나타나지 않는다.
-- <strong><em>title</em></strong> : 이미지에 마우스를 올리면 나타나는 이미지의 타이틀 값이다.</p>
+<p><a href="http://virtualbox.org">http://virtualbox.org</a> 에서 Downloads 링크를 클릭하고 해당되는 바이너리를 다운 받는다. 맥 사용자는 OS X hosts x86/amd 를 선택해서 다운받으면 된다.</p>
 
-<p>Markdown에서 위의 이미지 속성을 표현하기 위해서는 다음과 같은 문법을 따른다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">![아이폰화면 이미지](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
+<p><img src="http://cfile1.uf.tistory.com/image/190AE84350483A2E25DD17" alt=""></p>
+
+<p>dmg 이미지를 다운 받게 되면 dmg 파일을 더블클릭하고 열어서 VirtualBox.mpkg 파일을 더블클릭해서 VirtualBox를 설치한다.</p>
+
+<p><img src="http://cfile22.uf.tistory.com/image/11494F4450483B1925D62A" alt=""></p>
+
+<p><img src="http://cfile21.uf.tistory.com/image/18718F4150483B340102C7" alt=""></p>
+
+<h2 id="android-v4-vm-이미지-설치">Android v4 vm 이미지 설치</h2>
+
+<p><a href="http://www.vmlite.com/index.php?option=com_content&amp;view=article&amp;id=68:android&amp;catid=17:vmlitenewsrotator">http://www.vmlite.com/index.php?option=com_content&amp;view=article&amp;id=68:android&amp;catid=17:vmlitenewsrotator</a> 에서 Android V4 Ice Cream Sandwich (4.0.4 ICS) 이미지를 다운 받아서 압축을 해지한다.</p>
+
+<p><img src="http://cfile23.uf.tistory.com/image/1315DC3F50483C9A0CB0D4" alt=""></p>
+
+<p>그리고 VMLite-Android-v4.0.4.vbox 파일을 더블 클리해서 VM 파일을 실행시킨다.</p>
+
+<p><img src="http://cfile5.uf.tistory.com/image/1341213E50483CDD2EB48C" alt=""></p>
+
+<p>VirtualBox가 열리면서 Android-v4.0.4 이미지가 추가되는 것을 확인할 수 있다. VirtualBox의 start 버튼을 눌러 실행시키면 다음과 같은 에러가 발생한다.</p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/116A124550483D272604B4" alt=""></p>
+
+<p>이것은 VirtualBox에 USB 2.0의 패키지가 없기 때문에 Oracle VM VirtuablBox Extension Pack을 설치하라는 경고이다. VirtualBox 사이트에 가서 Downloads 링크를 클릭해서 VirtualBox Oracle VM Extension Pack을 다운 받는다.</p>
+
+<p><img src="http://cfile26.uf.tistory.com/image/147ED03F50483D8725CB08" alt=""></p>
+
+<p>다운받은 Pack을 더블클릭해서 설치한다.</p>
+
+<p><img src="http://cfile23.uf.tistory.com/image/145BF24150483DB825CB25" alt=""></p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/206D504650483DE71E0804" alt=""></p>
+
+<p>Pack이 설치가 완료되면 다시 실행한다. 이제 정상적으로 Android VM 이미지가 VirutalBox에서 실행이되면서 Android x86 운영체제가 VM에서 동작하게 된다.</p>
+
+<p><img src="http://cfile26.uf.tistory.com/image/137CE34250483E582FBC14" alt=""></p>
+
+<p>이제 Android VM을 개발 디바이스로 사용하기 위해서 Settings &gt; Developer options &gt; USB debugging을 활성화 한다.</p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/1605C63A5048537D326733" alt=""></p>
+
+<h2 id="안드로이드-앱-설치,-디버깅하기">안드로이드 앱 설치, 디버깅하기</h2>
+
+<p>안드로이드 앱 설치를 위해서 안드로이드 프로젝트를 하나 만들어보자. 그리고 adb 로 VM에 연결한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">${ANDROID_SDK}/platform-tools/adb connect localhost
 </code></pre></div>
-<p>이 문법은 HTML 코드로 변환되면 다음과 같이 변환이 된다.</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">&gt;</span>
-</code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지" title="아이폰화면"></p>
+<p>Android 4.0.3 기반의 HelloWorld 프로젝트를 만들기로 한다. 그리고 디버깅을 위해서 Debug Configurations를 열어서 virtualbox_debug 라는 android debug configuration을 추가한다. (포스팅에서는 예제를 위해서 eclipse에서 빌드할 때 디바이스를 선택하도록했다.) 그러면 빌드할 하고 실행할 때 디바이스의 선택하는 부분에서 android-x86 VM을 선택할 수 있다.</p>
 
-<p><code>img</code> 속성중에 <code>alt</code> 값은 이미지가 나타나는한 화면에 나타나지 않고 이미지를 설명하는 값이다. 그래서 Markdown을 작성할 때 <code>alt</code> 값에 <code>style</code> 값을 넣어서 사용하기로 했다.</p>
+<p><img src="http://cfile10.uf.tistory.com/image/196BBB3E5048572B256FA0" alt=""></p>
 
-<h3 id="alt-값에-style-속성-추가하기">ALT 값에 style 속성 추가하기</h3>
+<p>그리고 빌드가 끝나면 VirtualBox에 설치된 Android-x86에 안드로이드 앱이 설치되는 것을 확인할 수 있다.</p>
 
-<p>위에 나타나는 이미지는 아이폰5에서 캡쳐한 사진의 실제 크기이다. 그럼 <code>img</code>의 <code>alt</code>값을 넣고 표현해보자. 다음과 같이 Markdown의 이미지의 <code>alt</code>를 표현하는 공간에 <code>{}</code>를 사용해서 style 값을 지정했다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">![아이폰화면 이미지 {max-width:320px;}](http://cfile23.uf.tistory.com/image/222B154153A3916F292543 &quot;아이폰화면&quot;)
-</code></pre></div>
-<p><strong><em><a href="http://saltfactory.net/mark2html">mark2html</a>@0.0.4</em></strong> 버전에서는 <code>-imageStyle</code> 옵션값이 추가되었다. 명령어 옵션은 <code>-style</code>이다. 다음과 같이 옵션 값에 <code>imageStyle</code>을
-추가하거나 command 라인에 <code>-style</code>옵션을 추가하면 ALT에 포함된 스타일 값을 가지고 렌더링을 한다.</p>
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">imageStyle</span><span class="o">:</span><span class="kc">true</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>그러면 다음과 같이 HTML 코드로 변환이 된다.</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;http://cfile23.uf.tistory.com/image/222B154153A3916F292543&quot;</span> <span class="na">style=</span><span class="s">&quot;width:320px;&quot;</span> <span class="na">alt=</span><span class="s">&quot;아이폰화면 이미지&quot;</span> <span class="na">title=</span><span class="s">&quot;아이폰화면&quot;</span><span class="nt">/&gt;</span>
-</code></pre></div>
-<p><img src="http://cfile23.uf.tistory.com/image/222B154153A3916F292543" alt="아이폰화면 이미지 {max-width:320px;}" title="아이폰화면"></p>
+<p><img src="http://cfile22.uf.tistory.com/image/161E6B37504856B60C5C92" alt=""></p>
 
-<h2 id="결론">결론</h2>
+<p>이제 안드로이드가 제공하는 느린 Android emulator가 아닌 VM에 설치된 안드로이드를 가지고 앱을 개발할 수 있게 되었다. VirtualBox는 Mac 뿐만 아니라 PC나 Linux에서도 설치가 가능하기 때문에 어떠한 운영체제에서도 android-x86 VM 이미지를 가지고 보다 쾌적한 환경에서 앱을 개발할 수 있을 것으로 예상이 된다.</p>
 
-<p><code>IMG</code>에서 &#39;alt&#39; 속성은 화면에 이미지가 나타나지 않을 경우 이미지를 설명하는 속성이다. 이 이미지의 속성에 이미지의 <code>style</code>에 관한 설명을 추가하는 것은 의미적으로도 이미지를 더욱 잘 설명하는 것이라 생각했다. 그리고 Markdown에는 이미지에 대한 설명이 있고 HTML으로 변환이 되었을때 이미지에 스타일이 적용되면서 alt는 속성을 제외한 문자열만 나타나도록 했다. Markdown을 HTML으로 변환하는데 크게 불편함은 없지만 현재 Retina Display를 사용하는 경우 이미지의 크기 때문에 문제가 발생해서 <a href="mailto:mark2html@0.0.4">mark2html@0.0.4</a> 버전에서는 <code>-imageStyle</code> 옵션을 추가하게 되었다.</p>
+<h2 id="참조">참조</h2>
+
+<p>1.<a href="http://osxdaily.com/2012/02/23/android-4-ics-virtualbox/">http://osxdaily.com/2012/02/23/android-4-ics-virtualbox/</a></p>
 
 <h2 id="연구원-소개">연구원 소개</h2>
 
@@ -347,6 +366,24 @@
 </ul>
 
   </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
   
 </div>
