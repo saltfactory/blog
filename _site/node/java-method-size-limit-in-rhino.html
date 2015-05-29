@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Nginx와 git 연동 시 The remote end hung up unexpectedly 에러 문제 해결</title>
+    <title>Rhino에서 64K 넘는 대용량 JavaScript 로드할 때 발생하는 문제와 Java method size limit</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html">
+    <link rel="canonical" href="/series/node/java-method-size-limit-in-rhino.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -245,79 +245,64 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>Nginx와 git 연동 시 The remote end hung up unexpectedly 에러 문제 해결</h1>
-    <p class="meta">Sep 12, 2014</p>
+    <h1>Rhino에서 64K 넘는 대용량 JavaScript 로드할 때 발생하는 문제와 Java method size limit</h1>
+    <p class="meta">Sep 26, 2012</p>
   </header>
 
   <article class="post-content">
   <h2 id="서론">서론</h2>
 
-<p>Nginx와 git 연동 시 <code>git push</code> 명령어를 실행할 때, <strong>The remote and hung up unexpectedly</strong> 라는 에러를 보여주면서 <code>git push</code>가 정상적으로 동작하지 않는 문제를 만날 수 있다. 이것은 NginX에서 POST의 크기의 제한 때문에 발생하는 문제이다.
-Nginx의 문제를 파악하고 NginX의 설정을 변경하여 이 문제를 해결하는 방법에 대해서 알아본다.</p>
+<p>Rhino에 대해서는 이전 포스팅을 읽어보면 Java기반의 Javascript Runtime 환경을 제공해 주기 때문에 브라우저 없이 Javascript 코드를 개발할 수 있다는 것을 알수 있다. Rhino는 생각보다 편리한 기능을 많이 포함하고 있고 Javascript 라이브러리를 개발하는데 매우 유용하다. 하지만 이런 Rhino에게 현재 버전에 치명적인 단점이 있다. 지금 Rhino1.7R4 버전에서 64K 이상크기의 Javascript를 로드하지 못하는 문제가 있다.</p>
 
 <!--more-->
 
-<h2 id="git-push-에러-발생">git push 에러 발생</h2>
-
-<p>우리는 <a href="http://yobi.io">Yobi</a>와 <a href="http://nginx.com/">NGINX</a>를 연동하여 사용하고 있다. 이전 포스팅에서 소개했지만, 우리는 다양한 리눅스 서버에 운영될 수 있는 환경을 구축하기 위해서 <a href="https://docker.com/">Docker</a>를 사용하여 <a href="https://github.com/saltfactory/docker-yobi">saltfactory/yobi</a>와 <a href="https://github.com/saltfactory/docker-nginx">saltfactory/nginx</a> 이미지를 만들어서 git를 운영하고 있다. yobi는 ssh로 git를 사용하는 것 대신에 http로 git를 쉽게 사용할 수 있게 지원해주고 있다. 사내에서 http 포트만 외부에서 사용할 수 있는 우리 연구소에서 yobi를 선택했던 가장 큰 이유중에 하나가 http로 git를 사용할 수 있다는 것이였다. 우리는 http 서비스의 빠른 응답속도와 확장성을 위해서 웹 서버로 NGINX를 선택했고 이것을 yobi와 연동하여 사용하고 있다.</p>
-
-<p>프로젝트 소스코드를 원격 리파지토리에 저장해서 서버에서 병합하는 방법을 취하고 있는데 어느날 갑자기 로컬에서 작업하여 이력을 관리한 <code>commit</code>들이 다음과 같이 <strong><em>The remote end hung up unexpectedly</em></strong> 에러를 발생하면서 서버의 원격 리파지토리에 <code>push</code>가 되지 않는 것이다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Counting objects: 19, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (5/5), done.
-Writing objects: 100% (5/5), 1.27 MiB | 0 bytes/s, done.
-Total 5 (delta 2), reused 0 (delta 0)
-error: RPC failed; result=22, HTTP code = 413
-fatal: The remote end hung up unexpectedly
-fatal: The remote end hung up unexpectedly
-Everything up-to-date
+<p>현재 Envjs에서 배포하고 있는 env.rhino.1.2.js 파일은 64K 이상이다. Rhino1.7R4 버전에서 envjs를 로드하면 로드해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">java -jar js.jar
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">js&gt; load (&quot;env.rhino.1.2.js&quot;);
 </code></pre></div>
-<p>하지만 <code>fetch</code>와 <code>pull</code> 과 같은 리모트 명령어들은 정상적으로 동작하고 있었다. 그래서 우리는 서버에서 nginx의 로그를 살펴보기로 했다.</p>
+<p><img src="http://cfile25.uf.tistory.com/image/175D37385062F1521B891F" alt=""></p>
 
-<h2 id="nginx-에러-발생">NGINX 에러 발생</h2>
+<h2 id="java-method-size-limit">Java method size limit</h2>
 
-<p>Docker로 구성한 서버 환경에서 우리는 NGINX의 로그를 VOLUME으로 마운트시킨 디렉토리 파일에서 로그를 바로 확인할 수 있었다. 클라이언트에서 <code>git push</code>를 요청할 때마다 다음과 같이 <strong><em>client intended to send too large body</em></strong>  에러가 로그에 남는 것을 확인했다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">2014/09/12 01:38:50 [error] 11#0: *155 client intended to send too large body: 1326741 bytes, client: 클라이언트 아이피, server: 서버네임, request: &quot;POST /프로젝트명/git-receive-pack HTTP/1.0&quot;, host: &quot;호스트네임&quot;
+<p>Rhino 1.7 R4에서는 <code>env.rhino.1.2.js</code>를 용량제한으로 로드를 하지 못한다는 에러가 나온다. 이게 무슨 말인가... 정말 황당한 문제 때문에 이유를 찾기 시작했다. 그중에서 다음 자료를 찾을 수가 있었다.</p>
+
+<p><a href="http://www.coachwei.com/2008/09/01/the-64kb-java-language-problem-lesso-learnd-from-using-rhino-to-process-javascript/">http://www.coachwei.com/2008/09/01/the-64kb-java-language-problem-lesso-learnd-from-using-rhino-to-process-javascript/</a></p>
+
+<p>글을 보면 Rhino가 Java 의 non-native, non-abstract 메소드의 제한인 <strong>65536</strong>에 최적화 하기 위해서 Rhino가 로드하는 javascript의 코드길이가 이 이상이 넘지 않게 구현되어 있다는 것이다. 이건 Rhino의 문제인지 Java의 문제인지 몰라서 자료를 좀 더 찾아보기로 했다.</p>
+
+<ol>
+<li><strong>maximum method size is too small (64k)</strong> : <a href="http://bugs.sun.com/view_bug.do?bug_id=4262078">http://bugs.sun.com/view_bug.do?bug_id=4262078</a></li>
+<li><strong>method size limit in Java</strong> : <a href="http://eblog.chrononsystems.com/method-size-limit-in-java">http://eblog.chrononsystems.com/method-size-limit-in-java</a></li>
+<li><strong>Java Tip #5 - Avoid 64KB method limit on JSP</strong> : <a href="http://futuretask.blogspot.kr/2005/01/java-tip-5-avoid-64kb-method-limit-on.html">http://futuretask.blogspot.kr/2005/01/java-tip-5-avoid-64kb-method-limit-on.html</a></li>
+<li><strong>Workarounds for the 64K Size Limit for the Generated Java Method</strong> : <a href="http://docs.oracle.com/cd/A97688_16/generic.903/bp/j2ee.htm#1009526">http://docs.oracle.com/cd/A97688_16/generic.903/bp/j2ee.htm#1009526</a></li>
+</ol>
+
+<p>위 자료들을 보면 Java, JSP 등에서 code generation에 대한 Java method 의 Limit에 대해서 글들을 볼 수 있다. Java method에 대한 크기 제한이 있는것은 처음 알게 된 사실이다. Java 메소드를 그렇게 크게 만들어 본 적이 없기도 했을 뿐드러 Rhino에서 Javascript 파일을 로드하는데 그 소스코드가 문자열로 메소드안에서 code generation이 되는지는 생각도 하지 못했기 때문이다.</p>
+
+<p>env.rhino.1.2.js 파일을 살펴보자. env.rhino.1.2.js는 64k가 넘는다는 것을 확인 할 수 있다.</p>
+
+<p><img src="http://cfile23.uf.tistory.com/image/1864CF3D5063BB4317A472" alt=""></p>
+
+<p>그래서 github.com/hns 에서 rhino를 fork 해서 코드를 수정했다. <a href="https://github.com/hns/rhino/commit/207bb86e63b452237fbf6004fee12b90980c67f3">https://github.com/hns/rhino/commit/207bb86e63b452237fbf6004fee12b90980c67f3</a> 커밋된 내용을 참조하거나 이 커밋의 rhino를 다운 받는다. 그리고 압축을 해지한 다음 ant를 이용해서 jar를 생성하기 위해서를 build를 한다. 그리고 en.rhino.1.2.js를 다시 로드한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">cd hns-rhino-207bb86/
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">ant jar
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">cd hns-rhino-207bb86/build/rhino1_75pre/
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">java -jar js.jar
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">js &gt; load (&quot;env.rhino.1.2.js&quot;);
 </code></pre></div>
-<p>위 에러는 <strong>POST</strong> request를 요청할 때 서버에서 처리할 수 있는 body의 사이즈보다 큰 요청이 들어오면 생기는 에러이다. 그래서 우리는 NGINX의 설정값을 수정하기로 했다.</p>
-
-<h2 id="client_max_body_size-수정">client_max_body_size 수정</h2>
-
-<p>NGINX에서 클라이언트에서 요청하는 body의 사이즈를 설정하는 옵션은 <strong>client_max_body_size</strong> 이다. 우리는 yobi를 docker에서 운영하기 때문에 서버에 직접 들어가서 수정하지 않고, <em>VOLUME</em>으로 마운트 시키는 디렉토리 안의  <code>yobis-site.conf</code> 파일을 다음과 같이 수정했다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">client_max_body_size 1000M;
-
-upstream yobi-upstream {
-  server  서버네임:9000;
-}
-
-server {
-  listen 80;
-  server_name 서버네임;
-}
-... 생략
-</code></pre></div>
-<p>Ubuntu에 설치되는 NGINX는 <code>/etc/nginx/nginx.conf</code> 설정 파일을 가지고 있고 그 파일 안에서 외부 설정 파일들을 로드시키는데 우리는 Docker를 설정할 때 <code>/site-enabed/*.conf</code> 파일들을 로드시키도록 지정하였다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">http {
-... 생략 ...
-include /etc/nginx/sites-enabled/*;
-... 생략 ...
-}
-</code></pre></div>
-<p>NGINX의 각 설정파일은 <code>http</code> 설정 안에 포함이 되도록 설정되어 있다. <strong>client_max_body_size</strong> 설정은 <strong>http</strong> 설정 안에 지정되어야 하기 때문에 위의 <code>yobi-site.conf</code>의 첫번째 라인에 바로 이 값을 설정하도록 한 것을 유의해야한다. 설정이 끝나면 NGINX을 다시 제시작 한다. 우리는 docker를 사용했기 때문에 <code>docker start</code> 명령어로 재시작을 했다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo docker start nginx
-</code></pre></div>
-<p>다시 클라이언트에 돌아가서 <code>git push</code> 명령을 실행하면 문제 없이 원격 리파지토리에 commit들이 모두 push 되는 것을 확인할 수 있을 것이다.</p>
+<p>이젠 정상적으로 envjs 가 rhino에서 로드되어서 envjs를 사용할 수 있게 되었다.</p>
 
 <h2 id="결론">결론</h2>
 
-<p>git는 로컬에서 뿐만 아니라 원격 저장소에서 소스코드 형상관리를 할 수 있다. 사내 망 내부가 아닌 경우 http를 이용해서 git를 사용할 경우 접근도가 높아진다. http로 git 환경을 만드는 것은 그렇게 쉬운 일은 아니다. 하지만 yobi를 사용하면 복잡한 git를 http로 사용할 수 있는 환경을 쉽게 구축할 수 있다. http 서비스의 성능과 확장성을 위해서 <a href="http://playframework.com">Play framework</a>을 단독으로 웹 서버로 사용하는 것 보다 NGINX나 Apaach와 같은 웹 서버를 함께 사용하는 것이 좋다. 하지만 git를 http로 사용할 때 한가지 기억해 둬야할 것이다. <strong>HTTP로 git의 commit을 전송할 때 POST로 전송이 되며, 웹 서버는 POST의 body 사이즈를 제한하고 있다</strong>다는 것이다. 즉, 더 큰 사이즈의 데이터를 HTTP의 POST로 전송하기 위해서는 웹 서버의 <strong>HTTP POST body</strong> 설정을 변경해야한다. 우리가 겪은 문제도 동일한 문제이다. 하이브리드 어플리케이션 개발을 하는 프로젝트에서 commit하고 push하는 데이터량이 많아져서 NGINX에서 기본적으로 설정한 HTTP POST 사이즈보다 커서 원격 저장소에 정상적으로 업데이트 정보를 전송하지 못하는 문제를 갖게 되었다. 우리는 NGINX 웹 서버를 사용하고 있었고 Docker를 사용해서 nginx의 설정파일을 외부 디렉토리에서 VOLUME으로 마운트시켜서 사용하고 있었기 때문에 설정파일에 <strong>client_max_body_size</strong>의 값을 변경하여 이 문제를 해결했다.</p>
-
-<p>git와 HTTP를 연동하여 사용한다면 반드시 HTTP POST body의 사이즈를 결정하는 옵션을 한번 더 체크해보기 바란다. 이 부분을 간과하고 넘어간다면 언젠가 큰 소스코드를 한번에 push 할 때  &#39;fatal: The remote end hung up unexpectedly&#39;를 만나게 될 것이다. 이 에러를 만나게 되면 웹 서버의 HTTP POST body 사이즈를 늘려주고 서버를 재시작하면 된다.</p>
+<p>rhino에서는 Java의 최적화를 위해서 미리 대용량 파일을 로드하지 못하게 한듯하다. 이렇게 수정된 코드가 과연 Java의 method limit에 문제가 되지 않고 이상없이 사용 할 수 있는지에 대한 테스트는 더 필요할 것 같다. 이번 rhino와 대용량 javascript 로드를 통해서 Java의 method limit에 대한 것을 알게 된 것 같다. 실제 Java에서 XML을 파싱하기 위해서 대용량 XML을 로드하면서 비슷한 경험을 했다는 사례들도 찾을 수 있었다. Java의 이러한 제한이 있다면 rhino에서 대용량 자바스크립트를 로드하는게 가능하지 않게 때문에 여러개의 Javascript 파일을 나누어서 로드를 해야할 것이다. 아니면 rhino에 로드하기 위해서 javascript compressor를 이용해야 할지도 모른다. github.com/hns에 수정한 코드로 로드를 할 수는 있지만 현재 발생하는 이 문제에 대한 근본적인 해결 방법이 필요할 것으로 예상이 된다. 이 문제 대한 해결방법이나 Java method limit에 대한 다른 의견이 있으면 언제든지 조언을 부탁드리고 싶다.</p>
 
 <h2 id="참고">참고</h2>
 
 <ol>
-<li><a href="http://stackoverflow.com/questions/2056124/nginx-client-max-body-size-has-no-effect">http://stackoverflow.com/questions/2056124/nginx-client-max-body-size-has-no-effect</a></li>
+<li><a href="http://bugs.sun.com/view_bug.do?bug_id=4262078">http://bugs.sun.com/view_bug.do?bug_id=4262078</a></li>
+<li><a href="http://eblog.chrononsystems.com/method-size-limit-in-java">http://eblog.chrononsystems.com/method-size-limit-in-java</a></li>
+<li><a href="http://futuretask.blogspot.kr/2005/01/java-tip-5-avoid-64kb-method-limit-on.html">http://futuretask.blogspot.kr/2005/01/java-tip-5-avoid-64kb-method-limit-on.html</a></li>
+<li><a href="http://docs.oracle.com/cd/A97688_16/generic.903/bp/j2ee.htm#1009526">http://docs.oracle.com/cd/A97688_16/generic.903/bp/j2ee.htm#1009526</a></li>
 </ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>
