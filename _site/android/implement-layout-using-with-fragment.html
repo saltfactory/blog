@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Fragment를 이용하여 안드로이드 화면구성하기</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/android/implement-layout-using-with-fragment.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Fragment를 이용하여 안드로이드 화면구성하기</h1>
+    <p class="meta">Sep 13, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p><img src="http://cfile27.uf.tistory.com/image/1606DD38504EE6CF028038" alt=""></p>
+
+<p>만약 스마트 폰 앱을 개발할 때 세로모드(Portrait)에서는 단순하게 화면을 구성하지만 가로모드(Landscape) 화면 구성을 좀더 다양한 화면으로 구성 하고 싶다면 어떻게 할지 고민할 수 있다. 또는 해상도나 디바이스의 스크린크기, 디바이스 종류에 따라서 보여지는 것들을 다르게 구성하고 싶어할 수도 있다. 안드로이드 개발자들은 이러한 요구사항을 만족시켜줄 수 있는 것을 fragment라는 개념으로 추가하게 되었다. 안드로이드 2.3 이하 버전에서는 한 화면에 보이는 모든 것을 관장하는 것이 Activity라는 개념이였다. 이러한 Activity는 하나의 화면에 여러개 사용할 수 없게 설계가 되어있다. Activity 하나하나 마다 생명주기를 갖고 있기 때문이다. 만약 하나의 화면에 Activity와 비슷한 개념을 가지면서도 여러가지 화면을 넣을 수 있는 방법으로 fragment가 등장하게 되었다. 이 fragment 는 Android 3.0 부터 등장하였지만 Android 3.0은 태블릿을 위한 버전이라 Android 3.0 버전 때의 SDK를 사용하거나 개발하지 못했다. 하지만 Android 4.0 이상 부터는 안드로이드 개발자들이 스마트폰과 태블릿을 동시에 적용할 수 있게 지원하면서 Android 3.0 이상에서 부터 사용할 수 있는 fragment를 사용하여 개발할 수 있게 되면서 자료를 찾아서 실험하게 되었다.</p>
+
+<h2 id="fragment-특징">Fragment 특징</h2>
+
+<p>Fragment를 이용해서 개발을 하기전에 몇가지 특징을 알아보자. 더 많은 특징이 있지만 이번 예제에서 다음 특징들을 살펴볼 것이다.</p>
+
+<ol>
+<li>fragment는 activity 안에서만 존재할 수 있고 단독으로 존재할 수 없다.</li>
+<li>fragment는 activity 안에서 다른 view와 함께 존재할 수 있다.</li>
+<li>fragment는 back stack을 사용할 수 있다.</li>
+<li>fragment는 반드시 default 생성자가 있어야 한다.</li>
+</ol>
+
+<h2 id="fragment-생명주기">Fragment 생명주기</h2>
+
+<p><img src="http://cfile8.uf.tistory.com/image/1205543C504EE908095B3E" alt=""></p>
+
+<p><strong>onAttach()</strong></p>
+
+<p>onAttach() 콜백 메소드는 fargment가 activity에 추가되고 나면 호출된다. 이때 Activity가 파라미터로 전달되게 된다. Fragment는 Activity가 아니다. 다시말해서 Activity는 Context를 상속받아서 Context가 가지고 있는 많은 있지만 Fragment는 android.app 의 Object 클래스를 상속받아서 만들어진 클래스이다. 그래서 Fragment에서는 Context의 기능을 바로 사용할 수 없다. 뿐만 아니라 Fragment는  Activity 안에서만 존재하기 때문에 Activity를 onAttach() 콜백으로 받아올 수 있다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onAttach</span><span class="o">(</span><span class="n">Activity</span> <span class="n">activity</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onAttach</span><span class="o">(</span><span class="n">activity</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onCreate()</strong></p>
+
+<p>Fragment의 onCreate() 메소드는 Activity의 onCreate() 메소드와 비슷하지만 Bundle을 받아오기 때문에 bundle에 대한 속성을 사용할 수 있다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">savedInstanceState</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">savedInstanceState</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;bundle key : &quot;</span> <span class="o">+</span> <span class="n">key</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onCreateView()</strong></p>
+
+<p>Fragment의 onCreateView()는 Fragment에 실제 사용할 뷰를 만드는 작업을 하는 메소드이다. LayoutInflater를 인자로 받아서 layout으로 설정한 XML을 연결하거나 bundle에 의한 작업을 하는 메소드이다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">View</span> <span class="nf">onCreateView</span><span class="o">(</span><span class="n">LayoutInflater</span> <span class="n">layoutInflater</span><span class="o">,</span> <span class="n">ViewGroup</span> <span class="n">viewGroup</span><span class="o">,</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">onCreateView</span><span class="o">(</span><span class="n">layoutInflater</span><span class="o">,</span> <span class="n">viewGroup</span><span class="o">,</span> <span class="n">savedInstanceState</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onActivityCreated()</strong></p>
+
+<p>onActivityCreate() 메소드는 Activity에서 Fragment를 모두 생성하고 난 다음에 (Activity의 onCreate()가 마치고 난 다음)에 생성되는 메소드이다. 이 메소드가 호출될 때에서는 Activity의 모든 View가 만들어지고 난 다음이기 때문에 View를 변경하는 등의 작업을 할 수 있다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onActivityCreated</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">savedInstanceState</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">savedInstanceState</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;savedInstanceState key : &quot;</span> <span class="o">+</span> <span class="n">key</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onActivityCreated</span><span class="o">(</span><span class="n">icicle</span><span class="o">);</span>
+
+    <span class="c1">// 뷰에 데이터를 넣는 작업 등을 할 추가할 수 있음</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onStart()</strong></p>
+
+<p>이 메소드가 호출되면 화면의 모든 UI가 만들어진 지고 호출이 된다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onStart</span><span class="o">();</span>
+    <span class="o">}</span>
+</code></pre></div>
+<p><strong>onResume()</strong></p>
+
+<p>이 메소드가 호출되고 난 다음에 사용자와 Fragment와 상호작용이 가능하다. 다시 말해서 이 곳에서 사용자가 버튼을 누르거나 하는 이벤트를 받을 수 있게 된다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onResume</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onResume</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onPause()</strong></p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onPause</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">super</span><span class="o">.</span><span class="na">onPause</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onSaveInstanceState()</strong></p>
+
+<p>이 메소드에서는 Activity와 동일하게 Fragment가 사라질때 현재의 상태를 저장하고 나중에 Fragment가 돌아오면 다시 저장한 내용을 사용할 수 있게해주는 메소드이다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSaveInstanceState</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onSaveInstanceState</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+    <span class="n">savedInstanceState</span><span class="o">.</span><span class="na">putInt</span><span class="o">(</span><span class="s">&quot;text&quot;</span><span class="o">,</span> <span class="s">&quot;savedText&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onStop()</strong></p>
+
+<p>Fragment의 onStop() 메소드는 Activity의 onStop()메소드와 비슷하다. 이 콜백 메소드가 호출되면 Fragment가 더이상 보이지 않는 상태이고 더이상 Activity에서 Fragment에게 오퍼레이션을 할 수 없게 된다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStop</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onStop</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onDestroyView()</strong></p>
+
+<p>Fragment의 View가 모두 소멸될 때 호출되는 콜백 메소드이다. 이때 View에 관련된 모든 자원들이 사라지게 된다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDestroyView</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onDestroyView</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>*<em>onDestroy() *</em></p>
+
+<p>Fragment를 더이상 사용하지 않을 때 호출되는 콜백 메소드이다.  하지만 Activity와의 연결은 아직 끊어진 상태는 아니다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onDestroy</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>onDetach()</strong></p>
+
+<p>Fragment가 더이상 Activity와 관계가 없을 때 두 사이의 연결을 끊으며 Fragment에 관련된 모든 자원들이 사라지게 된다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDetach</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onDetach</span><span class="o">();</span>
+    <span class="n">activity</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Fragment의 생명주기를 테스트하기 위한 프로젝트를 만들어보자.
+테스트를 위해서 android 4.0.3 기반으로 안드로이드 프로젝트를 생성했다(HAXM과 X86으로 빠른 에뮬레이터로 테스트하기 위해서이다. Fragment는 Android 3.0 이상부터 지원한다.) <a href="http://blog.saltfactory.net/187">HAXM(Hardware Accelerated Execution Manager) + Android Atom x86 이미지로 안드로이드 에뮬레이터 속도 빠르게하기</a> 글을 참조해서 에뮬레이터 속도를 빠르게 설정한다. 설정이 완료되면 안드로이드 프로젝트를 추가한다.</p>
+
+<p><img src="http://cfile8.uf.tistory.com/image/13135A385051801908C5F4" alt=""></p>
+
+<p>그리고 Activity를 만드는 화면에서 MasterDetailFlow를 선택한다. 그리고 Debug Configurations에 x86 AVD를 이용해서 빌드될 수 있게 한다.</p>
+
+<p><img src="http://cfile30.uf.tistory.com/image/1338F3345051810209FCC3" alt=""></p>
+
+<p>에뮬레이터로 빌드해서 실행하게 되면 간단한 item의 목록이 나타나고 item을 선택하면 디테일화면으로 전환되는 예제이다.</p>
+
+<p><img src="http://cfile3.uf.tistory.com/image/170B893F50518229061174" alt=""></p>
+
+<p>디폴트로 생성된 클래스를 살펴보면 Fragment 클래스를 상속받아서 만든  ItemListFragment.java와 ItemDetailFragment.java가 생성된 것을 볼 수 있다.</p>
+
+<p><img src="http://cfile27.uf.tistory.com/image/1444AE43505182990395A6" alt=""></p>
+
+<p>이후에 각 클래스마다 자세히 살펴볼 것이다. 클래스 이름에서도 상상이 되듯,  item의 목록을 나타내는 ItemListFragment가 있고 item을 select하게 되면 ItemDetailFragment가 나타나게 될 것이다.</p>
+
+<p>Fragment가 Activity 안에서 어떻게 호출되는지 살펴보자.</p>
+
+<p>이 테스트 앱은 ItemListActivity가 가장먼저 호출이 된다.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;manifest</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span>
+    <span class="na">package=</span><span class="s">&quot;net.hibrain.tutorial&quot;</span>
+    <span class="na">android:versionCode=</span><span class="s">&quot;1&quot;</span>
+    <span class="na">android:versionName=</span><span class="s">&quot;1.0&quot;</span> <span class="nt">&gt;</span>
+
+    <span class="nt">&lt;uses-sdk</span>
+        <span class="na">android:minSdkVersion=</span><span class="s">&quot;15&quot;</span>
+        <span class="na">android:targetSdkVersion=</span><span class="s">&quot;15&quot;</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;application</span>
+        <span class="na">android:icon=</span><span class="s">&quot;@drawable/ic_launcher&quot;</span>
+        <span class="na">android:label=</span><span class="s">&quot;@string/app_name&quot;</span>
+        <span class="na">android:theme=</span><span class="s">&quot;@style/AppTheme&quot;</span> <span class="nt">&gt;</span>
+        <span class="nt">&lt;activity</span>
+            <span class="na">android:name=</span><span class="s">&quot;.ItemListActivity&quot;</span>
+            <span class="na">android:label=</span><span class="s">&quot;@string/title_item_list&quot;</span> <span class="nt">&gt;</span>
+            <span class="nt">&lt;intent-filter&gt;</span>
+                <span class="nt">&lt;action</span> <span class="na">android:name=</span><span class="s">&quot;android.intent.action.MAIN&quot;</span> <span class="nt">/&gt;</span>
+
+                <span class="nt">&lt;category</span> <span class="na">android:name=</span><span class="s">&quot;android.intent.category.LAUNCHER&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/intent-filter&gt;</span>
+        <span class="nt">&lt;/activity&gt;</span>
+        <span class="nt">&lt;activity</span>
+            <span class="na">android:name=</span><span class="s">&quot;.ItemDetailActivity&quot;</span>
+            <span class="na">android:label=</span><span class="s">&quot;@string/title_item_detail&quot;</span> <span class="nt">&gt;</span>
+            <span class="nt">&lt;meta-data</span>
+                <span class="na">android:name=</span><span class="s">&quot;android.support.PARENT_ACTIVITY&quot;</span>
+                <span class="na">android:value=</span><span class="s">&quot;.ItemListActivity&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/activity&gt;</span>
+    <span class="nt">&lt;/application&gt;</span>
+
+<span class="nt">&lt;/manifest&gt;</span>
+</code></pre></div>
+<p>ItemListActivity를 살펴보자. 이 ItemListActivity는 activity_item_list라는 layout으로 ContentView를 구성한다. 이것은 /res/layout/activity_item_list.xml 파일을 가르키고 있다.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">net</span><span class="o">.</span><span class="na">hibrain</span><span class="o">.</span><span class="na">tutorial</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.content.Intent</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.support.v4.app.FragmentActivity</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ItemListActivity</span> <span class="kd">extends</span> <span class="n">FragmentActivity</span>
+        <span class="kd">implements</span> <span class="n">ItemListFragment</span><span class="o">.</span><span class="na">Callbacks</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">mTwoPane</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_item_list</span><span class="o">);</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">item_detail_container</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">mTwoPane</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">((</span><span class="n">ItemListFragment</span><span class="o">)</span> <span class="n">getSupportFragmentManager</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">findFragmentById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">item_list</span><span class="o">))</span>
+                    <span class="o">.</span><span class="na">setActivateOnItemClick</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onItemSelected</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">mTwoPane</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Bundle</span> <span class="n">arguments</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Bundle</span><span class="o">();</span>
+            <span class="n">arguments</span><span class="o">.</span><span class="na">putString</span><span class="o">(</span><span class="n">ItemDetailFragment</span><span class="o">.</span><span class="na">ARG_ITEM_ID</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+            <span class="n">ItemDetailFragment</span> <span class="n">fragment</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ItemDetailFragment</span><span class="o">();</span>
+            <span class="n">fragment</span><span class="o">.</span><span class="na">setArguments</span><span class="o">(</span><span class="n">arguments</span><span class="o">);</span>
+            <span class="n">getSupportFragmentManager</span><span class="o">().</span><span class="na">beginTransaction</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">item_detail_container</span><span class="o">,</span> <span class="n">fragment</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">commit</span><span class="o">();</span>
+
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">Intent</span> <span class="n">detailIntent</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Intent</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">ItemDetailActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="n">detailIntent</span><span class="o">.</span><span class="na">putExtra</span><span class="o">(</span><span class="n">ItemDetailFragment</span><span class="o">.</span><span class="na">ARG_ITEM_ID</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+            <span class="n">startActivity</span><span class="o">(</span><span class="n">detailIntent</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>activity_item_list.xml 파일을 살펴보자. 이 레이아웃은 Fragment를 사용할 수 있는 fragment 태그를 포함하고 있는데 ItemListActivity 에서 사용하게되는 것으로 net.hibrain.tutorial.ItemListFragment 에서 구현을 한 클래스를 참조하고 있다. 그리고 id는 item_list로 만들어지게 된다.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;fragment</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span>
+    <span class="na">xmlns:tools=</span><span class="s">&quot;http://schemas.android.com/tools&quot;</span>
+    <span class="na">android:name=</span><span class="s">&quot;net.hibrain.tutorial.ItemListFragment&quot;</span>
+    <span class="na">android:id=</span><span class="s">&quot;@+id/item_list&quot;</span>
+    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+    <span class="na">android:layout_height=</span><span class="s">&quot;match_parent&quot;</span>
+    <span class="na">android:layout_marginLeft=</span><span class="s">&quot;16dp&quot;</span>
+    <span class="na">android:layout_marginRight=</span><span class="s">&quot;16dp&quot;</span>
+    <span class="na">tools:context=</span><span class="s">&quot;.ItemListActivity&quot;</span> <span class="nt">/&gt;</span>
+</code></pre></div>
+<p>더 자세한 코드는 나중에 살펴보기로 하고 위의 Fragment의 콜백 메소드를 테스트하기 위해서 Fragment마다 메소드들을 추가해서 Log를 작성해서 확인해보자.  </p>
+
+<p>디폴트로 만들어진 ItemListFragment.java 파일에 다음 코드를 추가하자.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="n">net</span><span class="o">.</span><span class="na">hibrain</span><span class="o">.</span><span class="na">tutorial</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">net.hibrain.tutorial.dummy.DummyContent</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.app.Activity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.support.v4.app.ListFragment</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.view.View</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.widget.ArrayAdapter</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.widget.ListView</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ItemListFragment</span> <span class="kd">extends</span> <span class="n">ListFragment</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">STATE_ACTIVATED_POSITION</span> <span class="o">=</span> <span class="s">&quot;activated_position&quot;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TAG</span> <span class="o">=</span> <span class="s">&quot;saltfactorytutorial&quot;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CLASS_NAME</span> <span class="o">=</span><span class="s">&quot;ItemListFragment&quot;</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">Callbacks</span> <span class="n">mCallbacks</span> <span class="o">=</span> <span class="n">sDummyCallbacks</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">mActivatedPosition</span> <span class="o">=</span> <span class="n">ListView</span><span class="o">.</span><span class="na">INVALID_POSITION</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Callbacks</span> <span class="o">{</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onItemSelected</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Callbacks</span> <span class="n">sDummyCallbacks</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Callbacks</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onItemSelected</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="kd">public</span> <span class="nf">ItemListFragment</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span><span class="o">+</span> <span class="s">&quot; : 생성자&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onAttach</span><span class="o">(</span><span class="n">Activity</span> <span class="n">activity</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span>  <span class="s">&quot;: onAttach(), activity : &quot;</span> <span class="o">+</span> <span class="n">activity</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+
+        <span class="kd">super</span><span class="o">.</span><span class="na">onAttach</span><span class="o">(</span><span class="n">activity</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(!(</span><span class="n">activity</span> <span class="k">instanceof</span> <span class="n">Callbacks</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">(</span><span class="s">&quot;Activity must implement fragment&#39;s callbacks.&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="n">mCallbacks</span> <span class="o">=</span> <span class="o">(</span><span class="n">Callbacks</span><span class="o">)</span> <span class="n">activity</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">savedInstanceState</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">savedInstanceState</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onCreate(Bundle savedInstanceState) : bundle key : &quot;</span> <span class="o">+</span> <span class="n">key</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onCreate(Bundle savedInstanceState) : bundle key is null&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setListAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayAdapter</span><span class="o">&lt;</span><span class="n">DummyContent</span><span class="o">.</span><span class="na">DummyItem</span><span class="o">&gt;(</span><span class="n">getActivity</span><span class="o">(),</span>
+                <span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">simple_list_item_activated_1</span><span class="o">,</span>
+                <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">text1</span><span class="o">,</span>
+                <span class="n">DummyContent</span><span class="o">.</span><span class="na">ITEMS</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onViewCreated</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">,</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onViewCreated(View view, Bundle savedInstanceState) :  View : &quot;</span> <span class="o">+</span> <span class="n">view</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+
+        <span class="kd">super</span><span class="o">.</span><span class="na">onViewCreated</span><span class="o">(</span><span class="n">view</span><span class="o">,</span> <span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">savedInstanceState</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">savedInstanceState</span>
+                <span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">STATE_ACTIVATED_POSITION</span><span class="o">))</span> <span class="o">{</span>
+             <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">savedInstanceState</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+                 <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onViewCreated(View view, Bundle savedInstanceState) :  bundle key : &quot;</span> <span class="o">+</span> <span class="n">key</span><span class="o">);</span>
+             <span class="o">}</span>
+
+            <span class="n">setActivatedPosition</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">.</span><span class="na">getInt</span><span class="o">(</span><span class="n">STATE_ACTIVATED_POSITION</span><span class="o">));</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onViewCreated(View view, Bundle savedInstanceState) :  bundle is null&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onActivityCreated</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">){</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">savedInstanceState</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">savedInstanceState</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onActivityCreated(Bundle savedInstanceState) :  bundle key : &quot;</span> <span class="o">+</span> <span class="n">key</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onActivityCreated(Bundle savedInstanceState) :  bundle key is null&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="kd">super</span><span class="o">.</span><span class="na">onActivityCreated</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(){</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span>  <span class="s">&quot;: onStart()&quot;</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onStart</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onResume</span><span class="o">(){</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span>  <span class="s">&quot;: onResume()&quot;</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onResume</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onPause</span><span class="o">(){</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span>  <span class="s">&quot;: onPause()&quot;</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onPause</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSaveInstanceState</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">outState</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">outState</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">outState</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onSavedInstanceState(Bundle outState) :  bundle key : &quot;</span> <span class="o">+</span> <span class="n">key</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot; : onSavedInstanceState(Bundle outState) :  bundle key is null&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+
+        <span class="kd">super</span><span class="o">.</span><span class="na">onSaveInstanceState</span><span class="o">(</span><span class="n">outState</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">mActivatedPosition</span> <span class="o">!=</span> <span class="n">ListView</span><span class="o">.</span><span class="na">INVALID_POSITION</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">outState</span><span class="o">.</span><span class="na">putInt</span><span class="o">(</span><span class="n">STATE_ACTIVATED_POSITION</span><span class="o">,</span> <span class="n">mActivatedPosition</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span>  <span class="s">&quot;: onStop()&quot;</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onStart</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDestroyView</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot;: onDestroyView()&quot;</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onDestroyView</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span> <span class="s">&quot;: onDestroy()&quot;</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onDestroy</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDetach</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">CLASS_NAME</span> <span class="o">+</span>  <span class="s">&quot;: onDetach()&quot;</span><span class="o">);</span>
+
+        <span class="kd">super</span><span class="o">.</span><span class="na">onDetach</span><span class="o">();</span>
+        <span class="n">mCallbacks</span> <span class="o">=</span> <span class="n">sDummyCallbacks</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onListItemClick</span><span class="o">(</span><span class="n">ListView</span> <span class="n">listView</span><span class="o">,</span> <span class="n">View</span> <span class="n">view</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">,</span> <span class="kt">long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onListItemClick</span><span class="o">(</span><span class="n">listView</span><span class="o">,</span> <span class="n">view</span><span class="o">,</span> <span class="n">position</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+        <span class="n">mCallbacks</span><span class="o">.</span><span class="na">onItemSelected</span><span class="o">(</span><span class="n">DummyContent</span><span class="o">.</span><span class="na">ITEMS</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">position</span><span class="o">).</span><span class="na">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setActivateOnItemClick</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">activateOnItemClick</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">getListView</span><span class="o">().</span><span class="na">setChoiceMode</span><span class="o">(</span><span class="n">activateOnItemClick</span>
+                <span class="o">?</span> <span class="n">ListView</span><span class="o">.</span><span class="na">CHOICE_MODE_SINGLE</span>
+                <span class="o">:</span> <span class="n">ListView</span><span class="o">.</span><span class="na">CHOICE_MODE_NONE</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setActivatedPosition</span><span class="o">(</span><span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="n">ListView</span><span class="o">.</span><span class="na">INVALID_POSITION</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">getListView</span><span class="o">().</span><span class="na">setItemChecked</span><span class="o">(</span><span class="n">mActivatedPosition</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">getListView</span><span class="o">().</span><span class="na">setItemChecked</span><span class="o">(</span><span class="n">position</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="n">mActivatedPosition</span> <span class="o">=</span> <span class="n">position</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>이제 빌드하고 로깅을 살펴볼 차례이다. 우리는 안드로이드의 모든 로그가 필요 없다. TAG로 &quot;satfactorytutorial&quot;라고 지정했으니 이것을 필터해보자. 이클립스는 안드로이드를 개발하는데 많은 편리함을 준다.  Logcat을 확인하는 화면에서 filter를 추가할 수 있다.</p>
+
+<p><img src="http://cfile30.uf.tistory.com/image/122C313B5051906C1160F9" alt=""></p>
+
+<p>이렇게 로그의 필터를 추가하면 다음과 같이 설정이 된다.</p>
+
+<p><img src="http://cfile8.uf.tistory.com/image/185098405051909932E2E5" alt=""></p>
+
+<p>이제 빌드하고 실행해서 로그를 확인해보자.</p>
+
+<p><img src="http://cfile27.uf.tistory.com/image/130D9C41505191000DFEF1" alt=""></p>
+
+<h2 id="fragment-실행-순서">Fragment 실행 순서</h2>
+
+<p>로그로 확인하면 Fragment가 실행되면서 생성되는 순서를 보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">최초 생성자를 호출 &gt; onAttach() &gt; onCreate() &gt; onViewCreated() &gt; onActivityCreated() &gt; onStart() &gt; onResume() 순으로 생성이된다.
+</code></pre></div>
+<p>아이템을 하나 선택해보자. 그러면 ItemDetailFragment가 실행될 것이다. 이 때 우리가 로깅하고 있는 ItemListFragment는 사라지게 되는데  다음 콜백 메소드를 순서대로 호출한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">onPause() &gt; onStop()
+</code></pre></div>
+<p><img src="http://cfile25.uf.tistory.com/image/1476CC3D505191940A5B6C" alt=""></p>
+
+<p>ItemDetailFragment에서 백 버튼(Back Button)을 눌러서 다시 ItemListFragment로 돌아오면 다음 순서대로 콜백 메소드를 호출한다. 이때 새로 Fragment를 생성하면서 이전의 Fragment에 대한 자원을 모두 해지하고 새로 만든다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">onDestroyView() &gt; onDestroy() &gt; onDetach() &gt; 생성자() &gt; onAttach() &gt; onCreate() &gt; onViewCreate() &gt; onStart() &gt; onResume()
+</code></pre></div>
+<p><img src="http://cfile25.uf.tistory.com/image/175AC63D5051926325595A" alt=""></p>
+
+<p>그럼 Fragment를 매번 새로 생성시켜야 하는가하면 그런것은 아니다. 이 포스팅에서 말하는 것은 Fragment가 Activity 안에서 만들어지고, Activity 의 생명 주기처럼 Fragment에서도 생명주기가 있는데, 상태가 변화는 것에 따라 콜백 메소드가 호출되며 각각 콜백 메소드의 특성에 따라서 오퍼레이션을 추가할 수 있다는 것을 말하고 있다.
+ItemDetailFragment 의 사용도 또하 동일한 방법으로 로깅을 해볼 수 있다. 다음 포스팅에서 Fragment를 이용해서 화면을 구성하는 방법에 대한 코드를 좀더 자세하게 살펴볼 예정이다.</p>
+
+<h2 id="참고">참고</h2>
+
+<ol>
+<li><a href="http://developer.android.com/reference/android/app/Fragment.html">http://developer.android.com/reference/android/app/Fragment.html</a></li>
+</ol>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>
