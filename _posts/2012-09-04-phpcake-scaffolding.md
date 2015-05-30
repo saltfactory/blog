@@ -19,7 +19,7 @@ CakePHP 의 scaffoding는 다음과 같다.
 1. RoR과 다르게 shell command를 사용하지 않는다. CakePHP는 PHP로 만들어진 프레임워크이기 때문에, 이말을 다시말하자면 웹 페이지에서 돌아가는 언어이기 때문에 PHP 코드 안에서 $ 변수로 scaffoding을 인식해서 CakePHP가 제공하는 템플릿으로 MVC가 자동으로 구현되어진다. (php shell 명령으로 커멘드 라인에서 명령어 수준으로 처리할 수 있지만 CakePHP에서는 public scaffod 변수 scaffolding을 한다.)
 2. RoR과 달리 실제 물리적인 파일이 생성되는 것이아니라, CakePHP가 제공하는 scaffolding 템플릿 기반으로 Model, View, Controller가 내부적으로 구현되어지기 때문에 기본 Template이 아닌 custom scaffolding 파일을 추가해서 처리할 수도 있다.
 
-우리는 앞서 [Scaffolding으로 빠르게 웹 개발하기](http://blog.saltfactory.net/177) 와 [CakePHP를 이용해서 MVC 기반 웹 서비스 만들기 연습 (2) - Create, Retrieve, Update, Delete](http://blog.saltfactory.net/181) 글에서 간단한 블로그 예제를 해보았다. 이어서 scaffoding 기능을 가지고 코드를 추가해 나갈 것이다.
+우리는 앞서 [Scaffolding으로 빠르게 웹 개발하기](http://blog.saltfactory.net/177) 와 [CakePHP를 이용하여 MVC 기반 웹 서비스 CRUD 개발하기](http://blog.saltfactory.net/181) 글에서 간단한 블로그 예제를 해보았다. 이어서 scaffoding 기능을 가지고 코드를 추가해 나갈 것이다.
 
 <!--more-->
 
