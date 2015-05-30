@@ -297,6 +297,10 @@
     <lastmod>2012-09-06T00:00:00+09:00</lastmod>
   </url>
   <url>
+    <loc>/php/creating-model-using-bake-in-cakephp.html</loc>
+    <lastmod>2012-09-05T00:00:00+09:00</lastmod>
+  </url>
+  <url>
     <loc>/php/creating-controller-using-bake-in-cakephp.html</loc>
     <lastmod>2012-09-05T00:00:00+09:00</lastmod>
   </url>
@@ -396,6 +400,9 @@
   </url>
   <url>
     <loc>/185/</loc>
+  </url>
+  <url>
+    <loc>/183/</loc>
   </url>
   <url>
     <loc>/186/</loc>

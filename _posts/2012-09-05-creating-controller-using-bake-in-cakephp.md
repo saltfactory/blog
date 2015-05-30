@@ -163,3 +163,14 @@ class CategoriesController extends AppController {
 ## 결론
 
 놀랍게도 bake shell 으로 몇번 과정을 거쳤을 뿐인데 멋지게 Database의 테이블과 매핑되는 Model을 기반한 Controller의 코드들이 생성이 되었다. CakePHP 에서는 기본적으로 bake 로 컨트롤러를 만들 때 CRUD 메소드를 만들어주는 것으로 확인된다. bake shell에서 scaffold로 만들지 않는다고 선택하고 basic class methods를 생성할지 물어보는 메뉴에서 n을 선택하면 비어있는 Controller가 만들어질 것이다. CakePHP는 개발자와 interactive하게 Controller를 간단하게 생성시키는 bake라는 기능을 추가함으로 MVC 기반 웹 개발을 매우 편리하고 빠르게 할 수 있게 실현한 것이다.
+
+
+## 연구원 소개
+
+* 작성자 : [송성광](http://about.me/saltfactory) 개발 연구원
+* 블로그 : http://blog.saltfactory.net
+* 이메일 : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
+* 트위터 : [@saltfactory](https://twitter.com/saltfactory)
+* 페이스북 : https://facebook.com/salthub
+* 연구소 : [하이브레인넷](http://www.hibrain.net) 부설연구소
+* 연구실 : [창원대학교 데이터베이스 연구실](http://dblab.changwon.ac.kr)
