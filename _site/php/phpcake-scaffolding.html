@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>크롬 브라우저에서 로컬 file경로 Sencah Application을 실행하기</title>
+    <title>CakePHP의 scaffolding 사용하기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/sencha/open-local-file-from-chrome-to-sencha.html">
+    <link rel="canonical" href="/series/php/phpcake-scaffolding.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -273,48 +273,78 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>크롬 브라우저에서 로컬 file경로 Sencah Application을 실행하기</h1>
-    <p class="meta">Feb 14, 2013</p>
+    <h1>CakePHP의 scaffolding 사용하기</h1>
+    <p class="meta">Sep 4, 2012</p>
   </header>
 
   <article class="post-content">
-  <p>Sencha Application은 web application을 개발하는 프레임워크라는 사실을 이젠 많은 개발자들이 알고 센차터치의 잠재력을 높이 평가하고 있다. 이러한 sencha application을 실행하기 위해서는 간단하게 html 파일과 javascript, css 파일만 있으면 브라우저에서 원격지에 파일을 업로드하지 않고 실행하면서 개발을 할 수 있다. 오페라 브라우저도 webkit engine을 포용하는 지금 시점에서 웹 어플리케이션은 webkit insepector로 개발하는 것이 이젠 거의 표준인 것으로 생각하기 때문에 chrome browser로 개발을 하는 사람들이 많아졌다.</p>
+  <h2 id="서론">서론</h2>
+
+<p>CakePHP는 Ruby on Rails와 매우 닮았다고 모든 사람들은 공감을 할 것이라고 생각든다. 그래서 CakePHP를 사용하면서 당연히 RoR의 scaffoding을 찾아볼 수 밖에 없었다. scaffoding에 대한 내용은 <a href="http://blog.saltfactory.net/177">Scaffolding으로 빠르게 웹 개발하기</a> 글을 참조하길 바란다. scaffolding은 MVC 프레임워크에서 마술사와 같이 알아서 척척 가장 기본이 되는 코드를 생성해서 구조화 시켜준다. 그럼 CakePHP에서 scaffolding은 어떠할까?</p>
+
+<p>두가지 의문으로 접근한다.
+1. RoR과 동일하게 shell command로 코드를 생성하는 것인가?
+2. RoR과 동일하게 물리적인 코드를 생성해서 MVC 패턴에 맞게 파일을 추가하여 기본 코드를 만들어주는 것인가?</p>
+
+<p>CakePHP 의 scaffoding는 다음과 같다.
+1. RoR과 다르게 shell command를 사용하지 않는다. CakePHP는 PHP로 만들어진 프레임워크이기 때문에, 이말을 다시말하자면 웹 페이지에서 돌아가는 언어이기 때문에 PHP 코드 안에서 $ 변수로 scaffoding을 인식해서 CakePHP가 제공하는 템플릿으로 MVC가 자동으로 구현되어진다. (php shell 명령으로 커멘드 라인에서 명령어 수준으로 처리할 수 있지만 CakePHP에서는 public scaffod 변수 scaffolding을 한다.)
+2. RoR과 달리 실제 물리적인 파일이 생성되는 것이아니라, CakePHP가 제공하는 scaffolding 템플릿 기반으로 Model, View, Controller가 내부적으로 구현되어지기 때문에 기본 Template이 아닌 custom scaffolding 파일을 추가해서 처리할 수도 있다.</p>
+
+<p>우리는 앞서 <a href="http://blog.saltfactory.net/177">Scaffolding으로 빠르게 웹 개발하기</a> 와 <a href="http://blog.saltfactory.net/181">CakePHP를 이용해서 MVC 기반 웹 서비스 만들기 연습 (2) - Create, Retrieve, Update, Delete</a> 글에서 간단한 블로그 예제를 해보았다. 이어서 scaffoding 기능을 가지고 코드를 추가해 나갈 것이다.</p>
 
 <!--more-->
 
-<p>sencha touch 테스트를 위해서 다음과 같이 간단히 sencha touch application을 sencha command로 만들어보겠다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd $SENCHA_HOME
-</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">sencha generate app TestApp ../TestApp
+<p>우리는 Categories를 처리하기 위한 코드를 생성한다고 가정한다. 그래서 Categories의 테이블을 생성한다. RoR에서는 scaffolding 으로 Model과 동시에 migration 파일이 생성되는 CakePHP에서는 그렇지 않다. 다음 코드를 MySQL로 접속해서 실행한다.</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="n">categories</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="n">unsigned</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span>  <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8</span> <span class="n">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">1</span> <span class="p">;</span>
 </code></pre></div>
-<p><img src="http://cfile24.uf.tistory.com/image/16369543511CE478136FFA" alt=""></p>
+<p><img src="http://cfile1.uf.tistory.com/image/145F133A50460BE2350A70" alt=""></p>
 
-<p>이젠 테스트로 만든 Sencha Projects 디렉토리에서 index.html 파일을 chrome에서 열어보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cd ../TestApp
-</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">open -a &quot;Google Chrome&quot; index.html
+<p>다음은 /app/Controller/CategoriesController.php 파일을 추가한다. 앞의 포스팅에서 PostsController를 구현할 때 기억을 해보면 URL요청이 들어오는 패턴에 따라서 메소드를 추가해 주었는데, CategoriesController에서는 public $scaffold 변수를 추가했다.</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">CategoriesController</span> <span class="k">extends</span> <span class="nx">AppController</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="nv">$scaffold</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div>
-<p><img src="http://cfile30.uf.tistory.com/image/154D7144511CE5410F116E" alt=""></p>
+<p>이제 <a href="http://cake.saltfactory.local/categories">http://cake.saltfactory.local/categories</a> 라고 요청을 해보자.</p>
 
-<p>chrome 브라우저가 열리면서 다음과 같이 Cross origin requests are only supported for HTTP 에러를 발생하면서 Sencha Application이 실행이 되지 않는다. Safari 브라우저로 열어보자</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">open -a &quot;Safari&quot; index.html
-</code></pre></div>
-<p><img src="http://cfile2.uf.tistory.com/image/121DDB42511CE5AC1FB5F1" alt=""></p>
+<p><img src="http://cfile23.uf.tistory.com/image/1162BF3A50460D31328390" alt=""></p>
 
-<p>Safari 브라우저에서는 문제 없이 실행이 되는 것을 확인할 수 있다. 위와 같은 문제는 Chrome 브라우저에서 file 경로로 브라우저에서 열게되었을때 access file policy 제한으로 발생하는 문제이다. 그래서 Chrome 브라우저를 실행할 때 다음과 같이 옵션을 추가한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">--args --allow-file-access-from-files
-</code></pre></div>
-<p>열려 있는 Chrome 프로세스를 완전히 종료를 한다. (만약 프로세스가 완벽하게 중지되지 않으면 오션을 추가해도 반영이 되지 않는다는 오류 메세지를 보게 될 것이다.) 그리고 옵션을 추가해서 Chrome을 열어보자.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --allow-file-access-from-files index.html
-</code></pre></div>
-<p><img src="http://cfile21.uf.tistory.com/image/17318043511CE72C25884C" alt=""></p>
+<p>마술이 일어났다. CategoriesController에 public $scaffold 변수 하나만 추가했을 뿐인데 MVC 코드들이 마치 생성이라도 된 것 처럼 URL 요청을 받아들이고 모델로 데이터베이스의 테이블을 조회하며, 뷰 파일까지 나타내어주고 있다. 앞에서 PostsController를 처리하기 위해서 많은 파일과 코드들을 힘들게 만든것이 허무하게 느껴질 정도이다. 그럼 CRUD가 동작되는지도 살펴보자.</p>
 
-<p><img src="http://cfile4.uf.tistory.com/image/2715A03A511CE7350678E4" alt=""></p>
+<h2 id="create">Create</h2>
 
-<p>이렇게 Chrome 브라우저를 열때 file access policy 제한을 풀어서 index.html을 실행하면 앞에서 봤던 문제 없이 Sencha Application을 Chrome에서 file 경로로 실행할 수 있게 된다.</p>
+<p><a href="http://cake.saltfactory.local/categories/add">http://cake.saltfactory.local/categories/add</a></p>
+
+<p><img src="http://cfile3.uf.tistory.com/image/194C8F3350460E10048A87" alt=""></p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/191C7C3750460E2925BAC1" alt=""></p>
+
+<h2 id="retrieve">Retrieve</h2>
+
+<p><a href="http://cake.saltfactory.local/categories/view/1">http://cake.saltfactory.local/categories/view/1</a></p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/1360023850460EBE2BFCE1" alt=""></p>
+
+<h2 id="update">Update</h2>
+
+<p><a href="http://cake.saltfactory.local/categories/edit/1">http://cake.saltfactory.local/categories/edit/1</a></p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/1222743950460EFC2AE7F5" alt=""></p>
+
+<h2 id="delete">Delete</h2>
+
+<p><img src="http://cfile6.uf.tistory.com/image/123F5A3750460F42035E59" alt=""></p>
+
+<p>CakePHP의 scaffolding RoR의 scaffolding보다 더 마술같이 MVC 패턴을 만들어준다. 코드를 생성하지 않아서 약가은 낯설지만 분명히 CRUD가 모두 가능할 수 있도록 자동으로 어플리케이션이 구현되어지는 결과를 만들어 냈다. RoR의 scaffoding은 MVC 코드를 생성하기 때문에 customization 하기 쉽지만 CakePHP는 어떻게 Customization을 해야할지 당황스러울 수 있다. 다음에는 CakePHP의 Scaffoding을 custom 하는 방법에 대해서 포스팅을 할 예정이다. 이 포스팅에서 소개하는 내용은 CakePHP도 scaffolding을 지원하고 있으며, scaffoding을 통애서 개발 속도가 빨라지고 개발 코드를 줄일 수 있는 효과를 얻을 수 있다는 것을 테스트해보았다.</p>
 
 <h2 id="참고">참고</h2>
 
 <ol>
-<li><a href="http://stackoverflow.com/questions/14776281/chrome-disable-web-security-cant-open-file">http://stackoverflow.com/questions/14776281/chrome-disable-web-security-cant-open-file</a></li>
+<li><a href="http://book.cakephp.org/2.0/en/controllers/scaffolding.html">http://book.cakephp.org/2.0/en/controllers/scaffolding.html</a></li>
 </ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>
