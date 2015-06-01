@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>iOS 주소록 API를 뷰컨트롤러에 연결하여 사용하기</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/ios/using-ios-addressbook-api-in-viewcontroller.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>iOS 주소록 API를 뷰컨트롤러에 연결하여 사용하기</h1>
+    <p class="meta">Aug 13, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p>우리는 이전 아티클  iOS 주소록 API를 이용해서 아이폰 주소록 그룹 다루기를 통해 Unit Test로 테스트를 해보았다. 이번 포스팅에서는 이전 아티클에서 사용한 테스트 코드를 이용해서 실제 UI와 함께 사용해서 아이폰 주소록에 데이터를 접근해서 아이폰 주소록 그룹에 관련된 작업을 처리할 수 있도록 할 것이다. 우선 테스트를 하기 위해서 프로젝트를 생성해야하는데 이전 아티클에서 사용한 프로젝트를 그대로 사용해도 된다. 우리는 t5-addressbook 브랜치의 소스코드에다가 파일을 더 추가할 것이다. 소스코드를 git를 이용해서 clone 하고 난 다음 git checkout으로 t5-addressbook으로 브랜치를 변경한다.</p>
+
+<!--more-->
+<div class="highlight"><pre><code class="language-text" data-lang="text">git clone https://github.com/saltfactory/Saltfactory_iOS_Tutorial.git
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">git checkout -t t5-addressbook
+</code></pre></div>
+<p>t5-addressbook 브랜치로 변경후 프로젝트 파일을 열어서 확인하면 이전 아티클에서 테스트한 프로젝트 파일이 열리게 될 것이다. SFAddressbookTutorial 프로젝트는 생성할 때 empty project로 생성하였기 때문에 AppDelegate 를 제외하고 아무런 파일이 존재하지 않는다. 그리고 단위 테스트를 했기 때문에 SFAddressbookTutorialtests에는 테스트한 코드들이 존재를 한다.</p>
+
+<p>우리는 간단하게 그룹을 추가/수정/삭제 테스트를 할 것이기 때문에 UITableViewController 을 상속받은 SFGroupsTableViewController를 프로젝트에 추가해보자.</p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/1945CF3950285E5822940E" alt=""></p>
+
+<p>다음은 AppDelegate에서 UINavigationController를 생성해서 방금 추가한 SFGroupsTableViewController를 추가하여 rootViewController가 되게 한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFAppDelegate.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/10/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFAppDelegate.h&quot;</span>
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+<span class="k">@implementation</span> <span class="nc">SFAppDelegate</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="bp">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+<span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame</span><span class="p">:[[</span><span class="bp">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
+    <span class="c1">// Override point for customization after application launch.</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">whiteColor</span><span class="p">];</span>
+
+    <span class="n">SFGroupsTableViewController</span> <span class="o">*</span><span class="n">groupsTableViewController</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SFGroupsTableViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="bp">UINavigationController</span> <span class="o">*</span><span class="n">navigationController</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UINavigationController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRootViewController</span><span class="p">:</span><span class="n">groupsTableViewController</span><span class="p">];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">navigationController</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">...</span> <span class="err">생략</span><span class="p">...</span>
+</code></pre></div>
+<p>빌드하고 실행해보면 다음과 같은 화면이 나타날 것이다.</p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/1725233550285FD60D1084" alt=""></p>
+
+<p>이제 SFGroupsTableViewController.m을 열어서 뷰 컨트롤러에 타이틀을 지정하고 그룹을 추가하고 편집할 수 있는 버튼을 추가한다. 버튼은 오른쪽 상단에 &quot;+&quot; 버튼을 추가하여 그룹을 추가할 수 있는 액션을 연결할 것이고, 왼쪽에는 &quot;Edit&quot; 버튼을 추가해서 현재화면을 편집할 수 있는 액션을 연결할 것이다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupsTableViewController</span> <span class="p">()</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="c1">// Uncomment the following line to preserve selection between presentations.</span>
+    <span class="c1">// self.clearsSelectionOnViewWillAppear = NO;</span>
+
+    <span class="c1">// Uncomment the following line to display an Edit button in the navigation bar for this view controller.</span>
+    <span class="c1">// self.navigationItem.rightBarButtonItem = self.editButtonItem;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;주소록 그룹&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemAdd</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onAddButton</span><span class="p">:)];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span><span class="p">...</span>
+
+<span class="cp">#pragma mark - IBAction henadler</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onEditButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>이제 onAddButton 안에 이전 아티클에서 테스트한 그룹을 추가하는 코드를 넣으면 된다. 하지만 우리는 좀더 View와 Logic을 분리해서 코드의 재사용성과 유지보수를 효율적이고 효과적으로 할 수 있도록 하길 원하기 때문에 SFGroupService라는 서비스객체를 만들어서 추가한다. NSObject를 상속받은 SFGroupService 라는 객체를 생성하고 delegate를 선언해서 추가한다. 이유는 서비스 객체의 재사용성과 코드의 유연성을 위해서이다. 실제 데이터를 핸들잉하는 것은 서비스객체에서 처리하고 뷰와 연관된 작업들은 뷰 컨트롤러에게 delegate로 위임시켜서 처리하고 싶기 때문이다.</p>
+
+<p><img src="http://cfile3.uf.tistory.com/image/12574339502862F41F9E76" alt=""></p>
+
+<p>SFGroupService.h 파일을 열어서 프로토토입을 선언하고 delegate를 사용할 수 있도록 설정한다. 그리고 그룹조회,추가, 삭제, 업데이트를 할 수 있는 메소드와 이 메소드가 처리하고 난 다음 다시 뷰 컨트롤러에거 작업을 위임시키기 위한 delegate 메소드를 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupService.h</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+
+<span class="k">@protocol</span> <span class="nc">SFGroupServiceDelegate</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
+
+<span class="k">@required</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFailWithError</span><span class="p">:(</span><span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidFindGroups:</span><span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">groups</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidAddGroup</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidDeleteGroup</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidUpdateGroup</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupService</span> : <span class="bp">NSObject</span>
+<span class="p">{</span>
+    <span class="kt">id</span><span class="o">&lt;</span><span class="n">SFGroupServiceDelegate</span><span class="o">&gt;</span><span class="n">delegate</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="kt">id</span><span class="o">&lt;</span><span class="n">SFGroupServiceDelegate</span><span class="o">&gt;</span><span class="n">delegate</span><span class="p">;</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">findAllGroups</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addGroupWithName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">deleteGroupWithGroupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateGroupWithName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="nf">groupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div>
+<p>이제 우리는 SFGroupService.m 파일에다 위의 선언들을 구현할 것인데 각 메소드에 들어가는 코드는 이전 아티클의 테스트를 참조해서 작성하면 된다. 먼저 -findAllGroups 메소드를 구현해보자. 이전 아티클에서 추가된 부분만 하이라이팅으로 표시를 해뒀다. 원래 단위테스트란 이렇게 메소드를 만드록 난 다음에도 단위 테스트를 실행해야하지만 포스팅이 길어지는 것을 원치않기 때문에 이 메소드에 대한 단위테스트는 이전 아티클의 로직테스트로 대처하기로 한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupService.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupService.h&quot;</span>
+<span class="cp">#import &lt;AddressBook/AddressBook.h&gt;</span>
+
+<span class="k">@implementation</span> <span class="nc">SFGroupService</span>
+<span class="k">@synthesize</span> <span class="n">delegate</span><span class="p">;</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">findAllGroups</span>
+<span class="p">{</span>
+
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="n">array</span><span class="p">];</span>
+
+    <span class="n">ABAddressBookRef</span> <span class="n">addressBookRef</span> <span class="o">=</span> <span class="n">ABAddressBookCreate</span><span class="p">();</span>
+    <span class="n">CFArrayRef</span> <span class="n">groupsRef</span> <span class="o">=</span> <span class="n">ABAddressBookCopyArrayOfAllGroups</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+
+    <span class="n">CFIndex</span> <span class="n">numberOfGroup</span> <span class="o">=</span> <span class="n">ABAddressBookGetGroupCount</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numberOfGroup</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="bp">NSMutableDictionary</span> <span class="o">*</span><span class="n">groupInfo</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableDictionary</span> <span class="n">dictionary</span><span class="p">];</span>
+
+        <span class="n">ABRecordRef</span> <span class="n">groupRef</span> <span class="o">=</span> <span class="n">CFArrayGetValueAtIndex</span><span class="p">(</span><span class="n">groupsRef</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+
+        <span class="n">CFStringRef</span> <span class="n">groupNameRef</span> <span class="o">=</span> <span class="n">ABRecordCopyValue</span><span class="p">(</span><span class="n">groupRef</span><span class="p">,</span> <span class="n">kABGroupNameProperty</span><span class="p">);</span>
+
+        <span class="bp">NSInteger</span> <span class="n">groupId</span> <span class="o">=</span> <span class="n">ABRecordGetRecordID</span><span class="p">(</span><span class="n">groupRef</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">groupInfo</span> <span class="nl">setValue</span><span class="p">:[</span><span class="bp">NSNumber</span> <span class="nl">numberWithInteger</span><span class="p">:</span><span class="n">groupId</span><span class="p">]</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;groupId&quot;</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">groupNameRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">groupInfo</span> <span class="nl">setValue</span><span class="p">:(</span><span class="k">__bridge</span> <span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">groupNameRef</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;name&quot;</span><span class="p">];</span>
+            <span class="n">CFRelease</span><span class="p">(</span><span class="n">groupNameRef</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">groups</span> <span class="nl">addObject</span><span class="p">:</span><span class="n">groupInfo</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">groupsRef</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nl">groupServiceDidFindGroups</span><span class="p">:</span><span class="n">groups</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>이렇게 코드를 작성하고 빌드하려고 하면 다음과 같은 에러 메세지를 만나게 된다. warning은 현재 메소드를 선언하고 구현하지 않아서 발생하는 경고기 때문에 이후에 모두 구현하고 나면 사라지게 되어 있다. 하지만 에러는 현재 프로젝트에서 단위테스트하려는 타겟에만 iOS 주소록 API를 사용할수 있는 AddressBook.framework를 포함해서 이와 같이 나타나는 것이다.</p>
+
+<p><img src="http://cfile6.uf.tistory.com/image/205F29385028690A056557" alt=""></p>
+
+<p>이제 우리는 실제 앱을 실행될 프로덕트 타겟을 선택해서 AddressBook.framework를 추가하도록 한다. 이렇게 타겟에다 AddressBook.framework를 추가하면 링크 에러는 사라지게 된다.</p>
+
+<p><img src="http://cfile24.uf.tistory.com/image/2049AB355028699A1BC08A" alt=""></p>
+
+<p>이제 우리는 SFGroupService의 나머지 메소드들을 더 구현할 것이다. 다음은 그룹을 추가하기 위한 -addGroupWithName: 메소드를 구현한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addGroupWithName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+<span class="p">{</span>
+    <span class="n">CFErrorRef</span> <span class="n">errorRef</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">ABAddressBookRef</span> <span class="n">addressBookRef</span> <span class="o">=</span> <span class="n">ABAddressBookCreate</span><span class="p">();</span>
+
+    <span class="n">ABRecordRef</span> <span class="n">groupRef</span> <span class="o">=</span> <span class="n">ABGroupCreate</span><span class="p">();</span>
+
+    <span class="n">CFStringRef</span> <span class="n">nameRef</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="n">CFStringRef</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
+    <span class="n">ABRecordSetValue</span><span class="p">(</span><span class="n">groupRef</span><span class="p">,</span> <span class="n">kABGroupNameProperty</span><span class="p">,</span> <span class="n">nameRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+
+    <span class="n">ABAddressBookAddRecord</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">groupRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+    <span class="n">ABAddressBookSave</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">groupRef</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">errorRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="bp">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">errorRef</span><span class="p">;</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nl">groupServiceDidFailWithError</span><span class="p">:</span><span class="n">error</span><span class="p">];</span>
+        <span class="n">CFRelease</span><span class="p">(</span><span class="n">errorRef</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="n">groupServiceDidAddGroup</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>다음은 그룹을 삭제하기 위한 메소드 -deleteGroupWithGroupId: 메소드를 구현한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">deleteGroupWithGroupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span>
+<span class="p">{</span>
+
+    <span class="n">CFErrorRef</span> <span class="n">errorRef</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">ABAddressBookRef</span> <span class="n">addressBookRef</span> <span class="o">=</span> <span class="n">ABAddressBookCreate</span><span class="p">();</span>
+
+    <span class="n">ABRecordRef</span> <span class="n">savedGroupRef</span> <span class="o">=</span> <span class="n">ABAddressBookGetGroupWithRecordID</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">groupId</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">savedGroupRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ABAddressBookRemoveRecord</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">savedGroupRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+        <span class="n">ABAddressBookSave</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+
+        <span class="n">savedGroupRef</span> <span class="o">=</span> <span class="n">ABAddressBookGetGroupWithRecordID</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">groupId</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">errorRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="bp">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">errorRef</span><span class="p">;</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nl">groupServiceDidFailWithError</span><span class="p">:</span><span class="n">error</span><span class="p">];</span>
+
+
+        <span class="n">CFRelease</span><span class="p">(</span><span class="n">errorRef</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="n">groupServiceDidDeleteGroup</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>마지막으로 -updateGroupWithName:groupId: 메소드를 구현해보자. 이전 아티클에서 update에 관한 테스트는 하지 않았지만 방법은 groupId와 해당되는 ABRecordRef를 찾아서 이름을 변경시키고 다시 ABAddressBook을 저장하면 된다. 다음 코드를 보고 확인하자</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateGroupWithName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="nf">groupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span>
+<span class="p">{</span>
+    <span class="n">CFErrorRef</span> <span class="n">errorRef</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">ABAddressBookRef</span> <span class="n">addressBookRef</span> <span class="o">=</span> <span class="n">ABAddressBookCreate</span><span class="p">();</span>
+
+    <span class="n">ABRecordRef</span> <span class="n">groupRef</span> <span class="o">=</span> <span class="n">ABAddressBookGetGroupWithRecordID</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">groupId</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">groupRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CFStringRef</span> <span class="n">nameRef</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="n">CFStringRef</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
+        <span class="n">ABRecordSetValue</span><span class="p">(</span><span class="n">groupRef</span><span class="p">,</span> <span class="n">kABGroupNameProperty</span><span class="p">,</span> <span class="n">nameRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+        <span class="n">ABAddressBookSave</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">errorRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="bp">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">errorRef</span><span class="p">;</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nl">groupServiceDidFailWithError</span><span class="p">:</span><span class="n">error</span><span class="p">];</span>
+
+        <span class="n">CFRelease</span><span class="p">(</span><span class="n">errorRef</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="n">groupServiceDidUpdateGroup</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>이렇게 만든 SFGroupService를 뷰 컨트롤러에서 사용하기 위해서 SFGroupsTableViewController.h에 다음과 같이 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.h</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+<span class="cp">#import &quot;SFGroupService.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupsTableViewController</span> : <span class="bp">UITableViewController</span><span class="o">&lt;</span><span class="n">SFGroupServiceDelegate</span><span class="o">&gt;</span>
+<span class="p">{</span>
+    <span class="n">SFGroupService</span> <span class="o">*</span><span class="n">groupService</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div>
+<p>다음 SFGroupService를 사용하기 위해서 alloc을하고 delegate를 지정한다. 그리고 delegate 메소드를 추가한다. SFGroupsTableViewController.m을 열어서 다음 코드들을 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">...</span><span class="err">생략</span><span class="p">..</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewStylePlain</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">groupService</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SFGroupService</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+        <span class="n">groupService</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">...</span><span class="err">생략</span><span class="p">...</span>
+
+<span class="cp">#pragma mark - SFGroupService delegate methods</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFailWithError</span><span class="p">:(</span><span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFindGroups</span><span class="p">:(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">groups</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidAddGroup</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidDeleteGroup</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidUpdateGroup</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>SFGroupsTableViewController가 열리면 가장 먼저 현재 주소록의 그룹을 찾아와서 그룹을 목록화 하는 일을 해야한다. 그래서 -viewDidLoad에서 -findAllGroups를 호출한다. 그리고 목록에 필요한 데이터소스를 저장하기 위해서 NSMutableArray 타입의 items를 선언해서 사용한다. 이렇게 저장된 items를 사용해서 UITableView의 data source와 delegate를 이용해서 목록을 UITableView 위에 나타나게 한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupsTableViewController</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">items</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">SFGroupsTableViewController</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;주소록 그룹&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemAdd</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onAddButton</span><span class="p">:)];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+
+    <span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver</span><span class="p">:</span><span class="nb">self</span> <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">receiveGroupEditorViewControllerNotification</span><span class="p">:)</span> <span class="nl">name</span><span class="p">:</span><span class="s">@&quot;SFGroupEditorViewControllerNotification&quot;</span> <span class="nl">object</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+
+
+    <span class="p">[</span><span class="n">groupService</span> <span class="n">findAllGroups</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - SFGroupService delegate methods</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFailWithError</span><span class="p">:(</span><span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;error: %@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFindGroups</span><span class="p">:(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">groups</span>
+<span class="p">{</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="nl">arrayWithArray</span><span class="p">:</span><span class="n">groups</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="n">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - Table view data source</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nl">numberOfSectionsInTableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span>
+<span class="p">{</span>
+    <span class="c1">// Return the number of sections.</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">numberOfRowsInSection</span><span class="p">:(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="n">section</span>
+<span class="p">{</span>
+    <span class="c1">// Return the number of rows in the section.</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">items</span> <span class="n">count</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="bp">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">cellForRowAtIndexPath</span><span class="p">:(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="bp">NSString</span> <span class="o">*</span><span class="n">CellIdentifier</span> <span class="o">=</span> <span class="s">@&quot;Cell&quot;</span><span class="p">;</span>
+    <span class="bp">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+
+    <span class="c1">// Configure the cell...</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">cell</span><span class="p">.</span><span class="n">textLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[[</span><span class="n">items</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">]</span> <span class="nl">valueForKey</span><span class="p">:</span><span class="s">@&quot;name&quot;</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+</code></pre></div>
+<p>이제 빌드하고 실행해보면 우리가 전 아티클에서 만든 테스트그룹이 보일 것이다. 아니면 아이폰 주소록에 이미 포함되어져 있는 그룹들이 목록으로 나타난것을 확인할 수 있을 것이다.</p>
+
+<p><img src="http://cfile8.uf.tistory.com/image/1673303E502881A61F2FE6" alt=""></p>
+
+<p>이제 &quot;+&quot; 버튼을 누르면 새로운 그룹을 생성할 수 있는 SFGroupEditorViewController를 추가해보자.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/19510E44502884AB1FA73B" alt=""></p>
+
+<p>SFGroupEditorViewController는 그룹이름을 입력받을 수 있는 UITextField로 구성되어 있다. SFGroupEditorViewController.m 파일을 열어서 다음 코드를 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupEditorViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupEditorViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupEditorViewController</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">IBOutlet</span> <span class="bp">UITextField</span> <span class="o">*</span><span class="n">textField</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onDoneButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onCancelButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewStyleGrouped</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;새로운 그룹&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemDone</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onDoneButton</span><span class="p">:)];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemCancel</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onCancelButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidUnload</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidUnload</span><span class="p">];</span>
+    <span class="c1">// Release any retained subviews of the main view.</span>
+    <span class="c1">// e.g. self.myOutlet = nil;</span>
+    <span class="n">textField</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - IBAction handlers</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onDoneButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">dismissModalViewControllerAnimated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onCancelButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">dismissModalViewControllerAnimated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - Table view data source</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nl">numberOfSectionsInTableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span>
+<span class="p">{</span>
+    <span class="c1">// Return the number of sections.</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">numberOfRowsInSection</span><span class="p">:(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="n">section</span>
+<span class="p">{</span>
+    <span class="c1">// Return the number of rows in the section.</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="bp">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">cellForRowAtIndexPath</span><span class="p">:(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="bp">NSString</span> <span class="o">*</span><span class="n">CellIdentifier</span> <span class="o">=</span> <span class="s">@&quot;Cell&quot;</span><span class="p">;</span>
+    <span class="bp">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+        <span class="n">cell</span><span class="p">.</span><span class="n">accessoryType</span> <span class="o">=</span> <span class="n">UITableViewCellAccessoryNone</span><span class="p">;</span>
+        <span class="n">cell</span><span class="p">.</span><span class="n">selectionStyle</span> <span class="o">=</span> <span class="n">UITableViewCellSelectionStyleNone</span><span class="p">;</span>
+
+
+        <span class="n">textField</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UITextField</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">185</span><span class="p">,</span> <span class="mi">30</span><span class="p">)];</span>
+        <span class="n">textField</span><span class="p">.</span><span class="n">adjustsFontSizeToFitWidth</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+        <span class="n">textField</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">blackColor</span><span class="p">];</span>
+        <span class="n">textField</span><span class="p">.</span><span class="n">autocorrectionType</span> <span class="o">=</span> <span class="n">UITextAutocorrectionTypeNo</span><span class="p">;</span>
+        <span class="n">textField</span><span class="p">.</span><span class="n">autocapitalizationType</span> <span class="o">=</span> <span class="n">UITextAutocapitalizationTypeNone</span><span class="p">;</span>
+        <span class="n">textField</span><span class="p">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="n">UITextAlignmentLeft</span><span class="p">;</span>
+
+        <span class="n">textField</span><span class="p">.</span><span class="n">clearButtonMode</span> <span class="o">=</span> <span class="n">UITextFieldViewModeAlways</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">textField</span> <span class="nl">setEnabled</span><span class="p">:</span> <span class="nb">YES</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">cell</span> <span class="nl">addSubview</span><span class="p">:</span><span class="n">textField</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">textField</span> <span class="n">becomeFirstResponder</span><span class="p">];</span>
+
+        <span class="n">textField</span><span class="p">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="s">@&quot;그룹명을 입력하세요&quot;</span><span class="p">;</span>
+
+    <span class="p">}</span>
+
+    <span class="n">cell</span><span class="p">.</span><span class="n">textLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">@&quot;그룹명&quot;</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>이제 SFGroupsTableViewController 에서 -onAddButton: 메소드에서 SFGroupEditorViewController를 나타나게 하는 코드를 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+<span class="cp">#import &quot;SFGroupEditorViewController.h&quot;</span>
+
+<span class="p">...</span> <span class="err">생략</span><span class="p">...</span>
+<span class="cp">#pragma mark - IBAction henadler</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="n">SFGroupEditorViewController</span> <span class="o">*</span><span class="n">groupEditorViewController</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SFGroupEditorViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="bp">UINavigationController</span> <span class="o">*</span><span class="n">navigationController</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UINavigationController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRootViewController</span><span class="p">:</span><span class="n">groupEditorViewController</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">presentModalViewController</span><span class="p">:</span><span class="n">navigationController</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>다시 빌드하고 실행시켜보자. 그리고 SFGroupsTableViewController의 &quot;+&quot; 버튼을 누르면 modalViewController로 그룹명을 입력시킬 수 있는 창이 나타날 것이다.</p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/1967CC44502887D00EB274" alt=""></p>
+
+<p>여기서 우리는 그룹을 새로 추가하기 위해서 -addGroupWithName: 을 가진 SFGroupService를 SFGroupEditorViewController에 추가해줘야한다. 하지만 같은 객체를 또한번 만들어주거나 새로운 뷰 컨트롤러에 파라미터로 넘기지 않고 에디터 뷰 컨트롤러 자체를 그냥 단순하게 데이터를 입력시키는 컨트롤러로만 사용하고 싶을 경우는 데이터 처리를 SFGroupsTableViewController에 넘겨서 처리할 수 있기도 하다. 그래서 우리는 이렇게 다른 뷰 컨트롤러에게 또는 다른 객체에게 메세지를 전송하기 위해서 NSNotificationCenter를 이용할 것이다. 우선 SFGroupsTableViewController에 Notification을 사용할 수 있도록 등록을 한다. 이때 Notification 메세지를 받게 되면 userInfo로 넘겨온 데이터 중에서 groupName 키의 값을 가지고 -addGroupWithName: 메소드를 실행하고 이 메소드가 실행하고 난 다음에 delegate로 위임하게 되는 delegate  메소드 -groupServiceDidAddGroup 메소드에서 저장후 다시 목록을 갱신시키기 위해서 -findAllGroups 메소드를 호출하게 한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+<span class="cp">#import &quot;SFGroupEditorViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupsTableViewController</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">items</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">receiveGroupEditorViewControllerNotification:</span><span class="p">(</span><span class="bp">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notification</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">SFGroupsTableViewController</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;주소록 그룹&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemAdd</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onAddButton</span><span class="p">:)];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+
+    <span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver</span><span class="p">:</span><span class="nb">self</span> <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">receiveGroupEditorViewControllerNotification</span><span class="p">:)</span> <span class="nl">name</span><span class="p">:</span><span class="s">@&quot;SFGroupEditorViewControllerNotification&quot;</span> <span class="nl">object</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+
+
+    <span class="p">[</span><span class="n">groupService</span> <span class="n">findAllGroups</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidUnload</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidUnload</span><span class="p">];</span>
+    <span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">removeObserver</span><span class="p">:</span><span class="nb">self</span> <span class="nl">name</span><span class="p">:</span><span class="s">@&quot;SFGroupEditorViewControllerNotification&quot;</span> <span class="nl">object</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - NSNotification handlers</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">receiveGroupEditorViewControllerNotification</span><span class="p">:(</span><span class="bp">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="n">notification</span>
+<span class="p">{</span>
+    <span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">userInfo</span> <span class="o">=</span> <span class="p">[</span><span class="n">notification</span> <span class="n">userInfo</span><span class="p">];</span>
+    <span class="bp">NSString</span> <span class="o">*</span><span class="n">groupName</span> <span class="o">=</span> <span class="p">[</span><span class="n">userInfo</span> <span class="nl">valueForKey</span><span class="p">:</span><span class="s">@&quot;groupName&quot;</span><span class="p">];</span>
+
+    <span class="p">[</span><span class="n">groupService</span> <span class="nl">addGroupWithName</span><span class="p">:</span><span class="n">groupName</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - IBAction henadler</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="n">SFGroupEditorViewController</span> <span class="o">*</span><span class="n">groupEditorViewController</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SFGroupEditorViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="bp">UINavigationController</span> <span class="o">*</span><span class="n">navigationController</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UINavigationController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRootViewController</span><span class="p">:</span><span class="n">groupEditorViewController</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">presentModalViewController</span><span class="p">:</span><span class="n">navigationController</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onEditButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - SFGroupService delegate methods</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFailWithError</span><span class="p">:(</span><span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;error: %@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFindGroups</span><span class="p">:(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">groups</span>
+<span class="p">{</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="nl">arrayWithArray</span><span class="p">:</span><span class="n">groups</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="n">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidAddGroup</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">groupService</span> <span class="n">findAllGroups</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="k">@end</span>
+</code></pre></div>
+<p>이렇게 NSNotificationCenter에 &quot;SFGroupEditorViewControllerNotification&quot;으로 등록을 했으면 SFGroupEditorViewController에서 새로운 이름을 입력하고 Done 버튼을 누르면 NSNotificationCenter로 post 하여 메소드를 전송시킨다. SFGroupEditorViewController.m 파일에 다음 코드를 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="cp">#pragma mark - IBAction handlers</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onDoneButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">userInfo</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSDictionary</span> <span class="nl">dictionaryWithObject</span><span class="p">:</span><span class="n">textField</span><span class="p">.</span><span class="n">text</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;groupName&quot;</span><span class="p">];</span>
+    <span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">postNotificationName</span><span class="p">:</span><span class="s">@&quot;SFGroupEditorViewControllerNotification&quot;</span> <span class="nl">object</span><span class="p">:</span><span class="nb">nil</span> <span class="nl">userInfo</span><span class="p">:</span><span class="n">userInfo</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">dismissModalViewControllerAnimated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>다시 빌드후 실행을 해보자. 새로운 그룹명을 입력하고 &quot;Done&quot; 버튼을 누르면 새로운 그룹이 추가된 목록을 확인할 수 있게 된다.</p>
+
+<p><img src="http://cfile27.uf.tistory.com/image/1107E94450288E15071F34" alt=""></p>
+
+<p><img src="http://cfile5.uf.tistory.com/image/1366BF4450288E1838E025" alt=""></p>
+
+<p>이제 우리는 새로 생성된 그룹을 삭제하는 것을 만들 것이다. 우리는 지금까지 delegate를 이용해서 데이터 처리를 하고 난 다음에 viewController에게 데이터를 가지고 뷰를 구성하는 것을 위임했다. 하지만 delete에서는 조금 다르게 뷰의 animation과 동기적으로 행동하기 위해서 delegate를 구현하는 것이 아니라 객체가 완전히 삭제될때까지 return을 기다렸다가 동작하는 Synchronize 형태의 메소드 진행을 할 것이다. 그래서 우리는 SFGroupService의 -deleteGroupWithGroupId: 메소드를 다음과 같이 수정을 한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupService.h</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+
+<span class="k">@protocol</span> <span class="nc">SFGroupServiceDelegate</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
+
+<span class="k">@required</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFailWithError</span><span class="p">:(</span><span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidFindGroups:</span><span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">groups</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidAddGroup</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidDeleteGroup</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">groupServiceDidUpdateGroup</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupService</span> : <span class="bp">NSObject</span>
+<span class="p">{</span>
+    <span class="kt">id</span><span class="o">&lt;</span><span class="n">SFGroupServiceDelegate</span><span class="o">&gt;</span><span class="n">delegate</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">strong</span><span class="p">)</span> <span class="kt">id</span><span class="o">&lt;</span><span class="n">SFGroupServiceDelegate</span><span class="o">&gt;</span><span class="n">delegate</span><span class="p">;</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">findAllGroups</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addGroupWithName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">deleteGroupWithGroupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">deleteGroupWithGroupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span> <span class="nf">withError:</span><span class="p">(</span><span class="bp">NSError</span> <span class="o">**</span><span class="p">)</span><span class="nv">error</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateGroupWithName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="nf">groupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div><div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">deleteGroupWithGroupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span> <span class="nf">withError:</span><span class="p">(</span><span class="bp">NSError</span> <span class="o">*</span><span class="k">__autoreleasing</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span>
+<span class="p">{</span>
+    <span class="kt">BOOL</span> <span class="n">success</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+
+    <span class="n">CFErrorRef</span> <span class="n">errorRef</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">ABAddressBookRef</span> <span class="n">addressBookRef</span> <span class="o">=</span> <span class="n">ABAddressBookCreate</span><span class="p">();</span>
+
+    <span class="n">ABRecordRef</span> <span class="n">savedGroupRef</span> <span class="o">=</span> <span class="n">ABAddressBookGetGroupWithRecordID</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">groupId</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">savedGroupRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ABAddressBookRemoveRecord</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">savedGroupRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+        <span class="n">ABAddressBookSave</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">errorRef</span><span class="p">);</span>
+
+        <span class="n">savedGroupRef</span> <span class="o">=</span> <span class="n">ABAddressBookGetGroupWithRecordID</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">,</span> <span class="n">groupId</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">errorRef</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="p">(</span><span class="k">__bridge</span> <span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">errorRef</span><span class="p">;</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">CFRelease</span><span class="p">(</span><span class="n">errorRef</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">addressBookRef</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">success</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">deleteGroupWithGroupId:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">groupId</span>
+<span class="p">{</span>
+
+    <span class="bp">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="nb">self</span> <span class="nl">deleteGroupWithGroupId</span><span class="p">:</span><span class="n">groupId</span> <span class="nl">withError</span><span class="p">:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">delegate</span> <span class="n">groupServiceDidDeleteGroup</span><span class="p">];</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>이제 이렇게 동기방식의 delete 메소드를 추가한 다음에는 SFGroupsViewController의 UITableView에서 삭제 로직을 추가해보자. -onEditButton: 메소드에 액션이 실행되면 상단의 버튼들이 사라지고 &quot;Cancel&quot; 버튼만 생기기 될 것이다. 그리고 UITableView는 editing 모드로 변환 될 것이다. 그리고 삭제 버턴을 누르면 groupService의 -deleteGroupWithGropuId:withError: 메소드기 실행되고 return으로 YES를 반환하면 items에 해당 데이터를 삭제하고 UITableView를 에니메이션 효과를 내며 해당 셀을 삭제하게 된다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+<span class="cp">#import &quot;SFGroupEditorViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupsTableViewController</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">items</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onCancelButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">receiveGroupEditorViewControllerNotification:</span><span class="p">(</span><span class="bp">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notification</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">SFGroupsTableViewController</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - IBAction henadler</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onAddButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="n">SFGroupEditorViewController</span> <span class="o">*</span><span class="n">groupEditorViewController</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SFGroupEditorViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="bp">UINavigationController</span> <span class="o">*</span><span class="n">navigationController</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UINavigationController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRootViewController</span><span class="p">:</span><span class="n">groupEditorViewController</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">presentModalViewController</span><span class="p">:</span><span class="n">navigationController</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onEditButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemCancel</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onCancelButton</span><span class="p">:)];</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">YES</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onCancelButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span>
+<span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemAdd</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onAddButton</span><span class="p">:)];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">NO</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+
+<span class="c1">// Override to support editing the table view.</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">commitEditingStyle</span><span class="p">:(</span><span class="n">UITableViewCellEditingStyle</span><span class="p">)</span><span class="n">editingStyle</span> <span class="nl">forRowAtIndexPath</span><span class="p">:(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">editingStyle</span> <span class="o">==</span> <span class="n">UITableViewCellEditingStyleDelete</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Delete the row from the data source</span>
+        <span class="bp">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">;</span>
+        <span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">groupInfo</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+        <span class="bp">NSInteger</span> <span class="n">groupId</span> <span class="o">=</span> <span class="p">[[</span><span class="n">groupInfo</span> <span class="nl">valueForKey</span><span class="p">:</span><span class="s">@&quot;groupId&quot;</span><span class="p">]</span> <span class="n">integerValue</span><span class="p">];</span>
+        <span class="kt">BOOL</span> <span class="n">success</span> <span class="o">=</span> <span class="p">[</span><span class="n">groupService</span> <span class="nl">deleteGroupWithGroupId</span><span class="p">:</span><span class="n">groupId</span> <span class="nl">withError</span><span class="p">:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">items</span> <span class="nl">removeObject</span><span class="p">:</span><span class="n">groupInfo</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">tableView</span> <span class="nl">deleteRowsAtIndexPaths</span><span class="p">:</span><span class="l">@[</span><span class="n">indexPath</span><span class="l">]</span> <span class="nl">withRowAnimation</span><span class="p">:</span><span class="n">UITableViewRowAnimationFade</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;error : %@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]);</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">editingStyle</span> <span class="o">==</span> <span class="n">UITableViewCellEditingStyleInsert</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+</code></pre></div>
+<p><img src="http://cfile25.uf.tistory.com/image/205A853E502896DB040B00" alt=""></p>
+
+<p>이제 마지막으로 그룹 이름을 변경해야하는데 우리는 그룹을 추가할 때 사용한 SFGroupEditorViewController를 다시 사용할 것이다. 그룹명을 수정하기 위해서는 groupId와 기존의 groupName이 필요하다. items는 groupId와 groupName을 가지고 있기 때문에 UITableView가 editing 모드일때 해당 cell을 선택하면 그룹편집창 (SFGroupEditorViewController)가 활성화되면서 기존의 내용을 가지고 편집할 수 있는 준비를 하면 된다. 그리고 수정후 &quot;Done&quot; 버튼을 누르면 NSNotificationCenter를 이용해서 메시지를 전송해서 처리하도록 한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupsTableViewController.m</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SFGroupsTableViewController.h&quot;</span>
+<span class="cp">#import &quot;SFGroupEditorViewController.h&quot;</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="k">@implementation</span> <span class="nc">SFGroupsTableViewController</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;주소록 그룹&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemAdd</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onAddButton</span><span class="p">:)];</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">leftBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+
+    <span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver</span><span class="p">:</span><span class="nb">self</span> <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">receiveGroupEditorViewControllerNotification</span><span class="p">:)</span> <span class="nl">name</span><span class="p">:</span><span class="s">@&quot;SFGroupEditorViewControllerNotification&quot;</span> <span class="nl">object</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">tableView</span><span class="p">.</span><span class="n">allowsSelectionDuringEditing</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+
+    <span class="p">[</span><span class="n">groupService</span> <span class="n">findAllGroups</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - NSNotification handlers</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">receiveGroupEditorViewControllerNotification</span><span class="p">:(</span><span class="bp">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="n">notification</span>
+<span class="p">{</span>
+    <span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">userInfo</span> <span class="o">=</span> <span class="p">[</span><span class="n">notification</span> <span class="n">userInfo</span><span class="p">];</span>
+    <span class="bp">NSString</span> <span class="o">*</span><span class="n">groupName</span> <span class="o">=</span> <span class="p">[</span><span class="n">userInfo</span> <span class="nl">valueForKey</span><span class="p">:</span><span class="s">@&quot;name&quot;</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">([[</span><span class="n">userInfo</span> <span class="nl">valueForKey</span><span class="p">:</span><span class="s">@&quot;editMode&quot;</span><span class="p">]</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;add&quot;</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">groupService</span> <span class="nl">addGroupWithName</span><span class="p">:</span><span class="n">groupName</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="bp">NSInteger</span> <span class="n">groupId</span> <span class="o">=</span> <span class="p">[[</span><span class="n">userInfo</span> <span class="nl">valueForKey</span><span class="p">:</span><span class="s">@&quot;groupId&quot;</span><span class="p">]</span> <span class="n">integerValue</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">groupService</span> <span class="nl">updateGroupWithName</span><span class="p">:</span><span class="n">groupName</span> <span class="nl">groupId</span><span class="p">:</span><span class="n">groupId</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - SFGroupService delegate methods</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFailWithError</span><span class="p">:(</span><span class="bp">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;error: %@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">groupServiceDidFindGroups</span><span class="p">:(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">groups</span>
+<span class="p">{</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="nl">arrayWithArray</span><span class="p">:</span><span class="n">groups</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="n">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidAddGroup</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">groupService</span> <span class="n">findAllGroups</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidDeleteGroup</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">groupServiceDidUpdateGroup</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">groupService</span> <span class="n">findAllGroups</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - Table view data source</span>
+
+<span class="p">...</span> <span class="err">생략</span> <span class="p">...</span>
+
+<span class="cp">#pragma mark - Table view delegate</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">didSelectRowAtIndexPath</span><span class="p">:(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span>
+<span class="p">{</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">tableView</span><span class="p">.</span><span class="n">editing</span><span class="p">)</span> <span class="p">{</span>
+        <span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">groupInfo</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+
+        <span class="n">SFGroupEditorViewController</span> <span class="o">*</span><span class="n">groupEditorViewController</span> <span class="o">=</span> <span class="p">[[</span><span class="n">SFGroupEditorViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithGroupInfo</span><span class="p">:</span><span class="n">groupInfo</span><span class="p">];</span>
+        <span class="bp">UINavigationController</span> <span class="o">*</span><span class="n">navigationController</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UINavigationController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRootViewController</span><span class="p">:</span><span class="n">groupEditorViewController</span><span class="p">];</span>
+        <span class="p">[</span><span class="nb">self</span> <span class="nl">presentModalViewController</span><span class="p">:</span><span class="n">navigationController</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div>
+<p>다음은 SFGroupEditorViewController에서 그룹 수정일때와 새로운 그룹 추가할때의 설정을 위해 다음 코드를 추가한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SFGroupEditorViewController.h</span>
+<span class="c1">//  SFAddressbookTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by saltfactory on 8/13/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory.net. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+
+<span class="k">@interface</span> <span class="nc">SFGroupEditorViewController</span> : <span class="bp">UITableViewController</span>
+<span class="p">{</span>
+    <span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">groupInfo</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithGroupInfo:</span><span class="p">(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">aGroupInfo</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div>
+<p>이제 빌드하고 실행을 시켜서 &quot;Edit&quot; 버튼을 선택하고 UITableView가 editing 모드일때 Cell을 선택하면 해당 그룹명을 수정할 수 있도록 SFGroupEditorViewController가 열리게 된다 그리고 수그룹 이름을 수정하고 &quot;Done&quot; 버튼을 누르면 해당 그룹명이 업데이트 되어지고 업데이트 후에 호출되는 -groupServiceDidUpdateGroup에서 -findAllGroups를 다시 호출해서 변경된 그룹명이 목록에 나타나게 된다.</p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/15012F3450289D9812E832" alt=""></p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/146E1C3450289D992A8EB6" alt=""></p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/207F903450289D9913B7AB" alt="">]</p>
+
+<h2 id="소스">소스</h2>
+
+<p><a href="https://github.com/saltfactory/Saltfactory_iOS_Tutorial/tree/t6-addressbook-group">https://github.com/saltfactory/Saltfactory_iOS_Tutorial/tree/t6-addressbook-group</a></p>
+
+<h2 id="참고">참고</h2>
+
+<ol>
+<li><a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UITableVi">http://developer.apple.com/library/ios/#documentation/uikit/reference/UITableVi</a></li>
+</ol>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>
