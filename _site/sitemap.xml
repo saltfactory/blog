@@ -321,6 +321,10 @@
     <lastmod>2012-08-17T00:00:00+09:00</lastmod>
   </url>
   <url>
+    <loc>/chrome/chrome-temporary-file-location-in-macosx.html</loc>
+    <lastmod>2012-08-16T00:00:00+09:00</lastmod>
+  </url>
+  <url>
     <loc>/linux/change-prompt-in-terminal.html</loc>
     <lastmod>2012-02-03T00:00:00+09:00</lastmod>
   </url>
@@ -413,6 +417,9 @@
   </url>
   <url>
     <loc>/99/</loc>
+  </url>
+  <url>
+    <loc>/172/</loc>
   </url>
   <url>
     <loc>/173/</loc>
