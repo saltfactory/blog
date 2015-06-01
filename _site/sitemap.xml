@@ -365,8 +365,80 @@
     <lastmod>2012-06-26T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/using-wac-geolocation-in-appspresso.html</loc>
+    <loc>/ios/using-wac-geolocation-in-appspresso.html</loc>
     <lastmod>2012-06-14T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-sencha-mvc-in-appspresso.html</loc>
+    <lastmod>2012-06-12T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-sencha-model-in-appspresso.html</loc>
+    <lastmod>2012-06-07T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-daum-map-api-sencha-in-appspresso.html</loc>
+    <lastmod>2012-06-05T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-sencha-view-navigation-in-appspresso.html</loc>
+    <lastmod>2012-05-22T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/build-to-device-in-appspress.html</loc>
+    <lastmod>2012-05-20T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/resize-heap-size-in-appspresso.html</loc>
+    <lastmod>2012-05-19T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-sencha-view-in-appspresso.html</loc>
+    <lastmod>2012-05-14T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-wac-addressbook-contact-in-appspresso.html</loc>
+    <lastmod>2012-05-10T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-wac-devicestatus-in-appspresso.html</loc>
+    <lastmod>2012-05-09T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-wac-deviceapi-in-appspresso.html</loc>
+    <lastmod>2012-05-09T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/implementing-android-c2dm-in-appspresso.html</loc>
+    <lastmod>2012-05-07T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/implementing-ios-push-notification-in-appspresso.html</loc>
+    <lastmod>2012-05-04T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/localization-in-appspresso.html</loc>
+    <lastmod>2012-05-02T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/building-using-with-xcode-select-in-appspresso.html</loc>
+    <lastmod>2012-05-02T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-pdk-in-appspresso.html</loc>
+    <lastmod>2012-04-30T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/using-appspresso-debug-extension.html</loc>
+    <lastmod>2012-04-30T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/request-remote-data-in-appspresso.html</loc>
+    <lastmod>2012-04-30T00:00:00+09:00</lastmod>
+  </url>
+  <url>
+    <loc>/appspresso/on-the-fly-in-appspresso.html</loc>
+    <lastmod>2012-04-27T00:00:00+09:00</lastmod>
   </url>
   <url>
     <loc>/appspresso/build-in-appspresso.html</loc>
@@ -468,6 +540,63 @@
   </url>
   <url>
     <loc>/125/</loc>
+  </url>
+  <url>
+    <loc>/126/</loc>
+  </url>
+  <url>
+    <loc>/127/</loc>
+  </url>
+  <url>
+    <loc>/128/</loc>
+  </url>
+  <url>
+    <loc>/129/</loc>
+  </url>
+  <url>
+    <loc>/132/</loc>
+  </url>
+  <url>
+    <loc>/133/</loc>
+  </url>
+  <url>
+    <loc>/134/</loc>
+  </url>
+  <url>
+    <loc>/135/</loc>
+  </url>
+  <url>
+    <loc>/136/</loc>
+  </url>
+  <url>
+    <loc>/137/</loc>
+  </url>
+  <url>
+    <loc>/138/</loc>
+  </url>
+  <url>
+    <loc>/141/</loc>
+  </url>
+  <url>
+    <loc>/146/</loc>
+  </url>
+  <url>
+    <loc>/127/</loc>
+  </url>
+  <url>
+    <loc>/147/</loc>
+  </url>
+  <url>
+    <loc>/155/</loc>
+  </url>
+  <url>
+    <loc>/156/</loc>
+  </url>
+  <url>
+    <loc>/158/</loc>
+  </url>
+  <url>
+    <loc>/160/</loc>
   </url>
   <url>
     <loc>/161/</loc>
