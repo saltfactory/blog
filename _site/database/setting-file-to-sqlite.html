@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>리눅스 터미널 프롬프트 정보와 색상 변경하기</title>
+    <title>SQLite 디폴트 환경설정 저장하여 사용하기</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
-    <link rel="canonical" href="/series/linux/change-prompt-in-terminal.html">
+    <link rel="canonical" href="/series/database/setting-file-to-sqlite.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/series/assets/css/main.css">
@@ -305,145 +305,92 @@
       <div class="post">
 
   <header class="post-header">
-    <h1>리눅스 터미널 프롬프트 정보와 색상 변경하기</h1>
-    <p class="meta">Feb 3, 2012</p>
+    <h1>SQLite 디폴트 환경설정 저장하여 사용하기</h1>
+    <p class="meta">Jul 3, 2012</p>
   </header>
 
   <article class="post-content">
   <h2 id="서론">서론</h2>
 
-<p>유닉스기반 운영체제를 사용한다면 터미널(terminal)을 가장 많이 사용할 것이다. 이번 포스트에서는 터미널의 정보와 색상 정보를 어떻게 변경하여 사용하는지에 대해서 소개한다.</p>
+<p>SQLite는 임베디드 시스템에서 상요하던 데이터베이스였는데 최근 스마트폰과 데스크탑의 브라우저 벤더들이 사용하면서 SQLite는 Oracle, SQLServer, MySQL과 더불어 가장많이 사용하고 알려진 DBMS가 되었다. 그런데 SQLite를 사용하다보면 궁금한 점이 생긴다. Oracle, SQL Server, MySQL들은 모두 화려하고 사용하기 좋은 GUI (상용, 무료 포함)가 있는 반면에 SQLite의 GUI는 그렇게 사용하기 좋은 툴이 없다는 것이다. 물론 Firefox의 plugins으로 사용할 수 있고, 오픈소스로된 약간 퀄리티가 낮은 GUI가 존재하긴 하지만 뭔가 아쉬움이 남는다. 그래서 스마트폰 개발을 할 때 대부분 터미널에서 sqlite3 명령어를 가지고 조회하고 데이터베이스 작업을 한다.</p>
 
-<!--more-->
+<h2 id="데이터-파일-생성">데이터 파일 생성</h2>
 
-<h2 id="prompt-기본-표현">Prompt 기본 표현</h2>
-
-<p>터미널을 사용할때 프롬프트(Prompt)는 많은 정보를 포함할 수 있다. bash shell 에서 프롬프트는 <code>$PS1</code>이라는 shell 변수에 들어있다. 다음은 Mac의 터미널을 열면 기본적으로 나타나는 프롬프트이다. <code>$PS1</code>에 어떤 정보가 저장되어 있는지 확인하기 위해서 <code>$PS1</code> 변수를 echo 하면 다음과 같이 나타난다.</p>
-
-<p><img src="http://cfile27.uf.tistory.com/image/116BE7424F2A9A1D2DEFFE" alt=""></p>
-
-<ul>
-<li><code>\h</code> 는 현재의 호스트의 이름(hostname)을 나타내는 것이다.</li>
-<li><code>\W</code> 는 현재의 위치의 디렉토리(Working Directory)를 나타내는 것이다.</li>
-<li><code>\u</code> 는 현재의 로그인된 사용자 (user name)을 나타내는 것이다</li>
-</ul>
-
-<p>Mac에서 디퐅트 프롬프트는 다음 코드 들이 저장되어 있다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">\h:\W \u\$
+<p>SQLite를 이용해서 테이블을 만들고 조회를 한다고 가정해보자.
+우선 sqlite3를 이용해서 sqlite 데이터 파일을 작성할 준비를 하자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sqlite3 sample.sqlite
 </code></pre></div>
-<p>이 코드는은 다음과 같은 뜻을 나타내고 있는 것이다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">{호스트이름}:{현재 디렉토리} {로그인된 사용자}$
+<p><img src="http://cfile10.uf.tistory.com/image/182C15344FF267910FA9F2" alt=""></p>
+
+<p>sample.sqlite 데이터베이스가 열어진 상태에서 테스트를 하기 위한 테이블을 만들어보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">CREATE TABLE users ( id INTEGER, name TEXT);
 </code></pre></div>
-<p><img src="http://cfile4.uf.tistory.com/image/2029A2464F2A9C0C1B8F05" alt=""></p>
-
-<p>만약 프롬프트에 현재의 시간을 나타내고 싶으면 <code>\t</code> 를 사용하면 된다. 다음 예는 <code>({현재시간}) {로그인된 사용자}$</code> 를 나타내려고 할때이다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">export PS1=&quot;(\t) \u$ &quot;
+<p>그리고 테스트를 위한 데이터를 입력해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">INSERT INTO users VALUES (1, &#39;saltfactory&#39;);
+INSERT INTO users VALUES (2, &#39;lightfactory&#39;);
 </code></pre></div>
-<p><img src="http://cfile9.uf.tistory.com/image/160480444F2A9E481C1AE4" alt=""></p>
+<p><img src="http://cfile23.uf.tistory.com/image/175C0D3A4FF26E3E2E6FE5" alt=""></p>
 
-<h2 id="prompt-코드-정보">Prompt 코드 정보</h2>
-
-<p>프롬프트에 들어갈 수 있는 코드는 다음과 같다.</p>
-
-<ul>
-<li>\a : an ASCII bell character (07)</li>
-<li>\d : the date in &quot;Weekday Month Date&quot; format (e.g., &quot;Tue May 26&quot;)</li>
-<li>\D{format} :  the format is passed to strftime(3) and the result is inserted into the prompt string; an empty format results in a locale-specific time representation. The braces are required</li>
-<li><code>\e</code> : an ASCII escape character (033)</li>
-<li><code>\h</code> : the hostname up to the first &#39;.&#39;</li>
-<li><code>\H</code> : the hostname</li>
-<li><code>\j</code> : the number of jobs currently managed by the shell</li>
-<li><code>\l</code> : the basename of the shell’s terminal device name</li>
-<li><code>\n</code> : newline</li>
-<li><code>\r</code> : carriage return</li>
-<li><code>\s</code> : the name of the shell, the basename of $0 (the portion following the final slash)</li>
-<li><code>\t</code> : the current time in 24-hour HH:MM:SS format</li>
-<li><code>\T</code> : the current time in 12-hour HH:MM:SS format</li>
-<li><code>\@</code> : the current time in 12-hour am/pm format</li>
-<li><code>\A</code> : the current time in 24-hour HH:MM format</li>
-<li><code>\u</code> : the username of the current user</li>
-<li><code>\v</code> : the version of bash (e.g., 2.00)</li>
-<li><code>\V</code> : the release of bash, version + patch level (e.g., 2.00.0)</li>
-<li><code>\w</code> : the current working directory, with $HOME abbreviated with a tilde</li>
-<li><code>\W</code> : the basename of the current working directory, with $HOME abbreviated with a tilde</li>
-<li><code>\!</code> : the history number of this command</li>
-<li><code>\#</code> : the command number of this command</li>
-<li><code>\$</code> : if the effective UID is 0, a #, otherwise a $</li>
-<li><code>\nnn</code> : the character corresponding to the octal number nnn</li>
-<li><code>\\</code> : a backslash</li>
-<li><code>\[</code> : begin a sequence of non-printing characters, which could be used to embed a terminal control sequence into the prompt</li>
-<li><code>\]</code> : end a sequence of non-printing characters</li>
-</ul>
-
-<p>위의 코드와 문자열, 숫자, 특수 기호를 조합하여 자신에 맞는 프로프트를 만들어 낼 수 있다. 터미널에서 작업을 하다보면 프롬프트와 command(명령어) 하나의 문자인 것 처럼 보여서 구분이 되지 않을 때가 있을 수도 있다. 그래서 호스트 이름과 디렉토리 이름 그리고 현재 로그인된 사용자의 이름을 구분되어지면 좋겠다고 생각할 것이다. 이 때, 위의 코드 처럼 색상을 지정하는 코드도 존재한다.</p>
-
-<h2 id="prompt-색상-정보">Prompt 색상 정보</h2>
-
-<ul>
-<li><code>0;30</code> : Black</li>
-<li><code>0;34</code> : Blue</li>
-<li><code>0;32</code> : Green</li>
-<li><code>0;36</code> : Cyan</li>
-<li><code>0;31</code> : Red</li>
-<li><code>0;35</code> : Purple</li>
-<li><code>0;33</code> : Brown</li>
-<li><code>0;34</code> : Blue</li>
-<li><code>0;32</code> : Green</li>
-<li><code>0;36</code> : Cyan</li>
-<li><code>0;31</code> : Red</li>
-<li><code>0;35</code> : Purple</li>
-<li><code>0;33</code> : Brown</li>
-<li><code>\e[</code> : Start color scheme</li>
-<li><code>x;y</code> : Color pair to use (x;y)</li>
-<li><code>$PS1</code> : is your shell prompt</li>
-<li><code>\e[m</code> : Stop color scheme</li>
-</ul>
-
-<p>만약 프롬프트를 모두 빨간 색으로 하고 싶으면 다음과 같이 하면 된다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">export PS1=&quot;\e[0;31m[\u@\h \W]\$ \e[m &quot;
+<p>데이터를 입력했으니 조회를 해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">SELECT * FROM users;
 </code></pre></div>
-<p><img src="http://cfile10.uf.tistory.com/image/1120A8354F2AA1F30CAFD8" alt=""></p>
+<p>Oracle이나 MySQL을 사용하던 사용자라면 SQLite의 SELECT 결과를 보고 실망을 했을지 모른다. SQLite의 SELECT 모드가 디폴트는 line mode에다가 header off가 기본적으로 되어 있기 때문이다.</p>
 
-<p>색상 정보를 이렇게 복잡한 식으로 넣었서 사용한다면 작성하기도 어렵고 혼란스럽게 된다. 그래서 다음과 같이 색상코드만 따로 변수에 만들어서 사용한다. 다음 코드를 <code>~/.bashrc</code> 나 <code>~/.profile</code>에 저장한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># define colors
-C_DEFAULT=&quot;\[\033[m\]&quot;
-C_WHITE=&quot;\[\033[1m\]&quot;
-C_BLACK=&quot;\[\033[30m\]&quot;
-C_RED=&quot;\[\033[31m\]&quot;
-C_GREEN=&quot;\[\033[32m\]&quot;
-C_YELLOW=&quot;\[\033[33m\]&quot;
-C_BLUE=&quot;\[\033[34m\]&quot;
-C_PURPLE=&quot;\[\033[35m\]&quot;
-C_CYAN=&quot;\[\033[36m\]&quot;
-C_LIGHTGRAY=&quot;\[\033[37m\]&quot;
-C_DARKGRAY=&quot;\[\033[1;30m\]&quot;
-C_LIGHTRED=&quot;\[\033[1;31m\]&quot;
-C_LIGHTGREEN=&quot;\[\033[1;32m\]&quot;
-C_LIGHTYELLOW=&quot;\[\033[1;33m\]&quot;
-C_LIGHTBLUE=&quot;\[\033[1;34m\]&quot;
-C_LIGHTPURPLE=&quot;\[\033[1;35m\]&quot;
-C_LIGHTCYAN=&quot;\[\033[1;36m\]&quot;
-C_BG_BLACK=&quot;\[\033[40m\]&quot;
-C_BG_RED=&quot;\[\033[41m\]&quot;
-C_BG_GREEN=&quot;\[\033[42m\]&quot;
-C_BG_YELLOW=&quot;\[\033[43m\]&quot;
-C_BG_BLUE=&quot;\[\033[44m\]&quot;
-C_BG_PURPLE=&quot;\[\033[45m\]&quot;
-C_BG_CYAN=&quot;\[\033[46m\]&quot;
-C_BG_LIGHTGRAY=&quot;\[\033[47m\]&quot;
-</code></pre></div>
-<p>호스트이름과 디렉토리 정보를 각각 다른 색상으로 나타내고 싶으면 다음과 같이 한다.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">export PS1=&quot;$C_CYAN\h:$C_YELLOW\W \$$C_DEFAULT &quot;
-</code></pre></div>
-<p><img src="http://cfile25.uf.tistory.com/image/161443504F2AA4F11DCB59" alt="">
-이제 호스트이름 디렉토리 그리고 명려어의 색상을 모두 자신이 원하는대로 변경할 수 있게 되었다.</p>
+<p><img src="http://cfile27.uf.tistory.com/image/1935AD454FF26EC316921F" alt=""></p>
 
-<h2 id="참조">참조</h2>
+<h2 id=".mode-colue">.mode colue</h2>
+
+<p>우리는 Oracle과 MySQL과 같은 출력포멧을 원하기 때문에 column mode로 변경해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">.mode column
+</code></pre></div>
+<p>column mode로 변경한 다음에 다시 SELECT를 실행하면 다음과 같이 라인으로 출력되었던 튜플들이 column 형태로 출력되는 것을 확인할 수 있다.</p>
+
+<p><img src="http://cfile9.uf.tistory.com/image/1325103D4FF26F302DA165" alt=""></p>
+
+<h2 id=".header-on">.header on</h2>
+
+<p>형태는 컬럼 형태로 출력되지만 attribute가 어떤 컬럼에 해당되는지 알기 힘들기 때문에 header on을 하여 컬럼이름을 출력하도록 해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">.header on
+</code></pre></div>
+<p><img src="http://cfile5.uf.tistory.com/image/181BBD424FF26FCB010058" alt=""></p>
+
+<h2 id=".width">.width</h2>
+
+<p>이제 우리가 출력하기 원했던 모양대로 출력되는 것을 확인할 수 있다. 그런데 자세히 살펴보면 입력했던 값이 제대로 출력되지 않고 있다는 것을 확인할 수 있다. lightfactory 라고 입력했던 2번째 튜플의 name 값을 보면 lightfactor 라고 y가 잘려서 출력된 것이 확인된다. 우리는 이제 column의 사이즈를 .width 라는 명령어로 조절할 것이다. 컬럼의 순서대로 사이즈를 지정하면 된다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">.width 10, 20
+</code></pre></div>
+<p><img src="http://cfile6.uf.tistory.com/image/137EAF434FF270EB2F066F" alt=""></p>
+
+<h2 id=".quit">.quit</h2>
+
+<p>이제 우리가 생각했던 형태로 완벽하게 출력이 되었다. 이제 sqlite 를 나가서 다시 들어오도록 해보자.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">.quit
+</code></pre></div>
+<p>그리고 다시 SELECT를 실행하면 위의 설정들이 모두 무시되고 SQLite에 설정한 기본 설정으로 출력이 되는 것을 확인할 수 있다.</p>
+
+<p><img src="http://cfile27.uf.tistory.com/image/17179D474FF27179154A4D" alt=""></p>
+
+<h2 id=".sqliterc">.sqliterc</h2>
+
+<p>터미널에서 SQLite에 접속할 때마다 이렇게 수동으로 설정한다면 매우 불편할 것이다.</p>
+
+<p>그래서 SQLite의 설정을 미리 파일에 저장하고 SQLite에 접속할 때 그 파일의 정보를 읽어와서 환경설정을 적용하게 해보자.
+홈디렉토리 밑에 .sqliterc 파일을 만들고 환경설정 정보를 입력한다.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">vi ~/.sqliterc
+</code></pre></div>
+<p><img src="http://cfile8.uf.tistory.com/image/185CEF3E4FF2723835D576" alt=""></p>
+
+<p>설정 정보를 저장한 뒤 SQLite에 다시 접속해서 SELECT 명령어를 실행해보자.</p>
+
+<p><img src="http://cfile24.uf.tistory.com/image/1634C3454FF272742A65FB" alt=""></p>
+
+<p>이제부터는 SQLite를 사용할 때는 라인모드가 아닌 컬럼모드로 컬럼헤더를 확인하면서 사용할 수 있게 되었다.</p>
+
+<h2 id="참고">참고</h2>
 
 <ol>
-<li><a href="http://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/">http://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/</a></li>
-<li><a href="http://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html">http://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html</a></li>
-<li><a href="http://apple.stackexchange.com/questions/9821/can-i-make-my-mac-os-x-terminal-color-items-according-to-syntax-like-the-ubuntu">http://apple.stackexchange.com/questions/9821/can-i-make-my-mac-os-x-terminal-color-items-according-to-syntax-like-the-ubuntu</a></li>
+<li><a href="http://www.sqlite.org/sqlite.html">http://www.sqlite.org/sqlite.html</a></li>
+<li><a href="http://stackoverflow.com/questions/5240643/change-sqlite-default-settings">http://stackoverflow.com/questions/5240643/change-sqlite-default-settings</a></li>
 </ol>
 
 <h2 id="연구원-소개">연구원 소개</h2>

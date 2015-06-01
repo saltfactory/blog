@@ -357,6 +357,10 @@
     <lastmod>2012-07-05T00:00:00+09:00</lastmod>
   </url>
   <url>
+    <loc>/database/setting-file-to-sqlite.html</loc>
+    <lastmod>2012-07-03T00:00:00+09:00</lastmod>
+  </url>
+  <url>
     <loc>/linux/change-prompt-in-terminal.html</loc>
     <lastmod>2012-02-03T00:00:00+09:00</lastmod>
   </url>
@@ -449,6 +453,9 @@
   </url>
   <url>
     <loc>/99/</loc>
+  </url>
+  <url>
+    <loc>/162/</loc>
   </url>
   <url>
     <loc>/163/</loc>
