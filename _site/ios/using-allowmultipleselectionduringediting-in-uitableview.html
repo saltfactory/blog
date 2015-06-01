@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UITableView에서 allowMultipleSelectionDuringEditing을 사용하여 여러개의 행 처리하기</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="/series/ios/using-allowmultipleselectionduringediting-in-uitableview.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/series/assets/css/main.css">
+    <!-- <link rel='stylesheet' type='text/css' href='/assets/css/main.css' /> -->
+
+    
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/series/">saltfactory's series</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/">saltfactory.net</a>
+        <a class="page-link" href="/guestbook">Guestbook</a>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>UITableView에서 allowMultipleSelectionDuringEditing을 사용하여 여러개의 행 처리하기</h1>
+    <p class="meta">Jun 26, 2012</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="서론">서론</h2>
+
+<p>iPhone의 기본 메일 앱을 사용하면 여러개의 메일을 한번에 삭제, 이동, 복사 하기 위해서 편집 버튼을 누르면 여러개의 항목을 선택할 수 있는 UITableViewCell이 나타나게 된다. iOS 5 하위 버전 SDK에서는 UITableView에 이러한 인터페이스를 제공하지 않아서 이와 같이 여러개의 행을 선택하기 위해서 프로그래밍으로 해야했지만 iOS 5에서는 다음과 같은 여러개의 행을 선택할 수 있는 API를 제공한다. UITableView의 allowsMultipleSelectionDuringEditing 라는 속성을 이용하면 된다.</p>
+
+<p><img src="http://cfile5.uf.tistory.com/image/154A64414FE8F8D40E8F4F" alt=""></p>
+
+<p>테스트를 하기 위해서 간단히 UITableView를 이용한 프로젝트를 만들자.</p>
+
+<p>Xcode 에서 New Project를 선택하여 새로운 프로젝트를 만든다.</p>
+
+<p><img src="http://cfile24.uf.tistory.com/image/202CE8344FE8FA5E316F0C" alt=""></p>
+
+<p><img src="http://cfile30.uf.tistory.com/image/1970C7354FE8FAA0265C3D" alt=""></p>
+
+<p>새로만든 프로젝트에서 New File을 선택하고 Objective-C class를 선택하여 SampleTableViewController라는 UITableViewController를 상속받아서 뷰 컨트롤러를 하나 추가한다.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/156CB3394FE8FB0922714F" alt=""></p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/193177364FE8FB2B266B59" alt=""></p>
+
+<p>프로젝트가 만들어지고 테이블뷰 컨트롤러를 만들고 난 다음에는 이 앱이 실행될때 SampleTableViewController가 보이도록 설정하자.
+AppDelegate.m 파일을 열어서 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 을 메소드 안에 다음과 같이 수정한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  AppDelegate.m</span>
+<span class="c1">//  SaltfactoryiOSTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by Song SungKwang on 6/26/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory@me.com. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;AppDelegate.h&quot;</span>
+<span class="cp">#import &quot;SampleTableViewController.h&quot;</span>
+<span class="k">@implementation</span> <span class="nc">AppDelegate</span>
+
+<span class="k">@synthesize</span> <span class="n">window</span> <span class="o">=</span> <span class="n">_window</span><span class="p">;</span>
+<span class="k">@synthesize</span> <span class="n">managedObjectContext</span> <span class="o">=</span> <span class="n">__managedObjectContext</span><span class="p">;</span>
+<span class="k">@synthesize</span> <span class="n">managedObjectModel</span> <span class="o">=</span> <span class="n">__managedObjectModel</span><span class="p">;</span>
+<span class="k">@synthesize</span> <span class="n">persistentStoreCoordinator</span> <span class="o">=</span> <span class="n">__persistentStoreCoordinator</span><span class="p">;</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="bp">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+<span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame</span><span class="p">:[[</span><span class="bp">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">]];</span>
+    <span class="c1">// Override point for customization after application launch.</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIColor</span> <span class="n">whiteColor</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UINavigationController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRootViewController</span><span class="p">:[[</span><span class="n">SampleTableViewController</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithNibName</span><span class="p">:</span><span class="s">@&quot;SampleTableViewController&quot;</span> <span class="nl">bundle</span><span class="p">:</span><span class="nb">nil</span><span class="p">]];</span>
+
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>빌드해서 실행하면 다음과 같이 비어 있는 UITableView를 가진 SampleTableViewController가 열리는 것을 확인할 수 있다.</p>
+
+<p><img src="http://cfile21.uf.tistory.com/image/184DEF414FE8FD0F1A2A2A" alt=""></p>
+
+<p>우리는 비어있는 UITableView에 테스트하기 위한 dataSource를 만들것이다.
+SampleTableViewController.h 를 열어서 다음과 같이 테이블뷰에서 사용할 배열을 만든다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SampleTableViewController.h</span>
+<span class="c1">//  SaltfactoryiOSTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by Song SungKwang on 6/26/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory@me.com. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+
+<span class="k">@interface</span> <span class="nc">SampleTableViewController</span> : <span class="bp">UITableViewController</span>
+<span class="p">{</span>
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">items</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div>
+<p>그리고 SampleTableViewController.m 을 열어서 뷰가 로드될때 호출되는 - (void)viewDidLoad 메소드를 수정한다. 우선 SampleTableViewController의 타이틀을 지정하고, 오른쪽 상단에 편집할 수 있는 UIBarButtonItem을 추가한다. 그리고 그 편집 버튼이 눌러질 때 동작할 수 있는 IBAction을 추가하여 이벤트를 등록한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SampleTableViewController.m</span>
+<span class="c1">//  SaltfactoryiOSTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by Song SungKwang on 6/26/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory@me.com. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SampleTableViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SampleTableViewController</span> <span class="p">()</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onEditButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">SampleTableViewController</span>
+
+
+<span class="cp">#pragma mark - IBAction methods</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="c1">//on edit button codes</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithStyle:</span><span class="p">(</span><span class="n">UITableViewStyle</span><span class="p">)</span><span class="nv">style</span>
+<span class="p">{</span>
+    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">style</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom initialization</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="c1">// Uncomment the following line to preserve selection between presentations.</span>
+    <span class="c1">// self.clearsSelectionOnViewWillAppear = NO;</span>
+
+    <span class="c1">// Uncomment the following line to display an Edit button in the navigation bar for this view controller.</span>
+    <span class="c1">// self.navigationItem.rightBarButtonItem = self.editButtonItem;</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;여러개의 행 수정 예제&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>다시 빌드해서 실행하면 아래와 같이 &quot;여러개의 행 수정 예제&quot;라는 타이틀과 오른쪽에 Edit(편집)이라는 버튼이 추가된 것을 확인할 수 있다.</p>
+
+<p><img src="http://cfile9.uf.tistory.com/image/185493424FE8FEA7378AA5" alt=""></p>
+
+<p>우리는 헤더파일에서 UITableView에서 사용할 dataSource를 items라고 추가 했었다. - (void)viewDidLoad 메소드 안에 dataSource를 설정하는 코드를 추가해보자.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="c1">// Uncomment the following line to preserve selection between presentations.</span>
+    <span class="c1">// self.clearsSelectionOnViewWillAppear = NO;</span>
+
+    <span class="c1">// Uncomment the following line to display an Edit button in the navigation bar for this view controller.</span>
+    <span class="c1">// self.navigationItem.rightBarButtonItem = self.editButtonItem;</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;여러개의 행 수정 예제&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="nl">arrayWithObjects</span><span class="p">:</span><span class="s">@&quot;saltfactory@gmail.com&quot;</span><span class="p">,</span> <span class="s">@&quot;saltfactory@me.com&quot;</span><span class="p">,</span> <span class="s">@&quot;sksong@hibrain.net&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>그리고 뷰가 로드될 때 UITableView를 구성하기 위해서 작업하는 UITableView의 delegate method를 수정한다.
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 메소드는 UITableView의 section의 갯수를 반환하는 delegate method 이다. 우리는 단순하게 하나의 section만 필요하기 때문에 1로 고정했다. - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 메소드는 section 안에 해당되는 row의 갯수를 반환하는 delegate method 이다. 우리는 items의 내용을 출력할 것이기 때문에 items 의 갯수를 반환한다.- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 는 UITableView에서 indexPath(section별 row)에 해당되는 UITableViewCell을 반환하는 delegate method 인데 여기서 UITableViewCell을 구성한다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="cp">#pragma mark - Table view data source</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nf">numberOfSectionsInTableView:</span><span class="p">(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span>
+<span class="p">{</span>
+<span class="c1">//#warning Potentially incomplete method implementation.</span>
+    <span class="c1">// Return the number of sections.</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">numberOfRowsInSection:</span><span class="p">(</span><span class="bp">NSInteger</span><span class="p">)</span><span class="nv">section</span>
+<span class="p">{</span>
+<span class="c1">//#warning Incomplete method implementation.</span>
+    <span class="c1">// Return the number of rows in the section.</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="bp">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">tableView:</span><span class="p">(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">cellForRowAtIndexPath:</span><span class="p">(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="bp">NSString</span> <span class="o">*</span><span class="n">CellIdentifier</span> <span class="o">=</span> <span class="s">@&quot;Cell&quot;</span><span class="p">;</span>
+    <span class="bp">UITableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+
+    <span class="c1">// Configure the cell...</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cell</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UITableViewCell</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithStyle</span><span class="p">:</span><span class="n">UITableViewCellStyleDefault</span> <span class="nl">reuseIdentifier</span><span class="p">:</span><span class="n">CellIdentifier</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">cell</span><span class="p">.</span><span class="n">textLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="allowsmultipleselectionduringediting">allowsMultipleSelectionDuringEditing</h2>
+
+<p>이제 빌드하고 다시 실행해보자.</p>
+
+<p><img src="http://cfile7.uf.tistory.com/image/185D2B3D4FE901060B478F" alt=""></p>
+
+<p>우리가 원하는대로 items의 dataSource를 이용해서 UITableView에 items에 저장된 데이터들이 출력될 수 있게 되었다. 우리는 이제 이 UITableView를 수정할 것이다. Edit(편집)버튼을 누르면 UITableView는 여러개의 행을 선택할 수 있는 모드로 변경되길 원한다. 그래서 Edit(편집) 버튼을 눌렀을 때 연결되어 있는 IBAction 메소드인 -onEditButton: 을 수정하자. 그리고 오늘 이 포스팅의 핵심인 UITableView에 allowsMultipleSelectionDuringEditing 속성을 활성화하자.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidLoad</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+
+    <span class="c1">// Uncomment the following line to preserve selection between presentations.</span>
+    <span class="c1">// self.clearsSelectionOnViewWillAppear = NO;</span>
+
+    <span class="c1">// Uncomment the following line to display an Edit button in the navigation bar for this view controller.</span>
+    <span class="c1">// self.navigationItem.rightBarButtonItem = self.editButtonItem;</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;여러개의 행 수정 예제&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="nl">arrayWithObjects</span><span class="p">:</span><span class="s">@&quot;saltfactory@gmail.com&quot;</span><span class="p">,</span> <span class="s">@&quot;saltfactory@me.com&quot;</span><span class="p">,</span> <span class="s">@&quot;sksong@hibrain.net&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">tableView</span><span class="p">.</span><span class="n">allowsMultipleSelectionDuringEditing</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - IBAction methods</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="c1">//on edit button codes</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">YES</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>그리고 Edit(편집) 버튼을 누르면 그 버튼이 Cancel(취소)로 변경될 수 있게 하자. 다음 코드를 추가한다. 핵심은 self.tableView.allowMultipleSelectionDuringEditing을 활성화 했을 경우  self.tableView.editing이 활성화되면 여러개의 행을 선택할 수 있는 인터페이스가 만들어진다는 것이다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="k">@interface</span> <span class="nc">SampleTableViewController</span> <span class="p">()</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onEditButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onCancelButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">SampleTableViewController</span>
+
+<span class="cp">#pragma mark - IBAction methods</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="c1">//on edit button codes</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">YES</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemCancel</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onCancelButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onCancelButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">NO</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>빌드하고 실행한 다음 Edit(편집) 버튼을 눌러보자.</p>
+
+<p><img src="http://cfile6.uf.tistory.com/image/204431334FE903B709577C" alt=""></p>
+
+<p>위와 같이 여러개의 행을 선택할 수 있게 되었고 Edit(편집) 버튼은 Cancel(취소) 버튼으로 변경되었다. 그리고 Cancel(취소) 버튼을 누르면 다시 원래 상태의 UITableView로 돌아가고 Edit(편집) 버튼으로 변경된다. 이제 UITableView가 수정모드로 되면 다른 액션을 취할 수 있는 버튼을 나타날 수 있게 하단에 UIToolbar를 만들어보자. Edit(편집) 버튼이 눌러지면 UITableView.editing 변경되게 하기 위해서 self.tableview의 -setEditing:animated를 사용했는데 에니메이션효과와 UIToolbar를 동시에 제어하기 위해서 -setEditing:animated: 메소드를 SampleTableViewController에 만들어서 두가지를 제어하게 하였다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SampleTableViewController.h</span>
+<span class="c1">//  SaltfactoryiOSTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by Song SungKwang on 6/26/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory@me.com. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &lt;UIKit/UIKit.h&gt;</span>
+
+<span class="k">@interface</span> <span class="nc">SampleTableViewController</span> : <span class="bp">UITableViewController</span>
+<span class="p">{</span>
+    <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">items</span><span class="p">;</span>
+    <span class="bp">UIToolbar</span> <span class="o">*</span><span class="n">toolbar</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div><div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="c1">//</span>
+<span class="c1">//  SampleTableViewController.m</span>
+<span class="c1">//  SaltfactoryiOSTutorial</span>
+<span class="c1">//</span>
+<span class="c1">//  Created by Song SungKwang on 6/26/12.</span>
+<span class="c1">//  Copyright (c) 2012 saltfactory@me.com. All rights reserved.</span>
+<span class="c1">//</span>
+
+<span class="cp">#import &quot;SampleTableViewController.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">SampleTableViewController</span> <span class="p">()</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nl">onEditButton</span><span class="p">:(</span><span class="kt">id</span><span class="p">)</span><span class="n">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onCancelButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onDeleteButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setEditing:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">editing</span> <span class="nf">animated:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">animated</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">SampleTableViewController</span>
+
+<span class="cp">#pragma mark - IBAction methods</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onEditButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="c1">//on edit button codes</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">YES</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemCancel</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onCancelButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onCancelButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">NO</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+    <span class="nb">self</span><span class="p">.</span><span class="n">navigationItem</span><span class="p">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemEdit</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onEditButton</span><span class="p">:)];</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onDeleteButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setEditing:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">editing</span> <span class="nf">animated:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">animated</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="n">editing</span> <span class="nl">animated</span><span class="p">:</span><span class="n">animated</span><span class="p">];</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">editing</span><span class="p">){</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">setEditing</span><span class="p">:</span><span class="nb">YES</span> <span class="nl">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+
+        <span class="n">toolbar</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIToolbar</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">480</span><span class="o">-</span><span class="mi">44</span><span class="o">-</span><span class="mi">44</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">44</span><span class="p">)];</span>
+
+        <span class="bp">NSArray</span> <span class="o">*</span><span class="n">buttonItems</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSArray</span> <span class="nl">arrayWithObjects</span><span class="p">:</span>
+                                <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemFlexibleSpace</span> <span class="nl">target</span><span class="p">:</span><span class="nb">nil</span> <span class="nl">action</span><span class="p">:</span><span class="nb">nil</span><span class="p">],</span>
+                                <span class="p">[[</span><span class="bp">UIBarButtonItem</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithBarButtonSystemItem</span><span class="p">:</span><span class="n">UIBarButtonSystemItemTrash</span> <span class="nl">target</span><span class="p">:</span><span class="nb">self</span> <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">onDeleteButton</span><span class="p">:)],</span>
+                                <span class="nb">nil</span><span class="p">];</span>
+
+        <span class="p">[</span><span class="n">toolbar</span> <span class="nl">setItems</span><span class="p">:</span><span class="n">buttonItems</span><span class="p">];</span>
+        <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview</span><span class="p">:</span><span class="n">toolbar</span><span class="p">];</span>
+
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">toolbar</span> <span class="n">removeFromSuperview</span><span class="p">];</span>
+        <span class="n">toolbar</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>빌드해서 실행해보자. 이제 Edit(편집) 버튼을 누르면 하단에 Toolbar 가 보이게 되고 Cancel(취소)를 누르면 사라지게 된다.</p>
+
+<p><img src="http://cfile8.uf.tistory.com/image/1474523E4FE9084C3389FE" alt=""></p>
+
+<p>마지막으로 휴지통을 누르면 선택한 row가 삭제되는 에니메이션을 만들기 위해서 -onDeleteButton: 메소드를 수정한다. UITableView에서 -indexPathsForSelectedRows 메소드를 이용해서 선택된 rows를 가져올 수 있게 된다. 그리고 dataSource에 removeObjectsAtIndexs로 해당 데이터를 삭제할 수 있고 -deleteRowsAtIndexPaths:withRowAnimation:을 이용하여 UITableView을 열을 에니메이션 효과를 주면서 삭제할 수 있게 된다.</p>
+<div class="highlight"><pre><code class="language-objective-c" data-lang="objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">onDeleteButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+<span class="p">{</span>
+    <span class="bp">NSArray</span> <span class="o">*</span><span class="n">selectedRows</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSArray</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithArray</span><span class="p">:</span> <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="n">indexPathsForSelectedRows</span><span class="p">]];</span>
+
+    <span class="bp">NSMutableIndexSet</span> <span class="o">*</span><span class="n">indexSetToDelete</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableIndexSet</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="bp">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span> <span class="k">in</span> <span class="n">selectedRows</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">indexSetToDelete</span> <span class="nl">addIndex</span><span class="p">:</span><span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="p">[</span><span class="n">items</span> <span class="nl">removeObjectsAtIndexes</span><span class="p">:</span><span class="n">indexSetToDelete</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">deleteRowsAtIndexPaths</span><span class="p">:</span><span class="n">selectedRows</span> <span class="nl">withRowAnimation</span><span class="p">:</span><span class="n">UITableViewRowAnimationAutomatic</span><span class="p">];</span>
+    <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">tableView</span> <span class="n">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>빌드하고 run을 해보자 그리고 실행하면 이제 여러개의 열을 삭제할 수 있게 된다.</p>
+
+<p><img src="http://cfile26.uf.tistory.com/image/166E47414FE90A002C9B1F" alt=""></p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/117F233D4FE90A0B047782" alt=""></p>
+
+<p><img src="http://cfile24.uf.tistory.com/image/20754F414FE90A16269083" alt=""></p>
+
+<h2 id="참고">참고</h2>
+
+<ol>
+<li><a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UITableView_Class/Reference/Reference.html">http://developer.apple.com/library/ios/#documentation/uikit/reference/UITableView_Class/Reference/Reference.html</a></li>
+<li><a href="http://www.ioslearner.com/features-uitableview-ios-5/">http://www.ioslearner.com/features-uitableview-ios-5/</a></li>
+</ol>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactorynet';
+    
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">saltfactory's series</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="http://saltfactory.net">www.saltfactory.net</a></li>
+        <li><a href="http://blog.saltfactory.net">blog.saltfactory.net</a></li>
+        <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/saltfactory">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+  c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+  c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+  c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+  C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+  c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+  c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+  c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+  c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/saltfactory">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+  <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+  c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+  c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+  C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+  c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+  c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+</svg>
+
+            </span>
+            <span class="username">saltfactory</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://facebook.com/saltfactory">
+            <span class="icon facebook">
+          		<svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+		
+        	</span>
+        	<span class="username">salthub</span>
+			</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text"></p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+	<script src="/series/assets/javascripts/jekyll-img-converter.js"></script>
+    </body>
+</html>
