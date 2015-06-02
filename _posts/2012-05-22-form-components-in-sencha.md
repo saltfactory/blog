@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Sencah Touch2를 이용한 하이브리드 앱 개발 - 5.Form Components
+title: Sencah Touch2를 이용한 하이브리드 앱 개발 - 6.Form Components
 category: sencha
 tags: [sencha, sencha touch, hybridapp, hybrid, view, component, form]
 comments: true
