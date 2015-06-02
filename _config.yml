@@ -5,7 +5,7 @@ email: saltfactory@gmail.com
 description: ""
 excerpt_separator : <!--more-->
 
-baseurl: "/series"
+#baseurl: "/series"
 #url: ""
 paginate: 5
 
