@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Homebrew를 이용하여Mac OS X에서 Unix 패키지 사용하기
+title: Homebrew를 이용하여 Mac OS X에서 Unix 패키지 사용하기
 category: mac
 tags: [mac, osx, unix, linux, homebrew, brew]
 comments: true
@@ -15,6 +15,8 @@ Mac OS X는 훌륭한 운영체제다. Windows 와 Mac은 항상 비교 대상�
 이러한 Unix기반에 Mac OS X에는 기본적인 Unix 프로그램과 명령어들이 설치되어 있어서 개발자에게 참 좋은 개발 플랫폼으로 사용될 수 있다. 하지만 Mac에서도 모든 Unix 프로그램이 설치되어 있는 것은 아니다. 그래서 때로는 source를 받아서 configuration을 하여 make를 하는 작업 등을 해야한다. 하지만 이러한 과정에서 Mac OS X 커널만의 문제로 컴파일이 제대로 되지 않는 문제가 생기기도 하는데 이러한 문제를 고쳐가면서 설치하기란 여긴 어려운것이 아니다. (물론 슈퍼 개발자들은 가능할지 모르겠다.) 그래서 이런 프로그램들을 BSD의 port 처럼 패키지 관리툴로 패키징 관리를 편리하게 할 수 있는 툴이 macport라는 것이 있다. 여러 오픈소스 개발자들이 Mac에 맞게 Unix 프로그램을 포팅해서 패키지 관리를 할 수 있게 노력하고 있어서 최근 라이브러리들이 빠르게 업데이트되고 있다. 처음에는 Macport를 사용했는데 macport은 기본적으로 macport가 사용하는 디렉토리에 실행파일은 실행파일대로, 라이브러리는 라이브러리 대로 설치가 되어진다.
 
 다시 말해서 macport의 홈 디렉토리가 /opt/local 이라고 하면 (기본적으로 여기에 설치된다) /bin 밑에 명령어들이 모두 모여져 있다. 예를 들어 python도 ruby도 모두 /opt/local/bin/python, /opt/local/bin/ruby 등과 같이 말이다. 그리고 개발할 때 필요한 header 파일들도 모두 /opt/local/include/sqlite3.h, /opt/local/include/node/node.h 등으로 /opt/local/include 안에 모두 모여 있다. 마치 macport가 하나의 운영체제의 파일 시스템과 같은 형태로 하고 있는 것이다. 이것을 좀더 패키징화되어서 패키지마다 따로 관리하고 싶은 생각이 들었다. 그래서 찾게 된 것이 Homebrew 라는 것이다.
+
+<!--more-->
 
 Homebrew 소스들은 ruby로 만들어져 있다. 루비는 항상 simple, easy라는 슬로건을 가지고 있듯 Homebrew 역시 매우매우 편리하고 간단하게 의존성있는 패키지를 검색해서 자동으로 설치해주거나 패키지를 관리할 수 있다. (macport도 의존성을 자동으로 검색해서 설치해준다) . Homebrew 사이트에 가면 가장 먼저 볼 수 있는 것이 다음 문장이다.
 
