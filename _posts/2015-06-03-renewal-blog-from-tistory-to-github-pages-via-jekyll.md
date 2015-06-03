@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Tistory에서 GitHub Pages로 블로그 이전
+title: Tistory에서 Jekyll을 이용하여 GitHub Pages로 블로그 이전
 category: note
 tags: [note, freeboard, markdown, blog]
 comments: true
@@ -13,7 +13,7 @@ comments: true
 
 왜?
 
-이번 포스티에서는 기존의 블로그에서 Github Pages로 블로그를 이전한 이유에 대해서 이야기를 나눈다.
+이번 포스팅에서는 기존의 블로그에서 Github Pages로 블로그를 이전한 이유에 대해서 이야기를 나눈다.
 
 <!--more-->
 
