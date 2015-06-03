@@ -13,4 +13,8 @@
     {% if page.css %}
     <link rel='stylesheet' type='text/css' href='/css/{{ page.css }}' />
     {% endif %}
+
+    {% if site.google_analytics %}
+      {% include google_analytics.html %}
+    {% endif %}
 </head>

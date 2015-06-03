@@ -9,6 +9,12 @@ excerpt_separator : <!--more-->
 #url: ""
 paginate: 5
 
+# analytics :
+#   provider : google
+#   google :
+#       tracking_id : 'UA-8647285-2'
+google_analytics : 'UA-8647285-2'
+
 twitter_username: saltfactory
 github_username:  saltfactory
 facebook_username: salthub
@@ -24,7 +30,8 @@ highlighter: pygments
 permalink: none
 
 # safe: false # if using alias is safe:false
-lsi: false
+# safe: true
+# lsi: true
 
 gems:
   - jekyll-sitemap
