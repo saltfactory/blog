@@ -5,6 +5,7 @@ category: android
 tags: [android, emulator, x86]
 comments: true
 redirect_from: /186/
+disqus_identifier : http://blog.saltfactory.net/186
 ---
 
 ## 서론

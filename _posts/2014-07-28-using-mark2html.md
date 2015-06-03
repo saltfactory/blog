@@ -5,6 +5,7 @@ category: mark2html
 tags: [markdown, mark2html]
 comments: true
 redirect_from: /252/
+disqus_identifier : http://blog.saltfactory.net/252
 ---
 
 ## 서론

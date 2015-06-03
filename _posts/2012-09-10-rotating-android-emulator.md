@@ -5,6 +5,7 @@ category: android
 tags: [android, java, emulator]
 comments: true
 redirect_from: /189/
+disqus_identifier : http://blog.saltfactory.net/189
 ---
 
 안드로이드 앱 개발할 때 가로모드(Landscape Mode)에서 동작하는 것을 디버깅하기 위해서 에뮬레이터를 회전시켜야하는 경우가 있다. 안드로이드의 에뮬레이터를 회전시키기 위해서는 다음 방법이 필요하다.

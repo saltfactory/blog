@@ -5,6 +5,7 @@ category : git
 tags : [git, yobi, safari]
 comments : true
 redirect_from : /259/
+disqus_identifier : http://blog.saltfactory.net/259
 ---
 
 ## 서론

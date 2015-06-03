@@ -5,6 +5,7 @@ category: appspresso
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, sencha, daum, map]
 comments: true
 redirect_from: /155/
+disqus_identifier : http://blog.saltfactory.net/155
 ---
 
 ## 서론

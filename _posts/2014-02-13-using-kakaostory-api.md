@@ -5,6 +5,7 @@ category : mobile
 tags : [kakaostory, api, mobile]
 comments : true
 redirect_from : /226/
+disqus_identifier : http://blog.saltfactory.net/226
 ---
 
 ## 서론

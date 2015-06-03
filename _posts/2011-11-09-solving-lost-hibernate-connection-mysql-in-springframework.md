@@ -5,6 +5,7 @@ category : spring
 tags : [spring,java,srpingframework,hibernate,mysql,connection]
 comments : true
 redirect_from : /59/
+disqus_identifier : http://blog.saltfactory.net/59
 ---
 
 ## 서론

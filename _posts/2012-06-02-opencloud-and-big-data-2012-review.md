@@ -5,6 +5,7 @@ category: bigdata
 tags: [cloud, big data, review]
 comments: true
 redirect_from: /152/
+disqus_identifier : http://blog.saltfactory.net/152
 ---
 
 스마트 폰 앱과 스타트업 기업의 인프라와 대기업의 대용량 데이터 처리가 더불어 이슈화 되면서 Cloud와 Big Data는 최근 가장 관심있는 주제어가 아닌가 생각이 된다. 데이터베이스 연구실에서 연구활동을 하면서 RDBMS 를 주력으로 사용하던 예전과 달리 최근의 데이터 처리 트랜드와 기술적 접근 방법을 얻기 위해서 이번 컨퍼런스에 참석하게 되었다. 같은 날에 inews24에 열리는 3Big Technology와 두가지 컨퍼런스 중에 어떤 것을 참석할지 심각하게 고민을 하고 있었다. 3Big Technology에서는 Big Data, Cloud, HTML5 관련 사례를 발표하는데 발표자와 후원자들이 굵직한 벤더들(Oracle, IBM, SK, 현대 등)이였기 때문이다. 하지만 결국은 KT cloudware에서 주최하는 "Open Cloud & Big Data 2012"에 참석을 하기로 결정했다. 이 컨퍼런스를 참석하게 된 가장 큰 이유는 바로 "Open Source 활용 사례"이다. 즉, 항상 서울까지 멀리 컨퍼런스를 참석하고 내려가서 종이 한장만 남는게 아니라, 실제 프로젝트에 도입하고 연구할 수 있는 팁을 얻기 위해서 였다. Open Source는 바로 내려와서 내가 연구실에서 테스트 서버를 여러대 묶어서 인프라를 만들어 볼 수 있다고 생각했다.

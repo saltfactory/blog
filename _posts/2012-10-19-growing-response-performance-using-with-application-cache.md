@@ -5,6 +5,7 @@ category: html5
 tags: [html, html5, application cache, cache, performance]
 comments: true
 redirect_from: /202/
+disqus_identifier : http://blog.saltfactory.net/202
 ---
 
 

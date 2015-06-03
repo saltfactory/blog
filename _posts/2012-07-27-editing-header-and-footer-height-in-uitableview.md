@@ -5,6 +5,7 @@ category: ios
 tags: [ios, sdk, uitableview, header, footer, height, objective-c]
 comments: true
 redirect_from: /165/
+disqus_identifier : http://blog.saltfactory.net/165
 ---
 
 ## 서론

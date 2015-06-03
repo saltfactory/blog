@@ -5,6 +5,7 @@ category: ios
 tags: [ios, sdk, objective-c, uitableview, allowmultipleselectionduringediting]
 comments: true
 redirect_from: /161/
+disqus_identifier : http://blog.saltfactory.net/161
 ---
 
 ## 서론

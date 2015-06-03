@@ -5,6 +5,7 @@ category: passport-tistory
 tags: [node, passport, passport-tistory, expressjs, tistory]
 comments: true
 redirect_from: /251/
+disqus_identifier : http://blog.saltfactory.net/251
 ---
 
 ## 서론

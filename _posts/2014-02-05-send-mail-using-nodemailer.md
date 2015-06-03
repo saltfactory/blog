@@ -5,6 +5,7 @@ category: node
 tags: [node, node-mailer, mail, javascript]
 comments: true
 redirect_from: /223/
+disqus_identifier : http://blog.saltfactory.net/223
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: appspresso
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, heap, memory]
 comments: true
 redirect_from: /146/
+disqus_identifier : http://blog.saltfactory.net/146
 ---
 
 ## Appspresso Studio

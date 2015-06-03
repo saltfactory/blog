@@ -5,6 +5,7 @@ category: linux
 tags: [linux, ip, python]
 comments: true
 redirect_from: /95/
+disqus_identifier : http://blog.saltfactory.net/95
 ---
 
 ## 서론

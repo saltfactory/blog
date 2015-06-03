@@ -5,6 +5,7 @@ category: appspresso
 tags: [appspresso, essay]
 comments: true
 redirect_from: /153/
+disqus_identifier : http://blog.saltfactory.net/153
 ---
 
 ![](http://cfile4.uf.tistory.com/image/1229AD3D4FCB4C74052EA2)

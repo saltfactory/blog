@@ -5,6 +5,7 @@ category: android
 tags: [android, java, pattern, async, callback]
 comments: true
 redirect_from: /214/
+disqus_identifier : http://blog.saltfactory.net/214
 ---
 
 ## 서론

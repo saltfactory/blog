@@ -5,6 +5,7 @@ category: php
 tags: [cakephp, php, bake, controller, mvc]
 comments: true
 redirect_from: /185/
+disqus_identifier : http://blog.saltfactory.net/185
 ---
 
 ## 서론

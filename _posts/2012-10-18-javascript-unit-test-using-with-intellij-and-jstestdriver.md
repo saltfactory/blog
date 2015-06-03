@@ -5,6 +5,7 @@ category: javascript
 tags: [javascript, intellij, jstestdriver, unit test]
 comments: true
 redirect_from: /204/
+disqus_identifier : http://blog.saltfactory.net/204
 ---
 
 ## 서론

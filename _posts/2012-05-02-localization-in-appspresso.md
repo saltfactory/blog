@@ -5,6 +5,7 @@ category: appspresso
 tags:  [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, localization]
 comments: true
 redirect_from: /133/
+disqus_identifier : http://blog.saltfactory.net/133
 ---
 
 Appspresso는 1.1 버전 부터 지역화 기능이 추가되었다. 앱 스토어나 안드로이드 마켓등 더이상 개발자에게 마켓은 국내만 타겟이 아니기 때문에 앱 스토어에 앱을 등록하면 국내 사용자 뿐만 아니라 미국, 중국, 일본 등 다른 언어를 사용하는 사용자가 고객의 대상이 된다. 지역화 기능은 이렇게 다른 언어를 사용하는 사용자의 디바이스의 Local 정보를 인식해서 그 디바이스에 사용하고 있는 언어가 출력되어서 사용자에게 거부감 없이 사용의 편리성을 높여주는 것을 말한다. Appspresso는 Project를 생성할 때 Localization 형태의 탬플릿을 선태하면 자동적으로 지역화를 할 수 있는 프로젝트 구조로 만들어 진다.

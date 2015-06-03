@@ -5,6 +5,7 @@ category : git
 tags : [git]
 comments : true
 redirect_from : /250/
+disqus_identifier : http://blog.saltfactory.net/250
 ---
 
 ## 서론

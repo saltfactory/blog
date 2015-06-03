@@ -5,6 +5,7 @@ category: android
 tags: [android, draw, 9-patch, stretch]
 comments: true
 redirect_from: /88/
+disqus_identifier : http://blog.saltfactory.net/88
 ---
 
 ## 서론

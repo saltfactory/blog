@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 8.지역화(Localization) 적용하기</title>
+    <meta name="description" content="">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="/appspresso/localization-in-appspresso.html">
+    <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
+
+    
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">saltfactory's blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+        <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+        h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+        <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+        h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+        <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+        c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+      </svg>
+    </a>
+    <div class="trigger">
+      <a class="page-link" href="http://saltfactory.net">saltfactory.net</a>
+      
+      <a class="page-link" href="/about/">About</a>
+      
+      
+      
+      <a class="page-link" href="/guestbook/">Guestbook</a>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </div>
+  </nav>
+
+</div>
+
+</header>
+
+
+
+<!-- <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">saltfactory's blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+          <a class="page-link" href="/guestbook/">Guestbook</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header> -->
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Appspresso를 사용하여 하이브리드앱 개발하기 - 8.지역화(Localization) 적용하기</h1>
+    <p class="post-meta">May 2, 2012</p>
+  </header>
+
+  <article class="post-content">
+    <p>Appspresso는 1.1 버전 부터 지역화 기능이 추가되었다. 앱 스토어나 안드로이드 마켓등 더이상 개발자에게 마켓은 국내만 타겟이 아니기 때문에 앱 스토어에 앱을 등록하면 국내 사용자 뿐만 아니라 미국, 중국, 일본 등 다른 언어를 사용하는 사용자가 고객의 대상이 된다. 지역화 기능은 이렇게 다른 언어를 사용하는 사용자의 디바이스의 Local 정보를 인식해서 그 디바이스에 사용하고 있는 언어가 출력되어서 사용자에게 거부감 없이 사용의 편리성을 높여주는 것을 말한다. Appspresso는 Project를 생성할 때 Localization 형태의 탬플릿을 선태하면 자동적으로 지역화를 할 수 있는 프로젝트 구조로 만들어 진다.</p>
+
+<!--more-->
+
+<p><img src="http://cfile25.uf.tistory.com/image/177D8C3F4FA0CE880D59D4" alt=""></p>
+
+<p>지역화 템플릿으로 프로젝트를 만들면 디렉토리 구조가 지역정보대로 분리가 된다.</p>
+
+<p><img src="http://cfile23.uf.tistory.com/image/123EDB354FA0CFB821690E" alt=""></p>
+
+<p>뭔가 엄청나게 많아 보인다. 지역화는 크게 platform 디렉토리와 src 디렉토리로 나누어서 살펴볼 수 있는데 tree라는 명령어를 사용해서 살펴보면 다음과 같다. 안드로이드와 아이폰 내부가 동일하기 때문에 android의 경우 살펴보자. resources라는 디렉토리 밑으로 icon과 splash 디렉토리가 있다. 각각 앱이 설치될 때의 icon과 앱이 실행될 때의 splash이다. 이렇게 지역별로 디렉토리로 구분해서 만들어두었는데 디바이스의 지역화 정보를 확인해서 자동으로 해당되는 자원을 사용하게 해주는 것이다.</p>
+
+<p><img src="http://cfile27.uf.tistory.com/image/127422344FA0D0390648BD" alt=""></p>
+
+<p>현재 splash.en 과 splash.ko에 들어 있는 이미지를 살펴보면 다음과 같다. splash.en 안에 들어있는 이미지는 하단에 en 로고가 있고 splash.ko 에 들어 있는 이미지는 ko라는 로고가 들어 있다.</p>
+
+<p><img src="http://cfile29.uf.tistory.com/image/197388354FA0D127127C9C" alt=""></p>
+
+<p><img src="http://cfile25.uf.tistory.com/image/146F7D3D4FA0D1372E39F5" alt=""></p>
+
+<p>실제 디바이스에 테스트하면 지역정보에 다르게 첫 화면이 다르게 나오게 된다. platform이라는 디렉토리 안의 지역화 디렉토리들은 이렇게 resource에 관한 지역화 파일들이 디렉토리별로 존재하게 된다.</p>
+
+<p>다음은 src 안에 들어 있는 지역화 구조이다. 예제 소스는 locale-example.js 가 각각 지역화 디렉토리 안에 들어가 있다. 이것도 마찬가지로 디바이스의 지역정보를 보고 해당되는 .js 파일을 사용하게 되는 것이다.</p>
+
+<p><img src="http://cfile26.uf.tistory.com/image/1143CB384FA0D20831B383" alt=""></p>
+
+<p>우리는 이해를 좀더 돕기 위해서 다음과 같이 소스를 변경해보자.
+원래 기본적으로 작성된 예제는 다음과 같다.
+/src/locales/en/locale-example.js</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">window</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">&#39;Hello&#39;</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>/src/locale/ko/locale-example.js
+<code>javascript
+window.onload = function() {
+    document.getElementById(&#39;title&#39;).innerHTML = &#39;안녕하세요&#39;;
+};
+</code></p>
+
+<p>그리고 index.html 에서 사용되는 코드를 보면 다음과 같다. locale-example.js 를 사용한다고 설정을 했는데, 지역화 정보를 확인해서 src 밑의 locales 안에서 각각 해당되는 en/locale-example.js 이나 ko/locale-example.js 를 자동으로 찾아서 사용하게 된다.</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;pragma&quot;</span> <span class="na">content=</span><span class="s">&quot;no-cache&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-Type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=UTF-8&quot;</span><span class="nt">&gt;</span>
+
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/appspresso/appspresso.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;locale-example.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script&gt;</span>
+            <span class="c1">//activate ax.log(), comment out when you release app</span>
+            <span class="nx">ax</span><span class="p">.</span><span class="nx">runMode</span> <span class="o">=</span> <span class="nx">ax</span><span class="p">.</span><span class="nx">MODE_DEBUG</span><span class="p">;</span>
+            <span class="nx">ax</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">);</span>
+        <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;/head&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;h1</span> <span class="na">id=</span><span class="s">&quot;title&quot;</span><span class="nt">&gt;&lt;/h1&gt;</span>
+        <span class="nt">&lt;h3&gt;</span>net.saltfactory.hybridtutorial<span class="nt">&lt;/h3&gt;</span>
+
+
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>하지만 약간 이상한 점이 있다. 똑 같은 코드인데 /src/locales/en/locale-example.js 와 /src/locales/ko/locale-example.js 모두 가지고 있다면 프로그램이 큰 .js 같은 경우는 용량도 크고, 단순히 언어만 다르게 설정하면 되는데 프로그램 코드가 모두 포함이 된다는 것이다. 그래서 이렇게 사용하면 어떨까? 프로그램 코드는 따로 분리하고 locales 밑에는 언어 설정만 하는 json 언어 딕셔너리만 존재하게 한다.</p>
+
+<p>/src/locales/en/locale-example.js
+```javascript
+//window.onload = function() {
+//  document.getElementById(&#39;title&#39;).innerHTML = &#39;Hello&#39;;
+//  document.getElementById(&#39;notice&#39;).innerHTML = &#39;This device use an english&#39;;
+//};</p>
+
+<p>var Language = {
+        title:  &#39;Hello&#39;,
+        notice: &#39;This device use an english&#39;
+};
+<code>
+/src/locales/ko/locale-example.js
+</code>javascript
+//window.onload = function() {
+//  document.getElementById(&#39;title&#39;).innerHTML = &#39;안녕하세요&#39;;
+//  document.getElementById(&#39;notice&#39;).innerHTML = &#39;이 디바이스는 한국어를 사용하고 있습니다.&#39;;
+//};</p>
+
+<p>var Language = {
+        title: &#39;안녕하세요&#39;,
+        notice: &#39;이 디바이스는 한국어를 사용하고 있습니다.&#39;
+};
+```</p>
+
+<p>그리고 프로그램 파일을 분리한다.
+/src/js/app.js
+<code>javascript
+window.onload = function() {
+    document.getElementById(&#39;title&#39;).innerHTML = Language.title;
+    document.getElementById(&#39;notice&#39;).innerHTML = Language.notice;
+};
+</code></p>
+
+<p>마지막으로 index.html 파일에 설정을 한다. 디바이스로 테스트하기 위해서 notice 를 추가하였다.</p>
+
+<p>/src/index.html
+```html
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">    &lt;script src=&quot;/appspresso/appspresso.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;locale-example.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/js/app.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        //activate ax.log(), comment out when you release app
+        ax.runMode = ax.MODE_DEBUG;
+        ax.log(&quot;Hello World&quot;);
+    &lt;/script&gt;
+
+    &lt;style&gt;
+        #notice {color:red;}
+    &lt;/style&gt;
+
+
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1 id=&quot;title&quot;&gt;&lt;/h1&gt;
+    &lt;h3&gt;net.saltfactory.hybridtutorial&lt;/h3&gt;
+    &lt;p id=&quot;notice&quot;&gt;notice&lt;/p&gt;
+&lt;/body&gt;
+</code></pre></div>
+<p></html>
+```</p>
+
+<p>앱의 이름 또한 지역화에 맞춰서 변경할 수도 있다. platform/Android/resources/appName.xml 과 platform/iOS/resources/appName.xml에서 설정하는데 위의 지역화 각각의 디렉토리가 아니라 xml 구조로 설정을 한다. 한국어에서만 한글 앱 이름이 나오게 하였고 나머지는 모두 영어가 나오도록 하였다.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;resources&gt;</span>
+    <span class="nt">&lt;app-name</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>HybridTutorial<span class="nt">&lt;/app-name&gt;</span>
+    <span class="nt">&lt;app-name</span> <span class="na">lang=</span><span class="s">&quot;es&quot;</span><span class="nt">&gt;</span>HybridTutorial<span class="nt">&lt;/app-name&gt;</span>
+    <span class="nt">&lt;app-name</span> <span class="na">lang=</span><span class="s">&quot;ja&quot;</span><span class="nt">&gt;</span>HybridTutorial<span class="nt">&lt;/app-name&gt;</span>
+    <span class="nt">&lt;app-name</span> <span class="na">lang=</span><span class="s">&quot;ko&quot;</span><span class="nt">&gt;</span>하이브리드연습<span class="nt">&lt;/app-name&gt;</span>
+    <span class="nt">&lt;app-name</span> <span class="na">lang=</span><span class="s">&quot;zh-Hans&quot;</span><span class="nt">&gt;</span>HybridTutorial<span class="nt">&lt;/app-name&gt;</span>
+<span class="nt">&lt;/resources&gt;</span>
+</code></pre></div>
+<p>위의 예제를 실행 하였을 때의 지역화가 적용된 모습이다. 왼쪽 iPod touch는 한글을 설정하였고 오른쪽 Android Nexus one은 영어로 설정되어 있는 상태이다.</p>
+
+<p><img src="http://cfile1.uf.tistory.com/image/174ED63A4FA0D6F015F390" alt=""></p>
+
+<p>앱이 설치된 아이콘도 이렇게 한글 설정이 되어 있는 iPod touch에는 한글로 설치가 되고 영어가 설정되어 있는 Android Nexus one에는 영어로 된 이름이 설치가 된다.</p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/196726384FA0D78118BE5D" alt=""></p>
+
+<h2 id="결론">결론</h2>
+
+<p>현재 버전에서는 on the fly로 지역화를 테스트를 할 수 없다고 한다. 언어 설정을 위해서 디바이스에 매번 설치하면서 확인한다는 것은 현재는 많이 불편한건 사실이지만 지역화를 지원해서 개발할 때 언어와 프로그램을 분리해서 개발할 수 있게 되었다는 것에는 매우 의미 있는 업데이트라고 생각한다. 다만 지역화를 하기 위해서 언어만 따로 설정할 수 있는 언어 파일이 존재한다면 어떨까 생각해봤다. 이미지나 리소스 자원들은 분리해서 디렉토리 구조로 나누어서 사용할 수 있을 것 같은데, 언어 설정을 하는 파일은 appName.xml 처럼 뭔가 정해진 곳에 언어를 설정하면 좋지 않을까? 생각도 해봤다. 하지만 대부분의 지역화를 지원하는 프레임워크는 이렇게 디렉토리 구조화가 되어 있는 것으로 안다. 앱스프레소의 업데이트 마다 새로운 기능이 추가되고 개발하기 편리해지는 것 같아서 이젠 앱스프레소를 사용하여 기존에 서비스하는 앱을 하이브리드 앱으로 마이그레이션 할 수 있을 것이라고 조심스레 생각해본다. 하나의 코드로 여러가지 디바이스에 적용하고 지역화까지 하나로 개발할 수 있으니 개발 공수가 많이 줄어 들것 같다는 생각도 해본다.</p>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactoryblog';
+    
+    // 
+    
+     var disqus_identifier = 'http://blog.saltfactory.net/133'; 
+    
+
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">saltfactory's blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <!-- <li>saltfactory's blog</li> -->
+          <li><img class="profile" src="/assets/images/profile.png"/></li>
+          <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/saltfactory">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">saltfactory</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/saltfactory">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">@saltfactory</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://facebook.com/salthub">
+              <span class="icon icon--facebook">
+                <!-- <svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+ -->
+                <svg viewBox="0 0 16 28">
+                  <path id="logo" d="M14.984 0.187v4.125h-2.453q-1.344 0-1.813 0.562t-0.469 1.687v2.953h4.578l-0.609 4.625h-3.969v11.859h-4.781v-11.859h-3.984v-4.625h3.984v-3.406q0-2.906 1.625-4.508t4.328-1.602q2.297 0 3.563 0.187z"></path>
+                </svg>
+              </span>
+              <span class="username">salthub</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text"></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

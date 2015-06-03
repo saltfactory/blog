@@ -5,6 +5,7 @@ category: ubuntu
 tags: [database, ubuntu, oracle]
 comments: true
 redirect_from : /267/
+disqus_identifier : http://blog.saltfactory.net/267
 ---
 
 ## 서론

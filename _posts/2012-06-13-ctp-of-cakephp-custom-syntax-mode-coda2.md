@@ -5,6 +5,7 @@ category: php
 tags: [php, coda2, cakephp, ctp, syntax, highlgihting]
 comments: true
 redirect_from: /159/
+disqus_identifier : http://blog.saltfactory.net/159
 ---
 
 ## 서론

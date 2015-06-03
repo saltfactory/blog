@@ -5,6 +5,7 @@ category : HybridApp
 tags : [phonegap, hybrid, mobile, ios, plugins]
 comments : true
 redirect_from : /235/
+disqus_identifier : http://blog.saltfactory.net/235
 ---
 
 ## 서론

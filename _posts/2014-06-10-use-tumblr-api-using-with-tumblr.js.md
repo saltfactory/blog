@@ -5,6 +5,7 @@ category: javascript
 tags: [javascript, tumblr, api]
 comments: true
 redirect_from: /241/
+disqus_identifier : http://blog.saltfactory.net/241
 ---
 
 ## 서론

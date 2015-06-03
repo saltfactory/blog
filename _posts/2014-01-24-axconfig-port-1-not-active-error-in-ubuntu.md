@@ -5,6 +5,7 @@ category: node
 tags: [node, ubuntu, error]
 comments: true
 redirect_from: /219/
+disqus_identifier : http://blog.saltfactory.net/219
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: android
 tags: [android, ide, android studio]
 comments: true
 redirect_from: /227/
+disqus_identifier : http://blog.saltfactory.net/227
 ---
 
 ## 서론

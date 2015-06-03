@@ -5,6 +5,7 @@ category: ios
 tags: [ios, objective-c, objc, gcd, block]
 comments: true
 redirect_from: /97/
+disqus_identifier : http://blog.saltfactory.net/97
 ---
 
 ## 서론

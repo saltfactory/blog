@@ -5,6 +5,7 @@ category: ios
 tags: [ios, iphone, mac, desktop, sharing]
 comments: true
 redirect_from: /173/
+disqus_identifier : http://blog.saltfactory.net/173
 ---
 
 ## 서론

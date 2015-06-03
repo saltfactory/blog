@@ -5,6 +5,7 @@ category : mobile
 tags : [kakaolink, api, mobile, intellij]
 comments : true
 redirect_from : /225/
+disqus_identifier : http://blog.saltfactory.net/225
 ---
 
 ## 서론

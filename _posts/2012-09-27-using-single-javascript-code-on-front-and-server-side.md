@@ -5,6 +5,7 @@ category: node
 tags: [javascript, node]
 comments: true
 redirect_from: /199/
+disqus_identifier : http://blog.saltfactory.net/199
 ---
 
 ## 서론

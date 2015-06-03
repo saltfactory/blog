@@ -5,6 +5,7 @@ category: database
 tags: [database, oracle, mac, client, install]
 comments: true
 redirect_from: /237/
+disqus_identifier : http://blog.saltfactory.net/237
 ---
 
 ## 서론

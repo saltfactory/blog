@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Sencah Touch2를 이용한 하이브리드 앱 개발 - 3.컴포넌트 구성</title>
+    <meta name="description" content="">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="/sencha/create-component-in-sencha.html">
+    <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
+
+    
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">saltfactory's blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+        <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+        h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+        <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+        h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+        <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+        c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+      </svg>
+    </a>
+    <div class="trigger">
+      <a class="page-link" href="http://saltfactory.net">saltfactory.net</a>
+      
+      <a class="page-link" href="/about/">About</a>
+      
+      
+      
+      <a class="page-link" href="/guestbook/">Guestbook</a>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </div>
+  </nav>
+
+</div>
+
+</header>
+
+
+
+<!-- <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">saltfactory's blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+          <a class="page-link" href="/guestbook/">Guestbook</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header> -->
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Sencah Touch2를 이용한 하이브리드 앱 개발 - 3.컴포넌트 구성</h1>
+    <p class="post-meta">May 15, 2012</p>
+  </header>
+
+  <article class="post-content">
+    <h2 id="서론">서론</h2>
+
+<p>Sencha Touch 는 네이티브 앱과 가장 유사한 인터페이스를 생성해주는 것으로 유명하다. 하이브리드 앱을 만들때 사용자의 UX를 무시하지 않는 것이 좋은 접근 방법이다.  하이브리드 앱에서는 기존에는 네이티브 앱에서는 복잡해서 하기 힘들었던 스타일 프로그래밍이 HTML5 + CSS(CSS3)의 조합으로 보다 편리하게 UI의 스타일을 변화 시킬 수 있게 되었다. 이러한 자유로움이 사용자가 지금까지 숙지해온 경험을 혼란으로 만들수도 있다. 가령 back 모양을 변경한다던지, 위치를 상단에서 하단으로 변경한다던지하면 아이폰 사용자는 메뉴를 찾기위해서 혼란스러워 할 수 있다는 의미이다. 이러한 관점에서 네이티브에 가장 가까운 UI를 미리 스타일로 만들어서저 컴포넌트 형식으로 제공해주는 Sencha의 특징을 장점으로 말할 수 있다. 이번 포스팅에서는 그러한 컴포넌트들의 UI를 만들고 뷰를 구성하는 방법에 대해서 설명한다.</p>
+
+<!--more-->
+
+<p>먼저 우리는 기본적으로 뷰를 올리기 위해서 Ext.Panel 이라는 것을 사용한 것을 기억 할 것이다. 또한 MVC 모델에 따라서 뷰를 분리해서 관리하기 위해서 app/view 아래 뷰를 물리적으로 나누기도 했었다. ( <a href="http://blog.saltfactory.net/140">Sencah Touch2를 이용한 하이브리드 앱 개발 - 2.View 생성</a> 글 참조)</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm"> * file : app.js</span>
+<span class="cm"> * author : saltfactory</span>
+<span class="cm"> * email : saltfactory@gmail.com</span>
+<span class="cm"> */</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">application</span><span class="p">({</span>
+    <span class="nx">name</span> <span class="o">:</span> <span class="s1">&#39;SaltfactorySenchaTutorial&#39;</span><span class="p">,</span>
+    <span class="nx">views</span> <span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;MainView&#39;</span> <span class="p">],</span>
+    <span class="nx">appFolder</span> <span class="o">:</span> <span class="s1">&#39;/js/app&#39;</span><span class="p">,</span>
+    <span class="nx">launch</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">Ext</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">&#39;welcome_view&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm"> * file : MainView.js</span>
+<span class="cm"> * author : saltfactory</span>
+<span class="cm"> * email : saltfactory@gmail.com</span>
+<span class="cm"> */</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Panel&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span> <span class="o">:</span> <span class="s1">&#39;welcome_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">html</span><span class="o">:</span> <span class="s1">&#39;Hello, World!&#39;</span><span class="p">,</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>우리는 이전에 이렇게 app.js와 app/view/Welcome.js 로 앱과 뷰를 분리해서 관리하고 생성 시킬 수 있다는 것을 알아보았다. 이젠 이 뷰를 어떻게 구성할지에 대해서 살펴보자. 먼저 뷰를 구성하는 것을 살펴보기 전에 Ext.Component에 대해서 살펴보아야한다. Ext.Component는 Sencha 에서 시각화하는 클래스를 말하는 것인데 컴포넌트들은 다음과 같은 특징이 있다.</p>
+
+<ol>
+<li>페이지에서 템플릿을 사용해서 렌더링할 수 있다.</li>
+<li>어떠한 시간이든 보이거나 감출 수 있다.</li>
+<li>스크린 중심에 위치할 수 있다.</li>
+<li>활성화 / 비활성화를 설정할 수 있다.</li>
+<li>다른 컴포넌트 위에 위치 시킬 수 있다.</li>
+<li>에니메이션 효과로 위치나 크기를 변경할 수 있다.</li>
+<li>다른 컴포넌트 안에 도킹할 수 있다.</li>
+<li>다른 컴포넌트를 정렬, 스크롤, 드래그 등을 할 수 있다.</li>
+</ol>
+
+<p>Sencha에서 가능한 컴포넌트는 크게 네가지로 분류된다. (각각 컴포넌트의 공식 메뉴에 자세히 설명하고 있어서 링크로 설명은 대신한다.)]]</p>
+
+<h4 id="navigation-components">Navigation components</h4>
+
+<ul>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Toolbar">Ext.Toolbar</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Button">Ext.Button</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.TitleBar">Ext.TitleBar</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.SegmentedButton">Ext.SegmentedButton</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Title">Ext.Title</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Spacer">Ext.Spacer</a></li>
+</ul>
+
+<h4 id="store-bound-components">Store-bound components</h4>
+
+<ul>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.dataview.DataView">Ext.dataview.DataView</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.carousel.Carousel">Ext.Carousel</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.dataview.List">Ext.List</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.dataview.NestedList">Ext.NestedList</a></li>
+</ul>
+
+<h4 id="form-components">Form components</h4>
+
+<ul>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.form.Panel">Ext.form.Panel</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.form.FieldSet">Ext.form.FieldSet</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.field.Checkbox">Ext.field.Checkbox</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.field.Hidden">Ext.field.Hidden</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.field.Slider">Ext.field.Slider</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.field.Text">Ext.field.Text</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.picker.Picker">Ext.picker.Picker</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.picker.Date">Ext.picker.Date</a></li>
+</ul>
+
+<h4 id="general-components">General components</h4>
+
+<ul>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Panel">Ext.Panel</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.tab.Panel">Ext.tab.Panel</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Viewport">Ext.Viewport</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Img">Ext.Img</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Map">Ext.Map</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Audio">Ext.Audio</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Video">Ext.Video</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.Sheet">Ext.Sheet</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.ActionSheet">Ext.ActionSheet</a></li>
+<li><a href="http://docs.sencha.com/touch/2-0/#!/api/Ext.MessageBox">Ext.MessageBox</a></li>
+</ul>
+
+<p>여기에 나오는 모든 컴포넌트를 최대한 실습해보려고 하겠지만 빠진 부분은 공식 메뉴을을 찾아보거나, 다른 컴포넌트의 상용과 크게 다르지 않다. 위에 열거되어 있는 컴포넌트들은 모두 Ext.Component를 상속받기 때문이다.  우리가 가장 먼저 살펴보았던 것은 Ext.Panel 이라는 General components 중에 하나였다. 이제 좀더 구체적으로 뷰를 구성하기 위한 컴포넌트 사용 예제를 살펴보자.</p>
+
+<h2 id="toolbar">Toolbar</h2>
+
+<p>우리는 기존에 Ext.Panel을 생성하는 방법을 배웠다. Toolbar도 Ext.Component를 상속받기 때문에 동일한 방법으로 생성할 수 있겠다. MainView.js를 열어서 다음과 같이 수정하자. 간단하게 MainView 를 Ext.Toolbar를 상속받게 정의하였다. 그리고 toolbar를 상단에 배치시키기 위해서 docked를 &#39;top&#39;으로 설정했다. &#39;bottom&#39;으로 하면 하단에 배치된다. 그리고 버그인지 모르겠지만, 하이브리드 앱 상에서는 width:&#39;100%&#39;를 주지 않아도 fullscreen으로 나오는데 데스크탑에서 브라우저를 열어서 확인하면 명시적인 사이즈 없이는 사이즈가 fullscreen으로 만들지 못했다. 이 Ext.define은 Ext.application에서 launch 속성이 동작할때 Ext.create(&#39;main_view&#39;)를 호출하는데 관련된 정의를 Panel에서 Toolbar로 상속되게 변경한 것이다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Toolbar&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+        <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>index.html을 새로 고치맣면 아이폰에서 Toolbar와 동일한 모야이 상단에 붙은 것을 확인할 수 있다.</p>
+
+<p><img src="http://cfile10.uf.tistory.com/image/1610A3394FB20517329A50" alt=""></p>
+
+<p>우리는 좀더 Toolbar 스럽게 만들기 위해서 버턴을 추가하자, 왼쪽상단에 &quot;Back&quot; 이라는 뒤로가기 버턴을 추가할 것이다. MainView.js 파일을 다음과 같이 수정하자.</p>
+
+<ol>
+<li>LeftTopButton이라는 이름으로 Ext.define을 가지고 정의를 한다.</li>
+<li>Ext.Button의 속성중에서 text라는 속성은 버턴 위에 나타나는 글자를 지정하는 것인데 &#39;Back&#39;이라는 글자를 지정한다.</li>
+<li>Ext.Button의 속성중에 ui라는 속성은 버턴의 모야을 지정하는 것인데, 그 중에서 &#39;back&#39;을 지정한다. ui에 값으로는 (normal, back, forward, round, action, decline, confirm) 이 있다.</li>
+<li>그리고 Toolbar를 정의하는 곳에서 객체가 생성될 때 작업을 지시하기 위해서 initialize 속성에 메소드를 구현해서 추가한다.</li>
+<li>initialize에서는 Toolbar 위에 올라가는 버턴을 생성하여 추가하는데 Sencha에서는 객체의 이름과 객체를 매핑시킨다고 하였다. 이 때 버턴의 이름이 LeftTopButton이므로 객체를 생성할 때 new LeftTopButton()으로 생성할 수 있다. 그리고 Ext.Component가 가지고 있는 속성중에 add 메소드를 이용해서 child component를 추가한다.</li>
+</ol>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;LeftTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Toolbar&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+        <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LeftTopButton</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">leftTopButton</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><img src="http://cfile2.uf.tistory.com/image/1102E0444FB2097E0B422A" alt=""></p>
+
+<p>우리는 Toolbar를 조금 더 수정해보자. Toolbar 오른쪽에 &quot;New&quot;라는 버턴을 추가해보자. 우리는 앞서 버턴을 툴바에 추가하는 방법에 대해서 알아보았다. 그래서 코드를 다음과 같이 수정한다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;LeftTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;RightTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;New&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;action&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Toolbar&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+        <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LeftTopButton</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">rightTopButton</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RightTopButton</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">leftTopButton</span><span class="p">,</span> <span class="nx">rightTopButton</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><img src="http://cfile28.uf.tistory.com/image/15090C384FB20A1012AF88" alt=""></p>
+
+<p>그런데 우리가 원하는 모양으로 나오지 않는다는 것을 확인할 수 있다. 이는 아이폰 개발자라면 알 수 있는 UI 구성이다. UIToolbar에 items를 NSArray 타입으로 받아서 UI를 구성하는데 Sencha에서도 동일하게 구성을 만들어둔 것이다. 그래서 다음과 같이 변경해보자.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;LeftTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;RightTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;New&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;action&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;Spacer&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Spacer&#39;</span><span class="p">,</span>
+<span class="p">})</span>
+
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Toolbar&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+        <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LeftTopButton</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">spacer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Spacer</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">rightTopButton</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RightTopButton</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">leftTopButton</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">,</span> <span class="nx">rightTopButton</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>다시 index.html 파일을 새로 고침해보자. 이제 우리가 원하는 모양대로 Toolbar가 네이티브 앱의 모양과 동일하게 구성된 것을 확인할 수 있다.</p>
+
+<p><img src="http://cfile29.uf.tistory.com/image/1136BA3E4FB20D7416BE5C" alt=""></p>
+
+<p>Sencha에서 우리는 컴포넌트를 생성하는 방법으로 Ext.create를 사용했고 위 예제에서는 이름과 동일한 클래스명을 new로 생성하였다. 우리는 Ext.create을 상용해서 컴포넌트들을 생성하고 추가해보자.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;LeftTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;RightTopButton&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Button&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;New&#39;</span><span class="p">,</span>
+        <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;action&#39;</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;Spacer&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Spacer&#39;</span><span class="p">,</span>
+<span class="p">})</span>
+
+
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Toolbar&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+        <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">&#39;LeftTopButton&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">spacer</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">&#39;Spacer&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">rightTopButton</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">&#39;RightTopButton&#39;</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">leftTopButton</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">,</span> <span class="nx">rightTopButton</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>이런 패턴으로 컴포넌트를 정의하고 추가하고 하는 작업을 하려면 복잡하게 될 것 같다는 생각이 든다. 그래서 Sencha는 xtype 이라는 속성을 컴포넌트에 추가하였고, 이 xtype은 컴포넌트가 생성되고 렌더링 될때 옵티마이저하게 하는 기능을 갖도록 구현하였다. 그래서 위의 코드를 다음과 같이 변경할 수 있다. 코드가 굉장히 짦고 간단해졌다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span> <span class="o">:</span> <span class="s1">&#39;Ext.Toolbar&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+        <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">callParent</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span>
+            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+            <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">rightTopButton</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span>
+            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;New&#39;</span><span class="p">,</span>
+            <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;action&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">spacer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;spacer&#39;</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">leftTopButton</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">,</span> <span class="nx">rightTopButton</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>마지막으로 우리가 처음 생성했던 Hello, World!의 Panel 컴포넌트에 우리가 만든 위의 Toolbar를 추가해서 완벽하게 구성해보자. Toolbar는 다음과 같이 xtype으로 정의할 수 있고, this.add로 컴포넌트를 생성하여 추가한 것은 items 속성으로 변경할 수 있다.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Panel&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">html</span><span class="o">:</span> <span class="s1">&#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;</span><span class="p">,</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span>
+            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+            <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">rightTopButton</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span>
+            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;New&#39;</span><span class="p">,</span>
+            <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;action&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">spacer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;spacer&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">toolbar</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span> <span class="o">:</span> <span class="s1">&#39;toolbar&#39;</span><span class="p">,</span>
+            <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+            <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+            <span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">leftTopButton</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">,</span> <span class="nx">rightTopButton</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">toolbar</span><span class="p">])</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><img src="http://cfile27.uf.tistory.com/image/183538374FB21B2102BF36" alt=""></p>
+
+<p>그리고 우리는 본문을 HTML로 작성하고자 하기 때문에 컨텐츠가 HTML 스타일이 적용되게 다음 코드를 추가하자.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**</span>
+<span class="cm">* file : MainView.js</span>
+<span class="cm">* author : saltfactory</span>
+<span class="cm">* email : saltfactory@gmail.com</span>
+<span class="cm">*/</span>
+
+<span class="nx">Ext</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SaltfactorySenchaTutorial.view.MainView&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="s1">&#39;Ext.Panel&#39;</span><span class="p">,</span>
+    <span class="nx">alias</span><span class="o">:</span> <span class="s1">&#39;main_view&#39;</span><span class="p">,</span>
+
+    <span class="nx">config</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">styleHtmlContent</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">html</span><span class="o">:</span> <span class="s1">&#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;</span><span class="p">,</span>
+        <span class="nx">fullscreen</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">leftTopButton</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span>
+            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;Back&#39;</span><span class="p">,</span>
+            <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;back&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">rightTopButton</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span>
+            <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;New&#39;</span><span class="p">,</span>
+            <span class="nx">ui</span><span class="o">:</span> <span class="s1">&#39;action&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">spacer</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;spacer&#39;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">toolbar</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">xtype</span> <span class="o">:</span> <span class="s1">&#39;toolbar&#39;</span><span class="p">,</span>
+            <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span>
+            <span class="nx">docked</span><span class="o">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+            <span class="nx">items</span><span class="o">:</span> <span class="p">[</span><span class="nx">leftTopButton</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">,</span> <span class="nx">rightTopButton</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">add</span><span class="p">([</span><span class="nx">toolbar</span><span class="p">])</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><img src="http://cfile24.uf.tistory.com/image/162E3F3B4FB21B60162DCB" alt=""></p>
+
+<h2 id="결론">결론</h2>
+
+<p>이제 우리가 구성하기로 마음 먹은대로 컴포넌트를 사용해서 뷰를 구성했다. 컴포넌트를 생성하는 방법은 Ext.create를 이용하거나 Ext.define에 정의한 이름을 new로 생성하여 만들 수 있다. 그리고 그렇게 생성된 컴포넌트들은 Ext.Component가 가지는 add 메소드를 이용해서 순서적으로 추가할 수 있다. 이렇게 정의하고 컴포넌트를 생성하고 하는 코드가 너무 길어지기 때문에 Ext.Component의 xtype이라는 것으로 컴포넌트를 정의하여 컴포넌트가 랜더링 될때 최적화된 컴포넌트를 구성할 수 있다는 것을 소개하였다. 마지막으로 우리가 사용하는 사용자 정의 HTML 속성을 사용하기 위해서 styleHtmlContent을 true 로 한다. 이 포스팅은 컴포넌트를 생성하여 다른 컴포넌트에 추가하여 뷰를 구성하는 방법을 Toolbar를 예로 들어 설명했다.  다음 포스팅에서는 컴포넌트 생성과 구성 과정을 생략하고 좀 더 다양한 컴포넌트를 조합해서 뷰를 구성하는 방법에 대해서 포스팅할 예정이다.</p>
+
+<h2 id="연구원-소개">연구원 소개</h2>
+
+<ul>
+<li>작성자 : <a href="http://about.me/saltfactory">송성광</a> 개발 연구원</li>
+<li>블로그 : <a href="http://blog.saltfactory.net">http://blog.saltfactory.net</a></li>
+<li>이메일 : <a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+<li>트위터 : <a href="https://twitter.com/saltfactory">@saltfactory</a></li>
+<li>페이스북 : <a href="https://facebook.com/salthub">https://facebook.com/salthub</a></li>
+<li>연구소 : <a href="http://www.hibrain.net">하이브레인넷</a> 부설연구소</li>
+<li>연구실 : <a href="http://dblab.changwon.ac.kr">창원대학교 데이터베이스 연구실</a></li>
+</ul>
+
+  </article>
+
+  
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    
+      var disqus_shortname = 'saltfactoryblog';
+    
+    // 
+    
+     var disqus_identifier = 'http://blog.saltfactory.net/142'; 
+    
+
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">saltfactory's blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <!-- <li>saltfactory's blog</li> -->
+          <li><img class="profile" src="/assets/images/profile.png"/></li>
+          <li><a href="mailto:saltfactory@gmail.com">saltfactory@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/saltfactory">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">saltfactory</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/saltfactory">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">@saltfactory</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://facebook.com/salthub">
+              <span class="icon icon--facebook">
+                <!-- <svg class="facebook-icon-svg" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <path d="M0.112290344,30 C0.112290344,13.4314567 13.3426506,0 29.663129,0 C45.9836073,0 59.2139676,13.4314567 59.2139676,30 C59.2139676,46.5685433 45.9836073,60 29.663129,60 C13.3426506,60 0.112290344,46.5685433 0.112290344,30 Z M0.112290344,30" fill="#C2C2C2" sketch:type="MSShapeGroup"></path>
+	<path d="M32.1341457,46.3196729 L32.1341457,29.9980891 L36.5657565,29.9980891 L37.1530406,24.3735809 L32.1341457,24.3735809 L32.141675,21.5584604 C32.141675,20.091502 32.2787707,19.3054722 34.351206,19.3054722 L37.1216686,19.3054722 L37.1216686,13.6803271 L32.6894304,13.6803271 C27.3655995,13.6803271 25.491749,16.4088187 25.491749,20.9972835 L25.491749,24.3742179 L22.1732173,24.3742179 L22.1732173,29.998726 L25.491749,29.998726 L25.491749,46.3196729 L32.1341457,46.3196729 Z M32.1341457,46.3196729" id="Path" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+</svg>
+ -->
+                <svg viewBox="0 0 16 28">
+                  <path id="logo" d="M14.984 0.187v4.125h-2.453q-1.344 0-1.813 0.562t-0.469 1.687v2.953h4.578l-0.609 4.625h-3.969v11.859h-4.781v-11.859h-3.984v-4.625h3.984v-3.406q0-2.906 1.625-4.508t4.328-1.602q2.297 0 3.563 0.187z"></path>
+                </svg>
+              </span>
+              <span class="username">salthub</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text"></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

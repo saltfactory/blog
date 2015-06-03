@@ -5,6 +5,7 @@ category: ruby
 tags: [ruby, scaffold, web]
 comments: true
 redirect_from: /177/
+disqus_identifier : http://blog.saltfactory.net/177
 ---
 
 ## 서론

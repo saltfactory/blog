@@ -5,6 +5,7 @@ category : ionic
 tags : [android, ios, hybrid, html5, ionic]
 comments : true
 redirect_from : /263/
+disqus_identifier : http://blog.saltfactory.net/263
 ---
 
 ## 서론

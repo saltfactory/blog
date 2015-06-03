@@ -5,6 +5,7 @@ category: ios
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, sencha, geolocation]
 comments: true
 redirect_from: /160/
+disqus_identifier : http://blog.saltfactory.net/160
 ---
 
 ## 서론

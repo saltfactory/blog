@@ -5,6 +5,7 @@ category: javascript
 tags: [javascript, var]
 comments: true
 redirect_from: /193/
+disqus_identifier : http://blog.saltfactory.net/193
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: android
 tags: [android, fragment, java]
 comments: true
 redirect_from: /190/
+disqus_identifier : http://blog.saltfactory.net/190
 ---
 
 ## 서론

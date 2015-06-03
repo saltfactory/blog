@@ -5,6 +5,7 @@ category: database
 tags: [database, sqlite]
 comments: true
 redirect_from: /162/
+disqus_identifier : http://blog.saltfactory.net/162
 ---
 
 ## 서론

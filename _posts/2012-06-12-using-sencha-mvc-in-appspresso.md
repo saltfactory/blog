@@ -5,6 +5,7 @@ category: appspresso
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, sencha, mvc]
 comments: true
 redirect_from: /158/
+disqus_identifier : http://blog.saltfactory.net/158
 ---
 
 ## 서론

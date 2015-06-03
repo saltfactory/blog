@@ -5,6 +5,7 @@ category: ios
 tags: [ios, addressbook, api, sdk, objective-c]
 comments: true
 redirect_from: /167/
+disqus_identifier : http://blog.saltfactory.net/167
 ---
 
 ## 서론

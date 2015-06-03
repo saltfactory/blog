@@ -5,6 +5,7 @@ category: javascript
 tags: [javascript, qunit, unit test]
 comments: true
 redirect_from: /194/
+disqus_identifier : http://blog.saltfactory.net/194
 ---
 
 ## 서론

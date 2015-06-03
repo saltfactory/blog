@@ -5,6 +5,7 @@ category: Java
 tags: [java, jvm, tomcat, character, utf-8, war]
 comments: true
 redirect_from : /269/
+disqus_identifier : http://blog.saltfactory.net/269
 ---
 
 ## 서론

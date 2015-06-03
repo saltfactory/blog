@@ -5,6 +5,7 @@ category: hybridapp
 tags: [phonegap, cordova, push, apn, gcm]
 comments: true
 redirect_from: /245/
+disqus_identifier : http://blog.saltfactory.net/245
 ---
 
 ## 서론

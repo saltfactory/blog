@@ -5,6 +5,7 @@ category: javascript
 tags: [javascript, pattern]
 comments: true
 redirect_from: /222/
+disqus_identifier : http://blog.saltfactory.net/222
 ---
 
 ## 서론

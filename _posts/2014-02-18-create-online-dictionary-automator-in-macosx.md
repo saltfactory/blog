@@ -5,6 +5,7 @@ category : hybridapp
 tags : [phonegap, cordova, remote build, hybrid, hybridapp]
 comments : true
 redirect_from : /230/
+disqus_identifier : http://blog.saltfactory.net/230
 ---
 
 ## 서론

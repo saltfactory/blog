@@ -5,6 +5,7 @@ category : android
 tags : [android, genymotion]
 comments : true
 redirect_from : /257/
+disqus_identifier : http://blog.saltfactory.net/257
 ---
 
 ## 서론

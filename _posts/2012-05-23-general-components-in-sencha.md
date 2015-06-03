@@ -5,6 +5,7 @@ category: sencha
 tags: [sencha, sencha touch, hybridapp, hybrid, view, component, general, tabbar, image, message, action]
 comments: true
 redirect_from: /149/
+disqus_identifier : http://blog.saltfactory.net/149
 ---
 
 ## 서론

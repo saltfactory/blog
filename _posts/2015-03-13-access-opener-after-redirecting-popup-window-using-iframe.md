@@ -5,6 +5,7 @@ category: javascript
 tags: [javascript, opener, window]
 comments: true
 redirect_from : /268/
+disqus_identifier : http://blog.saltfactory.net/268
 ---
 
 ## 서론

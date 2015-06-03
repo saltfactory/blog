@@ -1,14 +1,18 @@
-{{site.url}}
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     {% if site.disqus_shortname %}
       var disqus_shortname = '{{ site.disqus_shortname }}';
     {% endif %}
-    {% if page.disqus %}
-      {% if page.disqus.identifier %} var disqus_identifier = '{{ page.disqus.identifier }}'; {% endif %}
-      {% if page.disqus.url %} var disqus_url = '{{ page.disqus.url }}'; {% endif %}
-    {% endif %}
+    // {% if page.disqus %}
+    //   {% if page.disqus.identifier %} var disqus_identifier = '{{ page.disqus_identifier }}'; {% endif %}
+    //   {% if page.disqus.url %} var disqus_url = '{{ page.disqus.url }}'; {% endif %}
+    // {% endif %}
+    {% if page.disqus_shortname %} var disqus_shortname = '{{ page.disqus_shortname }}'; {% endif %}
+    {% if page.disqus_identifier %} var disqus_identifier = '{{ page.disqus_identifier }}'; {% endif %}
+    {% if page.disqus_url %} var disqus_url = '{{ page.disqus_url }}'; {% endif %}
+
+
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

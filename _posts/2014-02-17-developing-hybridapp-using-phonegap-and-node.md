@@ -5,6 +5,7 @@ category : hybridapp
 tags : [phonegap, node, nodejs, hybridapp, hybrid]
 comments : true
 redirect_from : /228/
+disqus_identifier : http://blog.saltfactory.net/228
 ---
 
 ## 서론

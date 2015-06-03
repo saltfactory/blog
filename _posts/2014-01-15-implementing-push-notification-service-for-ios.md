@@ -5,6 +5,7 @@ category: node
 tags: [node, node.js, ios, apns, push, notification]
 comments: true
 redirect_from: /215/
+disqus_identifier : http://blog.saltfactory.net/215
 ---
 
 ## 서론

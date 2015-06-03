@@ -5,6 +5,7 @@ category: node
 tags: [javascript, node, node.js, gallery3, api, rest]
 comments: true
 redirect_from : /266/
+disqus_identifier : http://blog.saltfactory.net/266
 ---
 
 ## 서론

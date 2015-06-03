@@ -5,6 +5,7 @@ category: ruby
 tags: [ruby, mixin, pattern]
 comments: true
 redirect_from: /209/
+disqus_identifier : http://blog.saltfactory.net/209
 ---
 
 ## 서론

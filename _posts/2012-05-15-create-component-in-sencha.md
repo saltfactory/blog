@@ -5,6 +5,7 @@ category: sencha
 tags: [sencha, sencha touch, hybridapp, hybrid, view, component]
 comments: true
 redirect_from: /142/
+disqus_identifier : http://blog.saltfactory.net/142
 ---
 
 ## 서론

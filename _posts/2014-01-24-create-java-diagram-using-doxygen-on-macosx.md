@@ -5,6 +5,7 @@ category: java
 tags: [java, mac, osx, doxygen, documents]
 comments: true
 redirect_from: /218/
+disqus_identifier : http://blog.saltfactory.net/218
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: linux
 tags: [unix, linux, prompt, terminal]
 comments: true
 redirect_from: /99/
+disqus_identifier : http://blog.saltfactory.net/99
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: xcode
 tags: [xcode]
 comments: true
 redirect_from: /163/
+disqus_identifier : http://blog.saltfactory.net/163
 ---
 
 ## 서론

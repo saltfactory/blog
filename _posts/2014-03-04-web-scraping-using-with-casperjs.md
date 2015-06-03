@@ -5,6 +5,7 @@ category : node
 tags : [node, javascript, casper, casper.js]
 comments : true
 redirect_from : /232/
+disqus_identifier : http://blog.saltfactory.net/232
 ---
 
 ## 서론

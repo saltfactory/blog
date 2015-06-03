@@ -5,6 +5,7 @@ category: mac
 tags: [mac, apns, push notification, objective-c]
 comments: true
 redirect_from: /171/
+disqus_identifier : http://blog.saltfactory.net/171
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category : jekyll
 tags : [jekyll, git, ruby]
 comments : true
 redirect_from : /256/
+disqus_identifier : http://blog.saltfactory.net/256
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: mac
 tags: [brew, update, error]
 comments: true
 redirect_from: /213/
+disqus_identifier : http://blog.saltfactory.net/213
 ---
 
 homebrew는 Mac에서 설치되지 않은 Unix 패키지를 관리하기 위한 툴로 맥 운영체제로 개발 연구하는 사람들에게 가장 인기 있는 툴 중에서 하나이다. 좀더 자세한 글은 [Homebrew를 이용하여 Mac OS X 에서 Unix 패키기 사용하기](http://blog.saltfactory.net/109)를 참고하자. MariaDB를 homebrew를 이용해서 설치하려고 그동안 homebrew 를 업데이트를 한 적이 없어서 업데이트를 하는데 다음과 같은 에러를 보이면서 업데이트가 되지 않는 문제가 발생했다.

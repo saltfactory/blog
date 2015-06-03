@@ -5,6 +5,7 @@ category: passport-tistory
 tags: [tistory, node, passport, passport-tistory]
 comments: true
 redirect_from: /249/
+disqus_identifier : http://blog.saltfactory.net/249
 ---
 
 ## 서론

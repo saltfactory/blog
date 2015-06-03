@@ -5,6 +5,7 @@ category: ruby
 tags: [ruby, irb, rvm, readline]
 comments: true
 redirect_from: /31/
+disqus_identifier : http://blog.saltfactory.net/31
 ---
 
 ## 서론

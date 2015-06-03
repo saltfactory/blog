@@ -5,6 +5,7 @@ category : nginx
 tags : [nginx, git]
 comments : true
 redirect_from : /262/
+disqus_identifier : http://blog.saltfactory.net/262
 ---
 
 ## 서론

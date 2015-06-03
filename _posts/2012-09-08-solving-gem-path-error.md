@@ -5,6 +5,7 @@ category: ruby
 tags: [ruby, rvm, error, gem]
 comments: true
 redirect_from: /188/
+disqus_identifier : http://blog.saltfactory.net/188
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: node
 tags: [node, web scraping, phantomjs, javascript]
 comments: true
 redirect_from: /224/
+disqus_identifier : http://blog.saltfactory.net/224
 ---
 
 ## 서론

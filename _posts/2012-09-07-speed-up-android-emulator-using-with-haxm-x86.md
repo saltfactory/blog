@@ -5,6 +5,7 @@ category: android
 tags: [android, x86, atom, haxm]
 comments: true
 redirect_from: /187/
+disqus_identifier : http://blog.saltfactory.net/187
 ---
 
 ## 서론

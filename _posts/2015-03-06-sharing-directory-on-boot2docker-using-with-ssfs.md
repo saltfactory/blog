@@ -5,6 +5,7 @@ category: docker
 tags: [mac, docker, boot2docker, volumn, ssfs]
 comments: true
 redirect_from : /265/
+disqus_identifier : http://blog.saltfactory.net/265
 ---
 
 ## 서론

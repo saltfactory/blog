@@ -5,6 +5,7 @@ category: chrome
 tags: [chrome, google, cache, cookie]
 comments: true
 redirect_from: /172/
+disqus_identifier : http://blog.saltfactory.net/172
 ---
 
 ## 서론

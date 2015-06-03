@@ -5,6 +5,7 @@ category : git
 tags : [docker, git, yobi]
 comments : true
 redirect_from : /261/
+disqus_identifier : http://blog.saltfactory.net/261
 ---
 
 ## 서론

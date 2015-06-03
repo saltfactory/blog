@@ -5,6 +5,7 @@ category: appspresso
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, wac, deviceapi]
 comments: true
 redirect_from: /136/
+disqus_identifier : http://blog.saltfactory.net/136
 ---
 
 ## WAC

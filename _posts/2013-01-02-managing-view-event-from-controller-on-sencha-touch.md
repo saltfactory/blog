@@ -5,6 +5,7 @@ category: sencha
 tags: [sencha, javascript, sencha touch]
 comments: true
 redirect_from: /210/
+disqus_identifier : http://blog.saltfactory.net/210
 ---
 
 Sencha Touch의 가장 큰 장점이 MVC 프레임워크 지원이 된다는 것이다. 그런데 사실 MVC라고 말해도 일부 사람들(개발자가 아니거나, 한 클래스에 모든 기능을 다 넣어두는 개발자)에게는 MVC 지원이 뭐 그리 대수냐고 말할 수 있을지도 모른다. 우리는 흔히 HTML 코드와 Javascript를 분리해서 markup에 최대한 집중하여 웹 자체를 문서로 만들어보자 라는 생각을 하고 있다. 그래서 HTML 코드 안에 onClick 대신에 javascript에서 DOM을 selector를 이용해서 접근해서 이벤트를 등록하는 코드를 만들어 사용한다.

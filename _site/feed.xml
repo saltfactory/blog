@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>saltfactory&#39;s series</title>
+    <title>saltfactory&#39;s blog</title>
     <description></description>
-    <link>/series/</link>
-    <atom:link href="/series/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 01 Jun 2015 14:32:37 +0900</pubDate>
-    <lastBuildDate>Mon, 01 Jun 2015 14:32:37 +0900</lastBuildDate>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 03 Jun 2015 14:21:50 +0900</pubDate>
+    <lastBuildDate>Wed, 03 Jun 2015 14:21:50 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -125,8 +125,8 @@
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 06 May 2015 00:00:00 +0900</pubDate>
-        <link>/series/nginx/redirect-using-with-parameter-on-nginx.html</link>
-        <guid isPermaLink="true">/series/nginx/redirect-using-with-parameter-on-nginx.html</guid>
+        <link>/nginx/redirect-using-with-parameter-on-nginx.html</link>
+        <guid isPermaLink="true">/nginx/redirect-using-with-parameter-on-nginx.html</guid>
         
         <category>nginx</category>
         
@@ -244,8 +244,8 @@ LC_ALL=
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 20 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/series/java/solving-character-in-war-prolbem-via-os-and-jvm.html</link>
-        <guid isPermaLink="true">/series/java/solving-character-in-war-prolbem-via-os-and-jvm.html</guid>
+        <link>/java/solving-character-in-war-prolbem-via-os-and-jvm.html</link>
+        <guid isPermaLink="true">/java/solving-character-in-war-prolbem-via-os-and-jvm.html</guid>
         
         <category>java</category>
         
@@ -564,8 +564,8 @@ SQL&amp;gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 13 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/series/ubuntu/install-oracle-xe-on-ubuntu.html</link>
-        <guid isPermaLink="true">/series/ubuntu/install-oracle-xe-on-ubuntu.html</guid>
+        <link>/ubuntu/install-oracle-xe-on-ubuntu.html</link>
+        <guid isPermaLink="true">/ubuntu/install-oracle-xe-on-ubuntu.html</guid>
         
         <category>database</category>
         
@@ -714,8 +714,8 @@ SQL&amp;gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 13 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/series/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</link>
-        <guid isPermaLink="true">/series/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</guid>
+        <link>/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</link>
+        <guid isPermaLink="true">/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</guid>
         
         <category>javascript</category>
         
@@ -1147,8 +1147,8 @@ var gallery3 = new Gallery3(options);
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 10 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/series/node/introduce-node-gallery3.html</link>
-        <guid isPermaLink="true">/series/node/introduce-node-gallery3.html</guid>
+        <link>/node/introduce-node-gallery3.html</link>
+        <guid isPermaLink="true">/node/introduce-node-gallery3.html</guid>
         
         <category>javascript</category>
         
@@ -1319,8 +1319,8 @@ VOLUME /shared
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 06 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/series/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</link>
-        <guid isPermaLink="true">/series/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</guid>
+        <link>/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</link>
+        <guid isPermaLink="true">/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</guid>
         
         <category>mac</category>
         
@@ -1642,8 +1642,8 @@ gems:
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 12 Nov 2014 00:00:00 +0900</pubDate>
-        <link>/series/jekyll/introduce-jekyll-img-converter.html</link>
-        <guid isPermaLink="true">/series/jekyll/introduce-jekyll-img-converter.html</guid>
+        <link>/jekyll/introduce-jekyll-img-converter.html</link>
+        <guid isPermaLink="true">/jekyll/introduce-jekyll-img-converter.html</guid>
         
         <category>jekyll</category>
         
@@ -1889,8 +1889,8 @@ gems:
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 13 Oct 2014 00:00:00 +0900</pubDate>
-        <link>/series/ionic/create-hybrid-app-using-ionic.html</link>
-        <guid isPermaLink="true">/series/ionic/create-hybrid-app-using-ionic.html</guid>
+        <link>/ionic/create-hybrid-app-using-ionic.html</link>
+        <guid isPermaLink="true">/ionic/create-hybrid-app-using-ionic.html</guid>
         
         <category>android</category>
         
@@ -1992,8 +1992,8 @@ include /etc/nginx/sites-enabled/*;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 12 Sep 2014 00:00:00 +0900</pubDate>
-        <link>/series/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</link>
-        <guid isPermaLink="true">/series/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</guid>
+        <link>/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</link>
+        <guid isPermaLink="true">/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</guid>
         
         <category>nginx</category>
         
@@ -2140,8 +2140,8 @@ docker ps
 &lt;/ul&gt;
 </description>
         <pubDate>Thu, 28 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/series/git/running-yobi-on-docker.html</link>
-        <guid isPermaLink="true">/series/git/running-yobi-on-docker.html</guid>
+        <link>/git/running-yobi-on-docker.html</link>
+        <guid isPermaLink="true">/git/running-yobi-on-docker.html</guid>
         
         <category>docker</category>
         

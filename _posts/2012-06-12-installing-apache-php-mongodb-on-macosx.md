@@ -5,6 +5,7 @@ category: php
 tags: [php, apache, mongodb, mac, osx]
 comments: true
 redirect_from: /157/
+disqus_identifier : http://blog.saltfactory.net/157
 ---
 
 ## 서론

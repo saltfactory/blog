@@ -5,6 +5,7 @@ category: android
 tags: [android, database, sqlite3, debugging]
 comments: true
 redirect_from: /217/
+disqus_identifier : http://blog.saltfactory.net/217
 ---
 
 ## 서론

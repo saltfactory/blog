@@ -5,6 +5,7 @@ category: html5
 tags: [html5, api, custom data attribute, attribute]
 comments: true
 redirect_from: /203/
+disqus_identifier : http://blog.saltfactory.net/203
 ---
 
 ## 서론

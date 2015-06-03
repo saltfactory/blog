@@ -5,6 +5,7 @@ category: hybridapp
 tags: [phonegap, cordova, link, browser]
 comments: true
 redirect_from: /243/
+disqus_identifier : http://blog.saltfactory.net/243
 ---
 
 ## 서론

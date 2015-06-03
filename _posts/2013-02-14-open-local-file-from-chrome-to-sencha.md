@@ -5,6 +5,7 @@ category: sencha
 tags: [sencha, chrome, javascript]
 comments: true
 redirect_from: /212/
+disqus_identifier : http://blog.saltfactory.net/212
 ---
 
 Sencha Application은 web application을 개발하는 프레임워크라는 사실을 이젠 많은 개발자들이 알고 센차터치의 잠재력을 높이 평가하고 있다. 이러한 sencha application을 실행하기 위해서는 간단하게 html 파일과 javascript, css 파일만 있으면 브라우저에서 원격지에 파일을 업로드하지 않고 실행하면서 개발을 할 수 있다. 오페라 브라우저도 webkit engine을 포용하는 지금 시점에서 웹 어플리케이션은 webkit insepector로 개발하는 것이 이젠 거의 표준인 것으로 생각하기 때문에 chrome browser로 개발을 하는 사람들이 많아졌다.

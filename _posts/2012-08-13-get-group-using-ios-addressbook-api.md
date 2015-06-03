@@ -5,6 +5,7 @@ category: ios
 tags: [ios, api, sdk, group, addressbook, contacts, objective-c]
 comments: true
 redirect_from: /169/
+disqus_identifier : http://blog.saltfactory.net/169
 ---
 
 우리는 앞서 [iOS 주소록 API를 이용하여 아이폰 주소록 그룹 다루기](http://blog.saltfactory.net/167) 와  [iOS 주소록 API를 이용하여 아이폰 주소록 그룹 뷰컨트롤러 연결하기](http://blog.saltfactory.net/168)편 에서 iOS의 AdddressBook.framework를 이용해서 주소록 데이터 중에서 그룹에 관련된 작업을 처리하는 방법에 대해서 함께 테스트하였다. 이번 포스팅은 주소록에서 연락처 조회에 관한 방법에 대해서 살펴볼 것이다. 테스트를 위해서 프로젝트를 생성해야한다. 지금까지 iOS  주소록 API 에 관련된 글을 계속 같이 해왔더라면 다음과 같이 github 에서 소스코드를 clone 하여 사용하면 된다.

@@ -5,6 +5,7 @@ category: ios
 tags: [ios, javascript, objective-c, objc]
 comments: true
 redirect_from: /86/
+disqus_identifier : http://blog.saltfactory.net/86
 ---
 
 ## 서론

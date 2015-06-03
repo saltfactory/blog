@@ -5,6 +5,7 @@ category: markdown
 tags: [markdown, tistory, blog]
 comments: true
 redirect_from: /248/
+disqus_identifier : http://blog.saltfactory.net/248
 ---
 
 ## 서론

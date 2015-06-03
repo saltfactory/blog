@@ -5,6 +5,7 @@ category : ubuntu
 tags : [linux, ubuntu, usb]
 comments : true
 redirect_from : /260/
+disqus_identifier : http://blog.saltfactory.net/260
 ---
 
 ## 서론

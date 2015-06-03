@@ -5,6 +5,7 @@ category: rabbitmq
 tags: [rabbitmq, async]
 comments: true
 redirect_from: /90/
+disqus_identifier : http://blog.saltfactory.net/90
 ---
 
 ## 서론

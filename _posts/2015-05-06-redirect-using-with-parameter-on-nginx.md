@@ -4,7 +4,9 @@ title: 모바일 앱 안에서 변화하는 외부 URL 문제를 NginX의 rewrit
 category: nginx
 tags: [nginx, mobile, rewrite]
 comments: true
-redirect_from : /270/
+redirect_from: /270/
+disqus_identifier : http://blog.saltfactory.net/270
+
 ---
 
 ## 서론

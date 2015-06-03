@@ -5,6 +5,7 @@ category: ios
 tags: [ios, xcode, ipod, ipod touch, debugging]
 comments: true
 redirect_from: /93/
+disqus_identifier : http://blog.saltfactory.net/93
 ---
 
 ## 서론

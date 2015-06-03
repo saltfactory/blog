@@ -5,6 +5,7 @@ category: node
 tags: [node, node.js, android, push, notification, gcm, google play service]
 comments: true
 redirect_from: /216/
+disqus_identifier : http://blog.saltfactory.net/216
 ---
 
 ## 서론

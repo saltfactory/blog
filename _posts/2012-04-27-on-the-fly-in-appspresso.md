@@ -5,12 +5,15 @@ category: appspresso
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c,on-the-fly]
 comments: true
 redirect_from: /126/
+disqus_identifier : http://blog.saltfactory.net/126
 ---
 
 ## 서론
 
 개발할 때 빌드 시간이 오래 건린다면 여러분은 어떻게 하시겠습니까? 오랫동안 개발 연구하면서 가장 큰 고민거리 중에 하나이다. PC 성능은 점점 좋아지고 클래스 API 는 점점 덩치가 커지면서 프로그램의 변경 사항을 한번 확인하기 위해서 컴파일 시켜서 기다리는게 너무나 지루한 싸움이기 때문이다. 그러한 이유로 토이 프로젝트를 진행할 때는 컴파일러가 따로 필요없이 인터프리터만 지원하면 개발할 수 있는 Ruby, Phython을 대부분 사용하고 있다. Xcode는 그나마 다행히 Android의 빌드 시간보다 짧다.(같은 라인코드 수라고 가정했을 경우). Appspresso의 IDE는 eclipse를 기반으로 만들어진 Java-based IDE 이다. 더구나 javascript와 deviceapi 를 내부적으로 패키징하여 .ipa나 .apk 파일을 만들어 내는데 한번 빌드하게되면 그 시간이 엄청나다. 처음에 Hello world를 우린 같이 살펴봤는데, 아마 실행하기 위해서 한번 빌드하고 나서 소감이 어떠했는가? 아마도 이정도의 빌드 속도라면 "Hello World"를 "Good bye World"로 단순히 글자만 변경해도 다시 빌드를 해야한다고 생각하면서 빌드 시간의 공포에 Appspresso를 두번다시 사용하기 싫다고 실망했을거라 예상된다. 처음 android의 emulator를 빌드,런을 하면서 거의 울먹거리며 한숨을 쉬었던 경험을 바탕으로 생각해보면 빌드의 시간은 프로덕트를 생산하는 생산성에 아주 큰 영향을 미친다.
 다행히도 Appspresso는 웹 리소스의 변화를 감지해서 우리들히 데스크탑에서 새로 고침을하면서 php를 개발하듯 동일한 인터페이스를 제공해준다. 즉, 한번만 빌드해서 실행시켜두고 웹 자원에 변경이 일어면 빌드를 새로하는 것이 아니라 새로 고침을 할 수 있게 해주는 것이다. 이런 기능을 on the fly이라고 한다.
+
+<!--more-->
 
 앞에서 같이 테스트한 SaltfactoryHybridTutorial (http://blog.saltfactory.net/125) 을 다시 열어 보자. 그리고 preferences를 열어서 Appspresso의 Debug를 열어서 Debug Server Host를 지정한다.
 

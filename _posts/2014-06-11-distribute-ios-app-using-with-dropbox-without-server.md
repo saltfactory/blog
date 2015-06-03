@@ -5,6 +5,7 @@ category: ios
 tags: [ios, dropbox, ad-hoc]
 comments: true
 redirect_from: /242/
+disqus_identifier : http://blog.saltfactory.net/242
 ---
 
 ## 서론

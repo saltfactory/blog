@@ -5,6 +5,7 @@ category: html5
 tags: [html5, api, selector]
 comments: true
 redirect_from: /201/
+disqus_identifier : http://blog.saltfactory.net/201
 ---
 
 ## 서론

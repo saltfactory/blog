@@ -5,6 +5,7 @@ category: ios
 tags: [ios, sdk, objective-c, table, uitable, uitableviewcellstyle, uitableviewcell]
 comments: true
 redirect_from: /166/
+disqus_identifier : http://blog.saltfactory.net/166
 ---
 
 ## 서론

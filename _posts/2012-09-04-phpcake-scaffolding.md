@@ -5,6 +5,7 @@ category: php
 tags: [cakephp, php, scaffolding, scaffold, mvc]
 comments: true
 redirect_from: /182/
+disqus_identifier : http://blog.saltfactory.net/182
 ---
 
 ## 서론

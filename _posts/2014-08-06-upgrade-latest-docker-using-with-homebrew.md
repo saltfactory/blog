@@ -5,6 +5,7 @@ category : docker
 tags : [docker, mac, linux]
 comments : true
 redirect_from : /255/
+disqus_identifier : http://blog.saltfactory.net/255
 ---
 
 ## 서론

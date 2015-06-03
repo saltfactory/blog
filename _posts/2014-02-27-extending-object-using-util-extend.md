@@ -5,6 +5,7 @@ category : node
 tags : [node, javascript, extend, object, util-extend]
 comments : true
 redirect_from : /231/
+disqus_identifier : http://blog.saltfactory.net/231
 ---
 
 ## 서론

@@ -5,6 +5,7 @@ category: android
 tags: [android, https, sslsocketfactory, httpsurlconnection]
 comments: true
 redirect_from: /220/
+disqus_identifier : http://blog.saltfactory.net/220
 ---
 
 ## 서론

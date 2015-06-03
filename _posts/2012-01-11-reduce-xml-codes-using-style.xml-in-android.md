@@ -5,6 +5,7 @@ category: android
 tags: [android, xml]
 comments: true
 redirect_from: /89/
+disqus_identifier : http://blog.saltfactory.net/89
 ---
 
 ## 서론

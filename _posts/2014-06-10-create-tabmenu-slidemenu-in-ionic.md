@@ -5,6 +5,7 @@ category: hybridapp
 tags: [javascript, hybrid, app, ionic, tabmenu, slidemenu]
 comments: true
 redirect_from: /240/
+disqus_identifier : http://blog.saltfactory.net/240
 ---
 
 ## 서론

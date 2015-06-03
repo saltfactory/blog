@@ -5,6 +5,7 @@ category: linux
 tags: [linux, centos, rpm, yum]
 comments: true
 redirect_from: /96/
+disqus_identifier : http://blog.saltfactory.net/96
 ---
 
 ## 서론

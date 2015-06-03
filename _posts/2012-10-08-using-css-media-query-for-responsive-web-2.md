@@ -5,6 +5,7 @@ category: css
 tags: [css, css3, responsive web]
 comments: true
 redirect_from: /200/
+disqus_identifier : http://blog.saltfactory.net/200
 ---
 
 ## 서론

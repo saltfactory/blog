@@ -5,6 +5,7 @@ category: android
 tags: [android, button]
 comments: true
 redirect_from: /87/
+disqus_identifier : http://blog.saltfactory.net/87
 ---
 
 ## 서론

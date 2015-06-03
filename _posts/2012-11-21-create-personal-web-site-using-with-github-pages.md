@@ -5,6 +5,7 @@ category: github
 tags: [github, pages]
 comments: true
 redirect_from: /208/
+disqus_identifier : http://blog.saltfactory.net/208
 ---
 
 ## 서론

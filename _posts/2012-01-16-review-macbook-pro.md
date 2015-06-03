@@ -5,6 +5,7 @@ category: review
 tags: [review, macbook]
 comments: true
 redirect_from: /92/
+disqus_identifier : http://blog.saltfactory.net/92
 ---
 
 # 서론

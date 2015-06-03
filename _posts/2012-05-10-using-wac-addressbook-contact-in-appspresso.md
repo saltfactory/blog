@@ -5,6 +5,7 @@ category: appspresso
 tags: [appspresso, hybrid, hybridapp, ios, android, javascript, java, objective-c, wac, addressbook, contact]
 comments: true
 redirect_from: /138/
+disqus_identifier : http://blog.saltfactory.net/138
 ---
 
 ## 서론

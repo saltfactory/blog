@@ -5,6 +5,7 @@ category: jekyll
 tags: [jekyll, ruby, markdown, plugin]
 comments: true
 redirect_from : /264/
+disqus_identifier : http://blog.saltfactory.net/264
 excerpt_separator : <!--more-->
 ---
 
