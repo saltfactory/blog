@@ -1,8 +1,39 @@
+
+
+<!-- // <script>
+// window.fbAsyncInit = function() {
+//   FB.init({
+//     appId      : '271162092926857',
+//     xfbml      : true,
+//     version    : 'v2.3'
+//   });
+// };
+//
+// (function(d, s, id){
+//   var js, fjs = d.getElementsByTagName(s)[0];
+//   if (d.getElementById(id)) {return;}
+//   js = d.createElement(s); js.id = id;
+//   js.src = "//connect.facebook.net/en_US/sdk.js";
+//   fjs.parentNode.insertBefore(js, fjs);
+// }(document, 'script', 'facebook-jssdk'));
+// </script> -->
+<!--
+<div class="fb-comments" data-href="http://developers.facebook.com/docs/plugins/comments/" data-width="100%" data-numposts="5" data-colorscheme="light"></div>
+-->
+
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=APPID";
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=271162092926857";
   fjs.parentNode.insertBefore(js, fjs);
-}(document, "script", "facebook-jssdk"));</script>
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-comments"
+{% if page.disqus_identifier %}
+data-href="{{page.identifier}}"
+{% else %}
+data-href="{{page.url}}"
+{% endif %}
+data-version="v2.3" data-numposts="5" data-colorscheme="light" data-width="100%"></div>
