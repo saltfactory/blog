@@ -38,7 +38,7 @@ comments: true
 * 내가 원하지 않는 JavaScript가 너무 많이 요청된다.
 * 서비스 자체의 강제 스타일링(`!important`) 때문에 CSS 충돌이 발생한다.
 
-블로그 이전을 마음먹게된 이유는 사소한 이유지만 [Markdown](http://daringfireball.net/projects/markdown/)을 지원하지 않는 이유가 크다. 개발하거나 연구하면서 문서를 만들 때 Markdown을 사용하는데 이 내용을 다시 블로그로 포스팅하려고 하는데 [WYSIWYG](http://en.wikipedia.org/wiki/WYSIWYG)을 사용해서 글을 작성해야 했기 때문이다. 그래서 이중으로 글을 작성하는 것이 싫어서 Tistory를 Theme를 Markdown을 위한 스타일이 적용되게 변경하고, Markdown 문서를 HTML으로 변환하는 [mark2html](https://github.com/saltfactory/mark2html)파서를 직접 만들어 Markdown을 HTML 포멧으로 변환해서 Tistory 블로그에 글을 올렸다.... 아... 설명을 해도 복잡하다. 나름 익숙해졌지만 글을 작성할 때마다 복잡한 프로세스를 거쳐야해서 Markdown을 작성하면 바로 웹 서비스를 할 수 있는 [Jekyll](http://jekyllrb.com/) 기반으로 [Github Pages](https://pages.github.com/)로 블로그를 운영하기로 마음먹었다.
+블로그 이전을 마음먹게된 이유는 사소한 이유지만 [Markdown](http://daringfireball.net/projects/markdown/)을 지원하지 않는 이유가 크다. 개발하거나 연구하면서 문서를 만들 때 Markdown을 사용하는데 이 내용을 다시 블로그로 포스팅하려고 하는데 [WYSIWYG](http://en.wikipedia.org/wiki/WYSIWYG)을 사용해서 글을 작성해야 했기 때문이다. 그래서 이중으로 글을 작성하는 것이 싫어서 Tistory를 Theme를 Markdown을 위한 스타일이 적용되게 변경하고, Markdown 문서를 HTML으로 변환하는 [mark2html](https://github.com/saltfactory/mark2html) Node.js 모듈을 직접 만들어 Markdown을 HTML 포멧으로 변환해서 Tistory 블로그에 글을 올렸다.... 아... 설명을 해도 복잡하다. 나름 익숙해졌지만 글을 작성할 때마다 복잡한 프로세스를 거쳐야해서 Markdown을 작성하면 바로 웹 서비스를 할 수 있는 [Jekyll](http://jekyllrb.com/) 기반으로 [Github Pages](https://pages.github.com/)로 블로그를 운영하기로 마음먹었다.
 
 Tistory는 초기보다 더 많은 JavaScript를 로드하고 있었다. 사용자에게 자유를 보장하면서도 서비스를 운영하기 위해서 사용자가 만들지 않은 서비스에서 사용하기 위한 JavaScript 파일들이 로드되는 것인데 이런 요청이 점점 더 많아지게 되는 모습을 보면서 앞으로도 지속적으로 증가할 것으로 예상이 되었다. 서비스 입장에서 이해하지만 사용자에게는 불필요한 코드들이다.
 
