@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 리눅스 터미널 프롬프트 정보와 색상 변경하기
-category: linux
-tags: [unix, linux, prompt, terminal]
+title: Homebrew를 이용하여Mac OS X에서 Unix 패키지 사용하기
+category: mac
+tags: [mac, osx, unix, linux, homebrew, brew]
 comments: true
 redirect_from: /109/
 disqus_identifier : http://blog.saltfactory.net/109
