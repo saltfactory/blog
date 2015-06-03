@@ -5,9 +5,141 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 03 Jun 2015 16:44:22 +0900</pubDate>
-    <lastBuildDate>Wed, 03 Jun 2015 16:44:22 +0900</lastBuildDate>
+    <pubDate>Wed, 03 Jun 2015 18:16:11 +0900</pubDate>
+    <lastBuildDate>Wed, 03 Jun 2015 18:16:11 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Tistory에서 GitHub Pages로 블로그 이전</title>
+        <description>&lt;blockquote&gt;
+&lt;p&gt;생일을 맞이하여 블로그를 새롭게 개편했다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;2012년 이전 글을 제외한 나머지 글들을 모두 &lt;strong&gt;Markdown&lt;/strong&gt; 으로 포팅했다.&lt;/p&gt;
+
+&lt;p&gt;왜?&lt;/p&gt;
+
+&lt;p&gt;이번 포스티에서는 기존의 블로그에서 Github Pages로 블로그를 이전한 이유에 대해서 이야기를 나눈다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;블로그-이전-준비&quot;&gt;블로그 이전 준비&lt;/h2&gt;
+
+&lt;h3 id=&quot;tistory-블로그&quot;&gt;Tistory 블로그&lt;/h3&gt;
+
+&lt;p&gt;2년동안 Tistory 블로그를 사용했다. 공해하고 발행한 포스트만 200건이 넘는다. 처음 Tistory를 선택한 이유는 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;직접 HTML, CSS, JavaScript를 적용할 수 있는 서비스&lt;/li&gt;
+&lt;li&gt;광고 없는 서비스&lt;/li&gt;
+&lt;li&gt;컨텐츠 import와 export를 지원하는 서비스&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2년동안 꽤 만족하면서 사용했다. 애국심 때문에 Wordpress와 Tumblr를 사용하고 싶은 마음을 참아가면서 말이다.. Tistory는 국내 대형 포털 블로그보다 자유도가 높아서 개발자와 연구하는 사람들에게 인기 있는 블로그 서비스이다. 이런 사람들은 대부분 자기가 원하는대로 컨텐츠를 만들어내고 싶어하기 때문이다. 정해진 레이아웃, 광고를 무조건 삽입하고 나오는 블로그... 그런건 정말 사용하기 싫은 블로그이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;블로그-이전-이유&quot;&gt;블로그 이전 이유&lt;/h3&gt;
+
+&lt;p&gt;이렇게 잘 사용하던 블로그에서 블로그를 이전하게된 이유는 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Markdown 지원을 하지 않는다.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;내가 원하지 않는 JavaScript가 너무 많이 요청된다.&lt;/li&gt;
+&lt;li&gt;서비스 자체의 강제 스타일링(&lt;code&gt;!important&lt;/code&gt;) 때문에 CSS 충돌이 발생한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;블로그 이전을 마음먹게된 이유는 사소한 이유지만 &lt;a href=&quot;http://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt;을 지원하지 않는 이유가 크다. 개발하거나 연구하면서 문서를 만들 때 Markdown을 사용하는데 이 내용을 다시 블로그로 포스팅하려고 하는데 &lt;a href=&quot;http://en.wikipedia.org/wiki/WYSIWYG&quot;&gt;WYSIWYG&lt;/a&gt;을 사용해서 글을 작성해야 했기 때문이다. 그래서 이중으로 글을 작성하는 것이 싫어서 Tistory를 Theme를 Markdown을 위한 스타일이 적용되게 변경하고, Markdown 문서를 HTML으로 변환하는 &lt;a href=&quot;https://github.com/saltfactory/mark2html&quot;&gt;mark2html&lt;/a&gt;파서를 직접 만들어 Markdown을 HTML 포멧으로 변환해서 Tistory 블로그에 글을 올렸다.... 아... 설명을 해도 복잡하다. 나름 익숙해졌지만 글을 작성할 때마다 복잡한 프로세스를 거쳐야해서 Markdown을 작성하면 바로 웹 서비스를 할 수 있는 &lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; 기반으로 &lt;a href=&quot;https://pages.github.com/&quot;&gt;Github Pages&lt;/a&gt;로 블로그를 운영하기로 마음먹었다.&lt;/p&gt;
+
+&lt;p&gt;Tistory는 초기보다 더 많은 JavaScript를 로드하고 있었다. 사용자에게 자유를 보장하면서도 서비스를 운영하기 위해서 사용자가 만들지 않은 서비스에서 사용하기 위한 JavaScript 파일들이 로드되는 것인데 이런 요청이 점점 더 많아지게 되는 모습을 보면서 앞으로도 지속적으로 증가할 것으로 예상이 되었다. 서비스 입장에서 이해하지만 사용자에게는 불필요한 코드들이다.&lt;/p&gt;
+
+&lt;p&gt;Markdown을 렌더링 하기 위해서 열심히 CSS을 만들었는데, 동적으로 로드된 서비스용 CSS가 내가 만든 스타일을 무시해 버리는 경험을 겪으면서 블로그 이전을 마음먹게 되었다. 내가 원하지 않는 &lt;code&gt;!important&lt;/code&gt; 을 더이상 강요받고 싶지 않았던것 같다.&lt;/p&gt;
+
+&lt;p&gt;이러한 이유로 Tistory에서 다른 블로그로 이전하려고 마음을 먹게 되었다.&lt;/p&gt;
+
+&lt;h3 id=&quot;블로그-이전시-고려사항&quot;&gt;블로그 이전시 고려사항&lt;/h3&gt;
+
+&lt;p&gt;블로그 이전을 하면서 고려한 사항은 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Markdown&lt;/strong&gt; 지원&lt;/li&gt;
+&lt;li&gt;기존 블로그의 &lt;strong&gt;URL링크 유지&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;HTML, CSS, JavaScript를 자유롭게 사용할 수 있는 환경&lt;/li&gt;
+&lt;li&gt;컨텐츠 관리(import, export) 지원&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;처음으로 고민한 서비스는 &lt;a href=&quot;https://www.tumblr.com/&quot;&gt;Tumblr&lt;/a&gt;이다. tumblr는 아주 훌륭한 소셜 블로그 서비스 플랫폼이다. 개인적으로 지금 존재하는 SNS 서비스중에 가장 좋다고 생각하고 있다. 이 서비스는 Markdown 입력을 지원한다. 그리고 데이터 import/export를 지원한다. theme를 직접 만들어서 사용할 수 있다. 하지만 기존의 링크를 유지하기엔 어려움이 있었다.&lt;/p&gt;
+
+&lt;h4 id=&quot;기존-블로그의-url-링크-유지&quot;&gt;기존 블로그의 URL 링크 유지&lt;/h4&gt;
+
+&lt;p&gt;블로그를 이전할 때 가장 고민했던 부분이 이부분이다. 쉽게 예를 들어 설명하면 누군가 다른 블로그나 사이트에 기존 블로그 링크를 상용했다고 가정하자. 그러면 본문에 &lt;a href=&quot;http://blog.saltfactory.net/270&quot;&gt;http://blog.saltfactory.net/270&lt;/a&gt; 이런 링크가 다른 웹 사이트 본문에 남게 된다. 그러면 다른 사용자들이 그 사이트에 방문해서 &lt;strong&gt;링크&lt;/strong&gt;를 통해 내 블로그로 진입하게 될때 블로그 주소가 &lt;a href=&quot;http://blog.saltfactory.net/2015-05-06-redirect-using-with-parameter-on-nginx.html&quot;&gt;http://blog.saltfactory.net/2015-05-06-redirect-using-with-parameter-on-nginx.html&lt;/a&gt; 이런 식으로 변경되어 버리면 찾을 수 없는 페이지로 표시가 되면서 &lt;strong&gt;링크&lt;/strong&gt;가 더이상 연결되지 않는 자원이 된다. 뿐만 아니라 블로그를 통해 자료를 공유하고 다시 보고 싶어하는 사용자들은 다시 내 블로그를 찾아 올 수 없는 문제가 발생한다.  &lt;/p&gt;
+
+&lt;p&gt;Markdown을 지원하는 블로그는 생각보다 많지 않았다. &lt;a href=&quot;https://wordpress.org/&quot;&gt;Wordpress&lt;/a&gt;에 플러그인을 이용하여 사용하면 되지만 Free Pricing Plan에는 광고가 포함되고 custom domain을 사용할 수 없기 때문에 제외했다. 연구용 서버에 소스를 설치해서 운영할 수 있지만 down time 없고 앞으로도 지속적으로 사용할 수 있는 안정적인 서비스를 위해서 설치형 블로그 방법은 선택하지 않았다.&lt;/p&gt;
+
+&lt;h3 id=&quot;github-pages&quot;&gt;GitHub Pages&lt;/h3&gt;
+
+&lt;p&gt;GitHub Pages는 고민하는 모든 사항을 만족시켜주었다. Jekyll을 사용하여 운영하게 되면 &lt;strong&gt;Markdown 문서를 자동으로 웹 서비스&lt;/strong&gt;로 만들 수 있었다. 그리고 &lt;strong&gt;광고도 없다.&lt;/strong&gt; &lt;a href=&quot;https://git-scm.com/&quot;&gt;git&lt;/a&gt;를 사용하니 자동으로 import/outport를 할 수 있다. 그리고 &lt;strong&gt;컨텐츠의 버전을  관리를 할 수 있다.&lt;/strong&gt;라는 강점까지 가질 수 있었다. 그리고 이전 블로그에 대한 링크 문제에 대한 고민은 GitHub Pages에서 공식적으로 제공하는 Jekyll의 Plugins인 &lt;a href=&quot;https://github.com/jekyll/jekyll-redirect-from&quot;&gt;redirect_from&lt;/a&gt; 기능을 사용하여 해결 할 수 있었다. 그래서 이전 블로그를 GitHub Pages로 이전하기로 결정을 하게 되었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;블로그-이전과-문제-해결방법&quot;&gt;블로그 이전과 문제 해결방법&lt;/h2&gt;
+
+&lt;h3 id=&quot;wysiwyg-에디터의-단점&quot;&gt;WYSIWYG 에디터의 단점&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/WYSIWYG&quot;&gt;WYSIWYG&lt;/a&gt; 은 웹 사이트에서 사용자가 글을 작성할 때,  편리한 UI를 제공하여 컨텐츠를 쉽게 제작할 수 있게 UI 인터페이스로 컨텐츠를 제작할 수 있게 도와주고 작성한 컨텐츠는 HTML 포멧으로 저장을 한다.  대형 포털부터 오픈소스 프레임워크에서도 단순기능부터 고급기능까지 WYSIWYG 에디터로 구현해서 서비스를 하고 있다.&lt;/p&gt;
+
+&lt;p&gt;문제는 바로 이 &lt;strong&gt;HTML 포멧&lt;/strong&gt;이다. 특정 웹 서비스에서 WYSWYIG으로 제작한 HTML은 &lt;a href=&quot;http://www.w3schools.com/html/html_css.asp&quot;&gt;inline styling(또는 inline css)&lt;/a&gt;으로 만들어지게 되는데, 이 컨텐츠를 다른 서비스로 이전할때 새로운 웹 사이트의 레이아웃과 어울리지 않는 문제를 가진다. 이미 inline styling으로 처리된 컨텐츠를 다른 스타일로 적용할 수 없는 문제가 발생한다.&lt;/p&gt;
+
+&lt;p&gt;Tistory에 작성한 이전 포스트들도 모두 inline styling으로된 HTML 포멧으로 만들어져 있었다. 그럼 어떻게 HTML 양식을 Markdown으로 만들었을까? 정답은 바로 &lt;strong&gt;손수 작업했음&lt;/strong&gt;이다...&lt;/p&gt;
+
+&lt;p&gt;WYSWYG에서 작성한 HTML 문서를 파싱해서 &lt;code&gt;&amp;lt;h&amp;gt;&lt;/code&gt; 태그를 &lt;code&gt;###&lt;/code&gt;로 하고, 어떤 태그를 Markdown으로 매핑하고.. 이런 작업은 이루어질 수 없었다. WYSWYG으로 만든 포스트들은 워낙 상황에 따라 다르게 만들어져 있었고, 케이스별로 패턴을 만들기에는 케이스가 너무 많았다. 결국 데이터를 긁어서 수동으로 Markdown 포멧에 맞게 문서를 다시 만들었다. &lt;strong&gt;Markdown 에서 HTML 변환&lt;/strong&gt;은 너무나 유연하고 쉽다. Markdown의 장점 중에 하나이다. Markdown으로 문서를 만들어두면 어떠한 서비스로 이전이 가능하다. 실제 GitHub Pages에서 다른 블로그로 이전할 경우 고민하지 않고 Markdown을 HTML 문서로 변환해서 포스팅하면 끝난다. 이런 Markdown의 장점과 WYSIWYG의 단점은 더욱 Markdown을 글을 남겨야한다는 생각을 하게 만들어 주었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;기존-블로그-링크-유지하기&quot;&gt;기존 블로그 링크 유지하기&lt;/h2&gt;
+
+&lt;p&gt;기존 블로그 링크를 유지하기 위한 작업은 다음과 같이 진행하였다.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;기존 도메인을 그대로 사용하기 위해 도메인 서비스를  GitHub 으로 설정한다.&lt;/li&gt;
+&lt;li&gt;GitHub Pages에서 지원하는 CNAME 파일을 사용하여 CNAME alias를 적용한다.&lt;/li&gt;
+&lt;li&gt;기존 링크를 유지하기 위해 &lt;code&gt;redirect_from&lt;/code&gt;을 설정한다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;이 방법은 꽤 중요한 방법이기 이에 대한 설명은 단독으로 포스트를 만들어서 공유할 예정이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;기존의-커멘트-서비스-유지하기&quot;&gt;기존의 커멘트 서비스 유지하기&lt;/h3&gt;
+
+&lt;p&gt;기존 블로그에서는 블로그 이전을 고려하여 Tistory에서 제공하는 댓글 서비스를 사용하지 않고  &lt;a href=&quot;https://disqus.com/&quot;&gt;Disqus&lt;/a&gt;와 &lt;a href=&quot;&quot;&gt;Facebook Comment&lt;/a&gt;를 사용하여 커멘트 서비스를 구현하였었다. 마찬가지로 방명록 역시 Tistory에서 제공하는 것을 사용하지 않고 Disqus comment를 이용하여 운영하였는데 이것은 모두 블로그를 이전할 경우 이전 댓글을 그대로 연장해서 사용하고 싶었기 때문이다. Jekyll에서 &lt;code&gt;_includes&lt;/code&gt;에 &lt;code&gt;disqus.html&lt;/code&gt;과 &lt;code&gt;facebook_comments.html&lt;/code&gt; 파일을 만들어서 포스트에 기존 커멘트를 그대로 사용할 수있는 코드를 추가했다.&lt;/p&gt;
+
+&lt;p&gt;Disqus에서 기존 커멘트를 그대로 사용할 수 있는 방법은 다음과 같다. Disqus를 설정할 때 커스텀 변수가 있는데 커멘트의 &lt;strong&gt;identifier&lt;/strong&gt;를 &lt;code&gt;disqus_identifier&lt;/code&gt;로 지정하여 URL이 달라져도 disqus_identifier만 같으면 동일한 커멘트로 사용할 수 있는 것이다. 이전 블로그에서 사용하던 &lt;code&gt;disqus_identifier&lt;/code&gt;를 새로운 블로그에서도 동일하게 사용하여 이 문제를 해결했다. Facebook comment 역시 동일한 방법으로 &lt;code&gt;data-href&lt;/code&gt; 값을 동일한 URL로 지정하면 같은 커멘트로 사용할 수 있다. 이에 대한 방법도 단독으로 포스팅을 만들어서고 공유할 예정이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;방문자-통계-서비스&quot;&gt;방문자 통계 서비스&lt;/h3&gt;
+
+&lt;p&gt;Tistory에서는 방문자 통계 서비스가 있었다. 하지만 GitHub Pages 에서는 그런 서비스가 존재하지 않는다. 이 문제를 해결하기 위해서 &lt;a href=&quot;http://www.google.com/analytics/ce/nrs/&quot;&gt;Google Analytics&lt;/a&gt;를 사용했다. 이것은 단순히 Tistory의 방문자 통계 기능을 넘어서 &lt;strong&gt;웹 사이트 분석 시스템&lt;/strong&gt;으로 사용할 수 있다. Google Analytics를 사용하여 블러그를 분석, 운영하기 위한 방법도 앞으로 공유할 예정이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 03 Jun 2015 00:00:00 +0900</pubDate>
+        <link>/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</link>
+        <guid isPermaLink="true">/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</guid>
+        
+        <category>note</category>
+        
+        <category>freeboard</category>
+        
+        <category>markdown</category>
+        
+        <category>blog</category>
+        
+        
+        <category>note</category>
+        
+      </item>
     
       <item>
         <title>모바일 앱 안에서 변화하는 외부 URL 문제를 NginX의 rewrite로 해결하기</title>
@@ -2001,156 +2133,6 @@ include /etc/nginx/sites-enabled/*;
         
         
         <category>nginx</category>
-        
-      </item>
-    
-      <item>
-        <title>docker-yobi를 이용하여 yobi 운영하기</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;우리는 LXC로 서버를 운영하기 위해서 &lt;a href=&quot;http://docker.com&quot;&gt;Docker&lt;/a&gt;를 도입하기로 했다. docker를 도입해서 docker에 올리는 서비스중 첫번째로 &lt;a href=&quot;http://yobi.io&quot;&gt;Yobi&lt;/a&gt;를 적용하기로 했다. 개인연구로 사용하고 있는 랩탑은 Mac OS X를 사용하고 있기 때문에 &lt;a href=&quot;&quot;&gt;boot2docker&lt;/a&gt;를 사용하여 Dockerfile을 생성해서 GitHub에 &lt;a href=&quot;https://github.com/saltfactory/docker-yobi&quot;&gt;docker-hub&lt;/a&gt; 와 &lt;a href=&quot;https://registry.hub.docker.com/u/saltfactory/yobi/&quot;&gt;Docker Hub&lt;/a&gt;에 올렸다. 이 포스팅에서는 GitHub와 Docker Hub를 이용해서 Yobi를 사용하는 방법을 소개한다.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;docker-yobi&quot;&gt;docker-yobi&lt;/h2&gt;
-
-&lt;p&gt;docker-yobi는 docker에서 &lt;a href=&quot;http://yobi.io&quot;&gt;Yobi&lt;/a&gt;를 운영하기 위한 Dockerfile이 포함되어 있다. docker-yobi는 로컬에 있는 yobi 디렉토리를 &lt;strong&gt;mount&lt;/strong&gt;하여 사용한다. 즉, docker-yobi를 실행할 때 docker 이미지에 내 로컬 PC에 있는 yobi 디렉토리를 그대로 사용할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;docker-yobi를 사용하기 위해서 먼저 GitHub에서 yobi를 &lt;code&gt;clone&lt;/code&gt;한다. 설치 예제를 설명하기 위해서 yobi를 &lt;code&gt;clone&lt;/code&gt; 받은 경로는 &lt;code&gt;/Users/saltfactory/yobi&lt;/code&gt;라고 가정한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git clone https://github.com/naver/yobi.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;docker나 boot2docker를 시작한 후 &lt;code&gt;build&lt;/code&gt;를 한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;docker build -t saltfactory/yobi .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;docker-yobi의 &lt;code&gt;run-yobi.sh&lt;/code&gt;를 실행한다. 이때, 로컬에 &lt;code&gt;clone&lt;/code&gt;한 yobi의 디렉토리를 지정한다. 설치 예제로 &lt;code&gt;clone&lt;/code&gt; 받은 경로는 &lt;code&gt;/Users/saltfactory/yobi&lt;/code&gt;라고 가정한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sh run-yobi.sh /Users/saltfactory/yobi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;docker-yobi가 정상적으로 실행되고 있는지 확인하기 위해서 &lt;code&gt;docker ps&lt;/code&gt; 명령어로 확인한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;docker ps
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;정상적으로 실행이되면 docker ps 목록에 yobi가 보인다. docker-yobi가 정상적으로 실행되면 &lt;a href=&quot;https://www.playframework.com/&quot;&gt;play&lt;/a&gt;가 실행되면서 필요한 패키지를 다운받고 컴파일한다. 만약 설치되는 로그를 보고 싶을 경우는 &lt;code&gt;docker logs&lt;/code&gt; 명령어로 확인할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;docker logs yobi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;play가 정상적으로 시작이되고 난 다음 브라우저에서 확인한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://localhost:9000&quot;&gt;http://localhost:9000&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;docker-yobi-활용방법&quot;&gt;docker-yobi 활용방법&lt;/h2&gt;
-
-&lt;p&gt;docker-yobi는 yobi를 사용하는데 필요한 이미지와 컨테이너를 만들게 된다. 한번 만들어진 컨테이너를 재사용하면 play가 시작하면서 다운받고 컴파일한 패키지를 다시 다운받고 컴파일하지 않기 때문에 yobi 시작 시간을 줄일 수 있다. 새롭게 &lt;code&gt;docker build&lt;/code&gt;를 하지 않는 이상 빠르게 yobi를 실행할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;docker에 커네이너로 만들어진 yobi를 정지하기 위해서는 &lt;code&gt;docker stop&lt;/code&gt; 명령어를 사용한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;docker stop yobi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;다시 yobi 컨테이너를 실행하고 싶을 경우 &lt;code&gt;run-yobi.sh&lt;/code&gt;를 명령어를 사용한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sh run-yobi.sh /Users/saltfactory/yobi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;다른-서버에서-docker-yobi-사용하여-이전하기&quot;&gt;다른 서버에서 docker-yobi 사용하여 이전하기&lt;/h2&gt;
-
-&lt;p&gt;docker 환경을 갖춘 모든 리눅스 서버에서 docker-yobi를 사용하여 이전에 사용하던 yobi를 그대로 사용할 수 있다. 만약 yobi를 다른 서버로 이전할 경우, docker-yobi를 설치하고 로컬 PC에 저장된 yobi 디렉토리만 복사해서 이전하는 서버에 복사하여 &lt;code&gt;run-yobi.sh&lt;/code&gt;를 할 때 이전한 서버에 복사한 yobi 경로를 지정하여 사용하면 된다.&lt;/p&gt;
-
-&lt;h2 id=&quot;mac-os-x에서-boot2docker를-사용할-경우&quot;&gt;Mac OS X에서 boot2docker를 사용할 경우&lt;/h2&gt;
-
-&lt;p&gt;docker는 리눅스 환경에서 사용하지만 Mac OS X에서 &lt;a href=&quot;http://docs.docker.com/installation/mac/&quot;&gt;boot2docker&lt;/a&gt;를 사용하여 docker-yobi를 사용할 수 있다.
-boot2docker 설치방법은 &lt;a href=&quot;http://docs.docker.com/installation/mac/&quot;&gt;http://docs.docker.com/installation/mac/&lt;/a&gt; 나 &lt;a href=&quot;http://blog.saltfactory.net/255&quot;&gt;http://blog.saltfactory.net/255&lt;/a&gt; 문서를 참조하면 된다.&lt;/p&gt;
-
-&lt;p&gt;boot2docker를 사용하기 위해서는 &lt;a href=&quot;https://www.virtualbox.org&quot;&gt;VirtualBox&lt;/a&gt;에서 forwarding port를 하기 위해서 docker-yobi 안에 있는 &lt;code&gt;boot2dockr-ports.sh&lt;/code&gt;를 실행한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sh boot2docker-ports.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;boot2docker에서 로컬 PC에 있는 디렉토리를 마운트하기 위해서 VirtualBox에서 shared directory를 지정해야 한다. 다음 사이트에 자세한 방법을 참조한다.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://medium.com/boot2docker-lightweight-linux-for-docker/boot2docker-together-with-virtualbox-guest-additions-da1e3ab2465c&quot;&gt;https://medium.com/boot2docker-lightweight-linux-for-docker/boot2docker-together-with-virtualbox-guest-additions-da1e3ab2465c&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://viget.com/extend/how-to-use-docker-on-os-x-the-missing-guide&quot;&gt;http://viget.com/extend/how-to-use-docker-on-os-x-the-missing-guide&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;boot2docker down
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;curl http://static.dockerfiles.io/boot2docker-v1.2.0-virtualbox-guest-additions-v4.3.14.iso &amp;gt; ~/.boot2docker/boot2docker.iso
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;VBoxManage sharedfolder add boot2docker-vm -name home -hostpath /Users
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;boot2docker up
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;docker-hub&quot;&gt;Docker Hub&lt;/h2&gt;
-
-&lt;p&gt;가장 먼저 해야할 일을 yobi를 clone 받는 것이다. 로컬 PC에 GitHub로부터 yobi를 clone 한다. 예제 설명을 위해서 clone 받는 위치는 &lt;code&gt;/Users/saltfactory/yobi&lt;/code&gt;라고 가정한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;git clone https://github.com/naver/yobi.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;docker는 GitHub와 같은 Repository를 구축했다. 그래서 docker 명령어로 docker image를 바로 다운받아서 사용할 수 있다. 우리는 yobi를 Docker Hub에서 바로 다운 받을 수 있게 GitHub와 Docker Hub를 연동했다.
-&lt;img src=&quot;http://cfile30.uf.tistory.com/image/223C273653FEB7A60B789B&quot; alt=&quot;Docker Hub&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Docker Hub에서 &lt;code&gt;docker pull&lt;/code&gt; 명령어를 사용하여  &lt;strong&gt;&lt;em&gt;saltfactory/yobi&lt;/em&gt;&lt;/strong&gt; 이미지를 다운 받는다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;docker pull saltfactory/yobi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;saltfactory/yobi&lt;/em&gt;&lt;/strong&gt; 에서 필요한 파일은  &lt;a href=&quot;https://www.playframework.com/&quot;&gt;Play&lt;/a&gt;를 실행시키는 &lt;code&gt;start-yobi.sh&lt;/code&gt; 파일이 필요하다. docker-yobi가 실행할때 이 파일을 자동으로 마운트해서 사용하기 때문이다. 로컬에 다음 내용으로 &lt;code&gt;start-yobi.sh&lt;/code&gt; 파일을 만든다. 필요하다면 play가 시작할 때 다른 옵션을 추가해도 된다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /home/yobi/yobi&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; play &lt;span class=&quot;s2&quot;&gt;&amp;quot;start -DapplyEvolutions.default=true -Dhttp.port=9000&amp;quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;다음은 docker-yobi를 실행하는 &lt;code&gt;run-yobi.sh&lt;/code&gt; 파일을 만든다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;YOBI_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; -f &lt;span class=&quot;nv&quot;&gt;$YOBI_HOME&lt;/span&gt;/RUNNING_PID &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
-  rm -rf &lt;span class=&quot;nv&quot;&gt;$YOBI_HOME&lt;/span&gt;/RUNNING_PID
-  docker start yobi
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-  docker stop yboi
-  docker rm yobi
-  docker run --name yobi &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  -d -p 9000:9000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  -v &lt;span class=&quot;nv&quot;&gt;$YOBI_HOME&lt;/span&gt;:/home/yobi/yobi &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  saltfactory/yobi
-&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-
-docker ps
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이제 &lt;code&gt;run-yobi.sh&lt;/code&gt;를 실행한다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sh run-yobi.sh /Users/saltfactory/yobi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;마지막으로 브라우저에서 &lt;a href=&quot;http://localhost:9000&quot;&gt;http://localhost:9000&lt;/a&gt; 를 확인한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile30.uf.tistory.com/image/214D574553FEB7A62A5D91&quot; alt=&quot;yobi&quot;&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
-
-&lt;p&gt;우리는 여러대의 Linux 서버를 관리하는데 많은 시간이 들여지고 환경을 맞추는데 어려움을 겪어서 서버에 동작하는 서비스들을 docker로 운영하기로 결정했다. 첫번째로 yobi를 docker에서 운영하기 위해서 docker-yobi를 만들어서 GitHub에 &lt;a href=&quot;https://github.com/saltfactory/docker-yobi&quot;&gt;docker-hub&lt;/a&gt; 와 &lt;a href=&quot;https://registry.hub.docker.com/u/saltfactory/yobi/&quot;&gt;Docker Hub&lt;/a&gt;에 올렸다. 이제 우리는 어떠한 Linux 서버에서도 동일한 환경으로 Yobi 서비스를 사용할 수 있게 되었다.&lt;/p&gt;
-
-&lt;p&gt;Yobi는 git를 사용하기 위한 repository를 포함하고 있다. 이 repository는 docker 이미지 안에 넣지 않았다. 이유는 Yobi의 repository는 단순히 우리가 쌓는 데이터이기 때문이고, 이 데이터는 서버 환경에 영향을 받지 않고 빠르게 이전하거나 백업을 따로 하기 위해서 이다. 그래서 우리는 docker의 &lt;a href=&quot;https://docs.docker.com/userguide/dockervolumes/&quot;&gt;VOLUME&lt;/a&gt;을 사용해서 외부의 디렉토리를 docker 컨테이너에 올릴 수 있게 했다.&lt;/p&gt;
-
-&lt;p&gt;개인적으로 연구할 때 사용하는 랩탑은 Mac OS X 이기 때문에 boot2docker를 사용했지만 docker-yobi를 사용해서 어떤 Linux 서버에서도 쉽게 설치해서 운영할 수 있는 Dockerfile을 만들어서 사용할 수 있게 되었다.&lt;/p&gt;
-
-&lt;h2 id=&quot;참조&quot;&gt;참조&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/userguide/dockervolumes/&quot;&gt;https://docs.docker.com/userguide/dockervolumes/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/docker-hub/builds/&quot;&gt;https://docs.docker.com/docker-hub/builds/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://viget.com/extend/how-to-use-docker-on-os-x-the-missing-guide&quot;&gt;http://viget.com/extend/how-to-use-docker-on-os-x-the-missing-guide&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://medium.com/boot2docker-lightweight-linux-for-docker/boot2docker-together-with-virtualbox-guest-additions-da1e3ab2465c&quot;&gt;https://medium.com/boot2docker-lightweight-linux-for-docker/boot2docker-together-with-virtualbox-guest-additions-da1e3ab2465c&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
-&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
-&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Thu, 28 Aug 2014 00:00:00 +0900</pubDate>
-        <link>/git/running-yobi-on-docker.html</link>
-        <guid isPermaLink="true">/git/running-yobi-on-docker.html</guid>
-        
-        <category>docker</category>
-        
-        <category>git</category>
-        
-        <category>yobi</category>
-        
-        
-        <category>git</category>
         
       </item>
     
