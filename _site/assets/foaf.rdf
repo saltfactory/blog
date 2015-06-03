@@ -4,12 +4,7 @@
   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
   xmlns:foaf="http://xmlns.com/foaf/0.1/"
   xmlns:admin="http://webns.net/mvcb/">
-  <foaf:PersonalProfileDocument rdf:about="">
-    <foaf:maker rdf:resource="#me"/>
-    <foaf:primaryTopic rdf:resource="#me"/>
-    <admin:generatorAgent rdf:resource="http://www.ldodds.com/foaf/foaf-a-matic"/>
-    <admin:errorReportsTo rdf:resource="mailto:leigh@ldodds.com"/>
-  </foaf:PersonalProfileDocument>
+
   <foaf:Person rdf:ID="me">
     <foaf:name>SungKwang Song</foaf:name>
     <foaf:title>Ph.D. candidate</foaf:title>
@@ -21,5 +16,13 @@
     <foaf:depiction rdf:resource="http://blog.saltfactory.net/assets/images/profile.png"/>
     <foaf:workplaceHomepage rdf:resource="http://hibrain.net"/>
     <foaf:workInfoHomepage rdf:resource="Mobile Service Development Research"/>
-    <foaf:schoolHomepage rdf:resource="http://changwon.ac.kr"/></foaf:Person>
-  </rdf:RDF>
+    <foaf:schoolHomepage rdf:resource="http://changwon.ac.kr"/>
+  </foaf:Person>
+
+  <foaf:PersonalProfileDocument rdf:about="">
+    <foaf:maker rdf:resource="#me"/>
+    <foaf:primaryTopic rdf:resource="#me"/>
+    <admin:generatorAgent rdf:resource="http://www.ldodds.com/foaf/foaf-a-matic"/>
+    <admin:errorReportsTo rdf:resource="mailto:leigh@ldodds.com"/>
+  </foaf:PersonalProfileDocument>
+</rdf:RDF>
