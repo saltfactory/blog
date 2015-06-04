@@ -12,6 +12,7 @@ layout: default
     {{ content }}
   </article>
 
+  {% include share_buttons.html %}
   {% if page.comments %}
   {% include disqus.html %}
   {% endif %}
