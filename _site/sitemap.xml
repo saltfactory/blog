@@ -13,7 +13,7 @@
     <lastmod>2015-03-20T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ubuntu/install-oracle-xe-on-ubuntu.html</loc>
+    <loc>/linux/install-oracle-xe-on-ubuntu.html</loc>
     <lastmod>2015-03-13T00:00:00+09:00</lastmod>
   </url>
   <url>
@@ -45,7 +45,7 @@
     <lastmod>2014-08-28T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ubuntu/mount-external-harddisk-on-ubuntu.html</loc>
+    <loc>/linux/mount-external-harddisk-on-ubuntu.html</loc>
     <lastmod>2014-08-27T00:00:00+09:00</lastmod>
   </url>
   <url>
@@ -225,7 +225,7 @@
     <lastmod>2012-11-22T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/github/create-personal-web-site-using-with-github-pages.html</loc>
+    <loc>/note/create-personal-web-site-using-with-github-pages.html</loc>
     <lastmod>2012-11-21T00:00:00+09:00</lastmod>
   </url>
   <url>
@@ -529,7 +529,7 @@
     <lastmod>2012-01-17T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/review/review-macbook-pro.html</loc>
+    <loc>/note/review-macbook-pro.html</loc>
     <lastmod>2012-01-16T00:00:00+09:00</lastmod>
   </url>
   <url>
@@ -568,10 +568,94 @@
     <loc>/about/</loc>
   </url>
   <url>
+    <loc>/categories/android/</loc>
+  </url>
+  <url>
+    <loc>/categories/appspresso/</loc>
+  </url>
+  <url>
+    <loc>/categories/bigdata/</loc>
+  </url>
+  <url>
+    <loc>/categories/</loc>
+  </url>
+  <url>
+    <loc>/categories/chrome/</loc>
+  </url>
+  <url>
+    <loc>/categories/css/</loc>
+  </url>
+  <url>
+    <loc>/categories/database/</loc>
+  </url>
+  <url>
+    <loc>/categories/docker/</loc>
+  </url>
+  <url>
+    <loc>/categories/git/</loc>
+  </url>
+  <url>
     <loc>/guestbook/</loc>
   </url>
   <url>
+    <loc>/categories/html5/</loc>
+  </url>
+  <url>
+    <loc>/categories/hibridapp/</loc>
+  </url>
+  <url>
     <loc>/</loc>
+  </url>
+  <url>
+    <loc>/categories/ionic/</loc>
+  </url>
+  <url>
+    <loc>/categories/ios/</loc>
+  </url>
+  <url>
+    <loc>/categories/java/</loc>
+  </url>
+  <url>
+    <loc>/categories/javascript/</loc>
+  </url>
+  <url>
+    <loc>/categories/jekyll/</loc>
+  </url>
+  <url>
+    <loc>/categories/linux/</loc>
+  </url>
+  <url>
+    <loc>/categories/mac/</loc>
+  </url>
+  <url>
+    <loc>/categories/markdown/</loc>
+  </url>
+  <url>
+    <loc>/categories/node/</loc>
+  </url>
+  <url>
+    <loc>/categories/note/</loc>
+  </url>
+  <url>
+    <loc>/categories/php/</loc>
+  </url>
+  <url>
+    <loc>/categories/python/</loc>
+  </url>
+  <url>
+    <loc>/categories/rabbitmq/</loc>
+  </url>
+  <url>
+    <loc>/categories/ruby/</loc>
+  </url>
+  <url>
+    <loc>/categories/sencha/</loc>
+  </url>
+  <url>
+    <loc>/categories/spring/</loc>
+  </url>
+  <url>
+    <loc>/categories/xcode/</loc>
   </url>
   <url>
     <loc>/17/</loc>
@@ -994,87 +1078,81 @@
     <loc>/270/</loc>
   </url>
   <url>
-    <loc>/page2/</loc>
+    <loc>/category/hybrid%20app/appspresso/</loc>
   </url>
   <url>
-    <loc>/page3/</loc>
+    <loc>/category/</loc>
   </url>
   <url>
-    <loc>/page4/</loc>
+    <loc>/category/database/</loc>
   </url>
   <url>
-    <loc>/page5/</loc>
+    <loc>/category/database/oracle/</loc>
   </url>
   <url>
-    <loc>/page6/</loc>
+    <loc>/category/database/mysql/</loc>
   </url>
   <url>
-    <loc>/page7/</loc>
+    <loc>/category/database/mongodb/</loc>
   </url>
   <url>
-    <loc>/page8/</loc>
+    <loc>/category/database/sqlite/</loc>
   </url>
   <url>
-    <loc>/page9/</loc>
+    <loc>/category/database/redis/</loc>
   </url>
   <url>
-    <loc>/page10/</loc>
+    <loc>/category/web/</loc>
   </url>
   <url>
-    <loc>/page11/</loc>
+    <loc>/category/web/html5/</loc>
   </url>
   <url>
-    <loc>/page12/</loc>
+    <loc>/category/hybrid%20/app/phonegap/</loc>
   </url>
   <url>
-    <loc>/page13/</loc>
+    <loc>/category/java/</loc>
   </url>
   <url>
-    <loc>/page14/</loc>
+    <loc>/category/java/scala/</loc>
   </url>
   <url>
-    <loc>/page15/</loc>
+    <loc>/category/java/springframework/</loc>
   </url>
   <url>
-    <loc>/page16/</loc>
+    <loc>/category/javascript/</loc>
   </url>
   <url>
-    <loc>/page17/</loc>
+    <loc>/category/javascript/angularjs/</loc>
   </url>
   <url>
-    <loc>/page18/</loc>
+    <loc>/category/unix/linux/</loc>
   </url>
   <url>
-    <loc>/page19/</loc>
+    <loc>/category/mac/</loc>
   </url>
   <url>
-    <loc>/page20/</loc>
+    <loc>/category/javascript/node.js/</loc>
   </url>
   <url>
-    <loc>/page21/</loc>
+    <loc>/category/freeboard/</loc>
   </url>
   <url>
-    <loc>/page22/</loc>
+    <loc>/category/%EB%B0%B0%EC%9B%80%EC%9D%98%20%EB%86%80%EC%9D%B4%ED%84%B0/</loc>
   </url>
   <url>
-    <loc>/page23/</loc>
+    <loc>/category/php/</loc>
   </url>
   <url>
-    <loc>/page24/</loc>
+    <loc>/category/python/</loc>
   </url>
   <url>
-    <loc>/page25/</loc>
+    <loc>/category/ruby/</loc>
   </url>
   <url>
-    <loc>/page26/</loc>
+    <loc>/category/ruby/ruby%20on%20rails/</loc>
   </url>
   <url>
-    <loc>/page27/</loc>
-  </url>
-  <url>
-    <loc>/page28/</loc>
-  </url>
-  <url>
-    <loc>/page29/</loc>
+    <loc>/category/hybrid%20app/sencha/</loc>
   </url>
 </urlset>

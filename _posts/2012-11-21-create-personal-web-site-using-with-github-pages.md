@@ -1,7 +1,7 @@
 ---
 layout: post
 title: GitHub의 Pages를 이용하여 개인 사이트 구축하기기
-category: github
+category: note
 tags: [github, pages]
 comments: true
 redirect_from: /208/

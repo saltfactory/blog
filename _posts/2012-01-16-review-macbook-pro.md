@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Apple MacBook Pro 사용기 (개발자나 연구원이 맥을 사용하면 좋은 점)
-category: review
+category: note
 tags: [review, macbook]
 comments: true
 redirect_from: /92/

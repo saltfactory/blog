@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Ubuntu에 Oracle XE 설치하기
-category: ubuntu
+category: linux
 tags: [database, ubuntu, oracle]
 comments: true
 redirect_from : /267/

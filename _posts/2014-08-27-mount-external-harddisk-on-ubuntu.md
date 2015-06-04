@@ -1,7 +1,7 @@
 ---
 layout: post
 title : Ubuntu에 대용량 USB 외장하드디스크 연결하여 사용하기
-category : ubuntu
+category : linux
 tags : [linux, ubuntu, usb]
 comments : true
 redirect_from : /260/
