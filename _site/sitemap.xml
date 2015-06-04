@@ -1078,58 +1078,64 @@
     <loc>/270/</loc>
   </url>
   <url>
-    <loc>/category/hybrid%20app/appspresso/</loc>
+    <loc>/category/Android/</loc>
+  </url>
+  <url>
+    <loc>/category/Hybrid%20App/Appspresso/</loc>
   </url>
   <url>
     <loc>/category/</loc>
   </url>
   <url>
-    <loc>/category/database/</loc>
+    <loc>/category/Database/</loc>
   </url>
   <url>
-    <loc>/category/database/oracle/</loc>
+    <loc>/category/Database/Oracle/</loc>
   </url>
   <url>
-    <loc>/category/database/mysql/</loc>
+    <loc>/category/Database/MySQK/</loc>
   </url>
   <url>
-    <loc>/category/database/mongodb/</loc>
+    <loc>/category/Database/MongoDB/</loc>
   </url>
   <url>
-    <loc>/category/database/sqlite/</loc>
+    <loc>/category/Database/SQLite/</loc>
   </url>
   <url>
-    <loc>/category/database/redis/</loc>
+    <loc>/category/Database/Redis/</loc>
   </url>
   <url>
-    <loc>/category/web/</loc>
+    <loc>/category/Web/</loc>
   </url>
   <url>
-    <loc>/category/web/html5/</loc>
+    <loc>/category/Web/HTHML5/</loc>
   </url>
   <url>
-    <loc>/category/hybrid%20/app/phonegap/</loc>
+    <loc>/category/Hybrid%20App/</loc>
   </url>
   <url>
-    <loc>/category/java/</loc>
+    <loc>/category/Hybrid%20App/Phonegap/</loc>
   </url>
   <url>
-    <loc>/category/java/scala/</loc>
+    <loc>/category/iOS/</loc>
   </url>
   <url>
-    <loc>/category/java/springframework/</loc>
+    <loc>/category/Java/</loc>
   </url>
   <url>
-    <loc>/category/javascript/</loc>
+    <loc>/category/Java/Scala/</loc>
   </url>
   <url>
-    <loc>/category/javascript/angularjs/</loc>
+    <loc>/category/JavaScript/</loc>
   </url>
   <url>
-    <loc>/category/unix/linux/</loc>
+    <loc>/category/JavaScript/AngularJS/</loc>
   </url>
   <url>
-    <loc>/category/mac/</loc>
+    <loc>/category/Unix/Linux/</loc>
+  </url>
+  <url>
+    <loc>/category/Mac/</loc>
   </url>
   <url>
     <loc>/category/javascript/node.js/</loc>
@@ -1138,21 +1144,27 @@
     <loc>/category/freeboard/</loc>
   </url>
   <url>
+    <loc>/category/FreeBoard/</loc>
+  </url>
+  <url>
     <loc>/category/%EB%B0%B0%EC%9B%80%EC%9D%98%20%EB%86%80%EC%9D%B4%ED%84%B0/</loc>
   </url>
   <url>
-    <loc>/category/php/</loc>
+    <loc>/category/PHP/</loc>
   </url>
   <url>
-    <loc>/category/python/</loc>
+    <loc>/category/Python/</loc>
   </url>
   <url>
-    <loc>/category/ruby/</loc>
+    <loc>/category/Ruby/</loc>
   </url>
   <url>
-    <loc>/category/ruby/ruby%20on%20rails/</loc>
+    <loc>/category/Ruby/Ruby%20On%20Rails/</loc>
   </url>
   <url>
-    <loc>/category/hybrid%20app/sencha/</loc>
+    <loc>/category/Hybrid%20App/Sencha/</loc>
+  </url>
+  <url>
+    <loc>/category/Java/springframework/</loc>
   </url>
 </urlset>

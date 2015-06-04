@@ -4,6 +4,6 @@ title: 'Articles by category: ruby'
 category: ruby
 permalink: /categories/ruby/
 redirect_from:
-  - /category/ruby/
-  - /category/ruby/ruby%20on%20rails/
+  - /category/Ruby/
+  - /category/Ruby/Ruby%20On%20Rails/
 ---
