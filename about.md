@@ -15,6 +15,8 @@ permalink: /about/
 
 ## Contacts
 
+* Homepage : http://saltfactory.net
+* GitHub : http://github.com/saltfactory
 * email : [saltfactory@gmail.com](mailto:saltfactory@gmail.com)
 * twitter : [@saltfactory](https://twitter.com/saltfactory)
 * facebook : [salthub](https://facebook.com/salthub)
