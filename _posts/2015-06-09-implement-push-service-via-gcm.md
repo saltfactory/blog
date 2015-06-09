@@ -8,7 +8,7 @@ comments : true
 
 ## 서론
 
-블로그에서 가장 많이 검색되는 글이 [Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)](http://blog.saltfactory.net/android/implementing-push-notification-service-for-android-using-google-play-service.html) 이다. 이 글은 2014년 1월에 작성한 글로 그동안 [Google Cloud Messaging](https://developers.google.com/cloud-messaging/) 서비스는 진화를 하여 더욱 편리하고 다르게 개발이 되고 있다. 오늘은 새롭게 바뀐 GCM 서비스를 개발하는 방법을 소개한다.
+블로그에서 가장 많이 검색되는 글이 [Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)](http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html) 이다. 이 글은 2014년 1월에 작성한 글로 그동안 [Google Cloud Messaging](https://developers.google.com/cloud-messaging/) 서비스는 진화를 하여 더욱 편리하고 다르게 개발이 되고 있다. 오늘은 새롭게 바뀐 GCM 서비스를 개발하는 방법을 소개한다.
 
 Android는 [eclipse](https://eclipse.org/)에서 [Android Studio](http://developer.android.com/tools/studio/index.html)로 IDE를 바꾸었고, [Ant](http://ant.apache.org/) 기반 빌드 방식을 [Gradle](https://gradle.org/)로 변경하였다. 이에 따라 기존의 문서들을 참조해서 개발할때 혼란스러운 부분들이 있고 아직 이것을 반영한 자료들이 그렇게 많지 않기 때문에 이 글을 통해서 안드로이드 GCM 서비스를 개발하는데 도움이 되길 바란다.
 
@@ -938,7 +938,7 @@ https://gcm-http.googleapis.com/gcm/send \
 
 ## 결론
 
-이전에 블로그에 [Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)](http://blog.saltfactory.net/android/implementing-push-notification-service-for-android-using-google-play-service.html) 라는 글을 작성하고 많은 질문을 받았다. Google의 푸시 서비스는 [C2DM](https://developers.google.com/android/c2dm/) 부터 설정이 꽤 복잡했다. GCM이라는 이름을 변경하고 **Google Play Service**로 GCM을 통합하면서 `gcm.jar`를 사용하여 그 방법을 개선하다가, Android Studio와 **Gradle**의 조합으로 최근에 GCM 서비스를 개발하기에는 매우 간편해졌다. (아직 조금은 복잡하지만) 이 블로그의 글로 최신 GCM을 사용하는데 조금이라도 도움이 되길 바란다. 이번 GCM 업데이트에서는 [Instance ID](https://developers.google.com/instance-id/)와 [HTTP connection Server](https://developers.google.com/cloud-messaging/http)의 등장으로 GCM을 위한 서버를 구축하지 않아도 되어 GCM 서비스를 구축하는데 더욱 간편해졌다. 한간지 더! 이번 GCM 업데이트로 iOS도 GCM으로 푸시서비스를 구현할 수 있다는 것이다. 이제 Android, iOS 디바이스로 푸시를 발송하기 위해서 따로 푸시 서버(Push Provider)를 구축하지 않아도 된다는 말이다. iOS 디바이스에 GCM을 사용하여 푸시 서비스를 구현하는 방법은 이후에 블로그를 통해 소개할 예정이다.
+이전에 블로그에 [Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)](http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html) 라는 글을 작성하고 많은 질문을 받았다. Google의 푸시 서비스는 [C2DM](https://developers.google.com/android/c2dm/) 부터 설정이 꽤 복잡했다. GCM이라는 이름을 변경하고 **Google Play Service**로 GCM을 통합하면서 `gcm.jar`를 사용하여 그 방법을 개선하다가, Android Studio와 **Gradle**의 조합으로 최근에 GCM 서비스를 개발하기에는 매우 간편해졌다. (아직 조금은 복잡하지만) 이 블로그의 글로 최신 GCM을 사용하는데 조금이라도 도움이 되길 바란다. 이번 GCM 업데이트에서는 [Instance ID](https://developers.google.com/instance-id/)와 [HTTP connection Server](https://developers.google.com/cloud-messaging/http)의 등장으로 GCM을 위한 서버를 구축하지 않아도 되어 GCM 서비스를 구축하는데 더욱 간편해졌다. 한간지 더! 이번 GCM 업데이트로 iOS도 GCM으로 푸시서비스를 구현할 수 있다는 것이다. 이제 Android, iOS 디바이스로 푸시를 발송하기 위해서 따로 푸시 서버(Push Provider)를 구축하지 않아도 된다는 말이다. iOS 디바이스에 GCM을 사용하여 푸시 서비스를 구현하는 방법은 이후에 블로그를 통해 소개할 예정이다.
 
 ## 소스코드
 
@@ -946,7 +946,7 @@ https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo
 
 ## 참고
 
-1. http://blog.saltfactory.net/android/implementing-push-notification-service-for-android-using-google-play-service.html
+1. http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html
 2. https://developers.google.com/cloud-messaging/
 3. https://developers.google.com/cloud-messaging/android/start
 4. https://developers.google.com/cloud-messaging/registration
