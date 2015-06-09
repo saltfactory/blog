@@ -183,6 +183,8 @@ allprojects {
 }
 ```
 
+![Android Studio gradle fresh button](http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-09%20at%205_37_19%20PM.png?m=1433839059)
+
 ## Set Up Google Play Services
 
 GCM은 **Google Play Services**로 통합이 되었다. 이전 글에서도 Google Play Services 라이브러리를 사용하여 GCM 서비스를 만드는 방법을 소개했는데 Gradle을 사용하면 아주 쉽게 설정할 수 있다.

@@ -5,8 +5,8 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 09 Jun 2015 17:21:22 +0900</pubDate>
-    <lastBuildDate>Tue, 09 Jun 2015 17:21:22 +0900</lastBuildDate>
+    <pubDate>Tue, 09 Jun 2015 17:39:22 +0900</pubDate>
+    <lastBuildDate>Tue, 09 Jun 2015 17:39:22 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -188,6 +188,8 @@ allprojects {
     }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-09%20at%205_37_19%20PM.png?m=1433839059&quot; alt=&quot;Android Studio gradle fresh button&quot;&gt;&lt;/p&gt;
+
 &lt;h2 id=&quot;set-up-google-play-services&quot;&gt;Set Up Google Play Services&lt;/h2&gt;
 
 &lt;p&gt;GCM은 &lt;strong&gt;Google Play Services&lt;/strong&gt;로 통합이 되었다. 이전 글에서도 Google Play Services 라이브러리를 사용하여 GCM 서비스를 만드는 방법을 소개했는데 Gradle을 사용하면 아주 쉽게 설정할 수 있다.&lt;/p&gt;
