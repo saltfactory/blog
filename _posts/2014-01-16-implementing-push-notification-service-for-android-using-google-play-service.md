@@ -14,6 +14,8 @@ disqus_identifier : http://blog.saltfactory.net/216
 
 우리는 기존에 C2DM(https://developers.google.com/android/c2dm/?csw=1)을 사용해서 안드로이드 푸시를 구현했었다. 그러나 링크를 보면 알겠지만 C2DM은 2012년 6월 26일부터 더이상 업데이트를 지원하고 있지않다. 그럼 안드로이드 푸시는 어떻게 구현할 수 있는가? 구글에서는 푸시서비스를 위해서 GCM(Google Cloude Messaging) http://developer.android.com/google/gcm/index.html 을 제공하고 있다.
 
+> 이 글은 [2015-06-09-최신 Android Studio, GCM(Google Cloud Messaging), Node.js를 이용하여 Android 푸시 서비스 구현하기](http://blog.saltfactory.net/android/implement-push-service-via-gcm.html) 글로 업데이트 되었습니다.
+
 <!--more-->
 
 ### GCM 프로젝트 등록
@@ -293,6 +295,8 @@ node sf-push-provider.js
 ## 결론
 
 안드로이드 푸시는 아이폰의 푸시보다 복잡하게 구현한다. 더구나 이전에 C2DM과 gcm.jar를 이용하는 방법의 포스팅이 많아서 대부분 deprecate 되어 있는 자료로 푸시를 구현하고 있어서 Google Play Service를 이용하여 푸시를 전송하는 방법을 소개했다. 더구나 푸시의 핵심은 바로 Push Provider를 구축하는 것인데 기존의 구글에서 제공하는 GCM-Server를 열어보면 Java로 매우 긴 코드로 복잡하게 되어 있다. 우리는 사내 프로젝트로 Springframework를 도입했는데, 단순히 푸시 서버를 구현하는데 너무 많은 자원을 사용하고 복잡도가 높았기 때문에 이번에 Node.js로 마이그레이션을 진행하였다. 이에 우리 연구소에서 진행한 자료를 보다 간단하게 만들어서 공개하기로 결정했으며, 안드로이드 및 아이폰 푸시 서비스를 구축하는 개인 개발자와 소규모 중소기업에 조금이라도 도움이 되길 바란다.
+
+> 이 글은 [2015-06-09-최신 Android Studio, GCM(Google Cloud Messaging), Node.js를 이용하여 Android 푸시 서비스 구현하기](http://blog.saltfactory.net/android/implement-push-service-via-gcm.html) 글로 업데이트 되었습니다.
 
 
 ## 소스코드
