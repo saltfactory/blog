@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)
-category: node
+category: android
 tags: [node, node.js, android, push, notification, gcm, google play service]
 comments: true
 redirect_from: /216/
