@@ -5,9 +5,935 @@
     <description></description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 05 Jun 2015 17:47:19 +0900</pubDate>
-    <lastBuildDate>Fri, 05 Jun 2015 17:47:19 +0900</lastBuildDate>
+    <pubDate>Tue, 09 Jun 2015 17:21:22 +0900</pubDate>
+    <lastBuildDate>Tue, 09 Jun 2015 17:21:22 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>최신 Android Studio, GCM(Google Cloud Messaging), Node.js를 이용하여 Android 푸시 서비스 구현하기</title>
+        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
+
+&lt;p&gt;블로그에서 가장 많이 검색되는 글이 &lt;a href=&quot;http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html&quot;&gt;Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)&lt;/a&gt; 이다. 이 글은 2014년 1월에 작성한 글로 그동안 &lt;a href=&quot;https://developers.google.com/cloud-messaging/&quot;&gt;Google Cloud Messaging&lt;/a&gt; 서비스는 진화를 하여 더욱 편리하고 다르게 개발이 되고 있다. 오늘은 새롭게 바뀐 GCM 서비스를 개발하는 방법을 소개한다.&lt;/p&gt;
+
+&lt;p&gt;Android는 &lt;a href=&quot;https://eclipse.org/&quot;&gt;eclipse&lt;/a&gt;에서 &lt;a href=&quot;http://developer.android.com/tools/studio/index.html&quot;&gt;Android Studio&lt;/a&gt;로 IDE를 바꾸었고, &lt;a href=&quot;http://ant.apache.org/&quot;&gt;Ant&lt;/a&gt; 기반 빌드 방식을 &lt;a href=&quot;https://gradle.org/&quot;&gt;Gradle&lt;/a&gt;로 변경하였다. 이에 따라 기존의 문서들을 참조해서 개발할때 혼란스러운 부분들이 있고 아직 이것을 반영한 자료들이 그렇게 많지 않기 때문에 이 글을 통해서 안드로이드 GCM 서비스를 개발하는데 도움이 되길 바란다.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;앱-만들기&quot;&gt;앱 만들기&lt;/h2&gt;
+
+&lt;p&gt;GCM을 테스트하기 위한 Android 프로젝트를 하나 만들도록 한다. 완성된 예제는 &lt;a href=&quot;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&quot;&gt;saltfactory-android-tutorial의 gcm-demo 브랜치&lt;/a&gt;에서 받을 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Android Studio&lt;/strong&gt;를 열어서 기본 프로젝트를 만든다.&lt;/p&gt;
+
+&lt;h3 id=&quot;start-new-android-studio-project&quot;&gt;Start New Android Studio project&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%207_37_51%20PM.png?m=1433759886&quot; alt=&quot;Start New Android Studio&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;new-project&quot;&gt;New Project&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Application name&lt;/strong&gt; : SF-GCM-DEMO&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Company Domain&lt;/strong&gt; : saltfactory.net&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Package name&lt;/strong&gt; : &lt;strong&gt;net.saltfactory.demo.gcm&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Project location&lt;/strong&gt; : /Projects/Repository/Saltfactory/saltfactory-android-tutorial/sf-gcm-demo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;으로 프로젝트를 만든다. 위 입력은 자신에 맞게 수정하여 입력한다. 주의할 점은 &lt;strong&gt;Pacakge name&lt;/strong&gt;이다. Android의 어플리케이션의 유일한 identifier는 package name으로 인식하기 때문에 자신의 앱과 중복되지 않은 이름을 입력한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%207_42_51%20PM.png?m=1433760924&quot; alt=&quot;New Project&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;target-android-device&quot;&gt;Target Android Device&lt;/h3&gt;
+
+&lt;p&gt;다음은 개발하고 싶은 &lt;strong&gt;SDK&lt;/strong&gt;를 선택한다. 우리는 Android 스마트폰 GCM을 테스트할 예정이기 때문에 &lt;strong&gt;Phone and Tablet Minimum SDK&lt;/strong&gt;를 선택한다. 현재 연구에 사용하고 있는 Android 디바이스가 최신형이 아니기 때문에 &lt;strong&gt;API 14(Android 4.0)&lt;/strong&gt;을 선택했다. 자신에 맞는 SDK를 선택하면 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%207_46_26%20PM.png?m=1433760480&quot; alt=&quot;Phone and Table Minimum SDK&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;add-an-activity-to-mobile&quot;&gt;Add an activity to Mobile&lt;/h3&gt;
+
+&lt;p&gt;단순히 GCM을 테스트하기 위해서 우리는 &lt;strong&gt;Blank Activity&lt;/strong&gt;를 선택한다. 실제 프로젝트를 새롭게 진행한다면 자신에게 필요한 Activity를 선택하면 된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%207_49_07%20PM.png?m=1433760710&quot; alt=&quot;Add an activity to Mobile&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;customize-the-activity&quot;&gt;Customize the Activity&lt;/h3&gt;
+
+&lt;p&gt;특별히 다른 작업을 하지 않기 때문에 기본 Activity 이름을 그대로 사용하기로 한다. Title만 &lt;strong&gt;GCM demo&lt;/strong&gt;로 입력한다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Activity Name&lt;/strong&gt; : MainActivity&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Layout Name&lt;/strong&gt; : activity_name&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Title&lt;/strong&gt; : &lt;strong&gt;GCM demo&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Menu Resource Name&lt;/strong&gt; : menu_main&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%207_58_26%20PM.png?m=1433761123&quot; alt=&quot;Customize the Activity&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;간단하게 &lt;strong&gt;Gradle&lt;/strong&gt; 기반의 Anroid 프로젝트가 만들어졌다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%208_13_37%20PM.png?m=1433762024&quot; alt=&quot;created android project&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;앱-등록하기&quot;&gt;앱 등록하기&lt;/h2&gt;
+
+&lt;p&gt;Android GCM 서비스를 개발하기 전에 GCM을 사용하기 위해 앱을 등록해야한다. Android GCM 사이트에 접속해보자. &lt;a href=&quot;https://developers.google.com/cloud-messaging/&quot;&gt;https://developers.google.com/cloud-messaging/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%207_18_24%20PM.png?m=1433759205&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Google Cloud Messasing은 이제 &lt;strong&gt;Android&lt;/strong&gt; 디바이스 뿐만 아니라 &lt;strong&gt;iOS&lt;/strong&gt; 디바이스에도 동일한 로직으로 GCM 서비스를 이용하여 메세지를 보낼 수 있다. &lt;strong&gt;iOS&lt;/strong&gt;를 위한 GCM의 소개는 다음 포스트에서 소개하도록 하고 우선 &lt;strong&gt;Android GCM&lt;/strong&gt;을 소개한다. Google의 서비스는 점차적으로 &lt;a href=&quot;http://www.google.com/design/spec/material-design/introduction.html&quot;&gt;Material Design&lt;/a&gt;으로 디자인을 변경하고 있다. GCM 사이트 역시 &lt;strong&gt;Material Design&lt;/strong&gt;이 적용되어 있다. &lt;a href=&quot;https://developers.google.com/cloud-messaging/android/start&quot;&gt;TRY IT ON ANDROID&lt;/a&gt; 버튼을 클릭한다.&lt;/p&gt;
+
+&lt;p&gt;우리는 &lt;strong&gt;SF-GCM-demo&lt;/strong&gt;라는 프로젝트를 이미 만들었고 GCM을 추가할 것이기 때문에 &lt;a href=&quot;https://developers.google.com/cloud-messaging/android/client&quot;&gt;add Cloud Messaging to your existing app&lt;/a&gt;를 클릭한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%208_16_41%20PM.png?m=1433762213&quot; alt=&quot;add Cloud Messasing to your exsiting app&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;get-a-configuration-file&quot;&gt;Get a configuration file&lt;/h3&gt;
+
+&lt;p&gt;앞에 설명은 각자 읽어보도록 하고 가운데 정도가면 &lt;a href=&quot;https://developers.google.com/cloud-messaging/android/client#get-config&quot;&gt;Get a configuration file&lt;/a&gt;이 보일 것이다. &lt;a href=&quot;https://developers.google.com/mobile/add?platform=android&amp;amp;cntapi=gcm&amp;amp;cnturl=https:%2F%2Fdevelopers.google.com%2Fcloud-messaging%2Fandroid%2Fclient&amp;amp;cntlbl=Continue%20Adding%20GCM%20Support&amp;amp;%3Fconfigured%3Dtrue&quot;&gt;GET A CONFIGURATION FILE&lt;/a&gt; 버튼을 클릭하자.&lt;/p&gt;
+
+&lt;h3 id=&quot;enable-google-services-for-your-app&quot;&gt;Enable Google services for your app&lt;/h3&gt;
+
+&lt;p&gt;페이지가 전환되면서 Android 앱을 등록하는 화면이 나온다. &lt;strong&gt;GCM&lt;/strong&gt;을 사용하기 위해서 앱을 등록하는 화면이다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;App name&lt;/strong&gt; : 앱 이름을 입력한다. 영문으로만 등록이 가능하다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Android package name&lt;/strong&gt; : &lt;strong&gt;net.saltfactory.demo.gcm&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%208_22_35%20PM.png?m=1433762581&quot; alt=&quot;Create or Choose an app&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Continue Choose an configure services&lt;/strong&gt; 버튼을 클릭한다. 등록하는 시간을 기다리면 다음과 같이 &lt;strong&gt;SF-GCM-DEMO&lt;/strong&gt; 앱이 &lt;strong&gt;net.saltfactory.demo.gcm&lt;/strong&gt; 패키지명으로 등록된 것을 확인할 수 있다. 앱을 등록하면 Google Sigin-in, Cloud Messaging, Analytics 서비스를 사용할 수 있다. 우리는  &lt;strong&gt;Cloud Messaging&lt;/strong&gt;를 상용할 것이기 때문에 다른 설명은 생략한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%208_24_10%20PM.png?m=1433762877&quot; alt=&quot;Registration Android App&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Google Cloud Messaging&lt;/strong&gt; 탭을 보면 &lt;strong&gt;ENABLE GOOGLE CLOUD MESSAGING&lt;/strong&gt; 버튼이 보인다. 이 버튼을 눌러줘야 GCM 서비스가 활성화 된다. 버튼을 클릭하자. 그러면 아래와 같이 GCM 서비스가 활성화 된 것을 확인할 수 있다. 이제 Google 서비스에 GCM에 관한 설정은 모두 마친 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%208_30_33%20PM.png?m=1433763040&quot; alt=&quot;Enable google cloud messaging&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;아래에 보면 &lt;strong&gt;Generate configuration files&lt;/strong&gt; 라는 버튼이 보인다. 이전 GCM에서의 복잡한 설정을 간단하게 configuration file로 처리를 할 수 있게 GCM 서비스가 업그레이드 되었다. 설정 파일을 만들어보자.&lt;/p&gt;
+
+&lt;h3 id=&quot;generate-configuration-files&quot;&gt;Generate Configuration files&lt;/h3&gt;
+
+&lt;p&gt;GCM 서비스가 업그레이드 되면서 설정하는 프로세스가 매우 직관적으로 변경되었다. 앞에서 설명하듯 차례차례 문서대로 진행하면 다음과 같이 &lt;strong&gt;Server API key&lt;/strong&gt;와 &lt;strong&gt;Sender ID&lt;/strong&gt;를 만들 수 있다. 이전에 블로그에 포스팅한 글의 가장 많은 질문이 &lt;strong&gt;Project ID&lt;/strong&gt;를 어떻게 생성하는지에 대한 질문이였는데 GCM 업그레이드 이후 간단하게 생성할 수 있게 되었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot_2015-06-08_at_8_32_01_PM.png?m=1433763179&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;설정 파일 또한 쉽게 생성이 되었다. 상단에 &lt;strong&gt;Download google-services.json&lt;/strong&gt; 버튼을 클릭해서 설정파일을 다운로드한다. 다운로드 받은 &lt;code&gt;google-services.json&lt;/code&gt; 파일은 앞에서 만든 Android 프로젝트 디렉토리 안에 &lt;code&gt;app/&lt;/code&gt; 디렉토리 안으로 복사한다. 이 파일이 &lt;code&gt;/app&lt;/code&gt; 디렉토리안에 들어있지 않으면 GCM 프로젝트를 빌드할 때 &lt;code&gt;R.string.gcm_defaultSenderId&lt;/code&gt; 리소스를 찾을 수 없다는 에러가 발생하면서 빌드가 되지 않는다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-08%20at%208_40_47%20PM.png?m=1433763667&quot; alt=&quot;copy google-services.json&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;google-services.json&quot;&gt;google-services.json&lt;/h3&gt;
+
+&lt;p&gt;설정 파일을 열어보자. 이전에 질문이 가장 많았던 &lt;strong&gt;Project ID&lt;/strong&gt;와 &lt;strong&gt;Project Number&lt;/strong&gt;가 자동으로 만들어진 것을 확인할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&amp;quot;project_info&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;project_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;sf-gcm-demo-ae3be&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;project_number&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;636926190444&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;SF-GCM-DEMO&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&amp;quot;client&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&amp;quot;client_info&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;client_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;android:net.saltfactory.demo.gcm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;client_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;android_client_info&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;package_name&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;net.saltfactory.demo.gcm&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&amp;quot;oauth_client&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+      &lt;span class=&quot;s2&quot;&gt;&amp;quot;services&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;analytics_service&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;cloud_messaging_service&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;apns_config&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;appinvite_service&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;other_platform_oauth_client&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;google_signin_service&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;ads_service&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;build.gradle-설정&quot;&gt;build.gradle 설정&lt;/h2&gt;
+
+&lt;p&gt;다음은 &lt;strong&gt;Build&lt;/strong&gt;를 설정해야한다. Android Studio로 Android 프로젝트를 개발하게 되면 이전과 다리 &lt;strong&gt;Gradle&lt;/strong&gt;을 사용하게 되는데, 처음에는 복잡해 보일지 모르지만 기존의 &lt;strong&gt;Ant&lt;/strong&gt; 방식과 달리 다양한 설정을 할 수 있고, 프로젝트에 필요한 &lt;strong&gt;dependencies&lt;/strong&gt; 라이브러리를 자동으로 다운받기 때문에 &lt;strong&gt;classpath&lt;/strong&gt;를 설정해주는 복잡한 과정을 생략할 수 있는 장점이 있다.&lt;/p&gt;
+
+&lt;p&gt;Google Cloud Messaging 문서에서는 &lt;a href=&quot;https://developers.google.com/cloud-messaging/android/client#add-config&quot;&gt;Add the configuration file to your project&lt;/a&gt;를 참고한다.&lt;/p&gt;
+
+&lt;p&gt;Android Studio에서 &lt;code&gt;build.gradle&lt;/code&gt; 파일을 열어서 아래와 같이 &lt;code&gt;classpath&lt;/code&gt;를 추가한다. Android Studio에서 gradle 파일을 수정하면 자동으로 변경된 내용을 반영한다. 만약 자동으로 반영이 되지 않을 경우 Android Studio 오른쪽 Gradle Projects 패널을 열어서 &lt;strong&gt;새로 고침&lt;/strong&gt; 버튼을 클릭하면 Gradle이 자동으로 갱신되어 필요한 라이브러리들을 다운받고 빌드를 진행할 준비를 하게 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+//        classpath &amp;#39;com.android.tools.build:gradle:1.2.3&amp;#39;
+        classpath &amp;#39;com.android.tools.build:gradle:1.3.0-beta1&amp;#39;
+        classpath &amp;#39;com.google.gms:google-services:1.3.0-beta1&amp;#39;
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;set-up-google-play-services&quot;&gt;Set Up Google Play Services&lt;/h2&gt;
+
+&lt;p&gt;GCM은 &lt;strong&gt;Google Play Services&lt;/strong&gt;로 통합이 되었다. 이전 글에서도 Google Play Services 라이브러리를 사용하여 GCM 서비스를 만드는 방법을 소개했는데 Gradle을 사용하면 아주 쉽게 설정할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;app&lt;/strong&gt;을 설정하는 &lt;code&gt;build.gradle&lt;/code&gt;을 열어서 필요할 라이브러리 &lt;code&gt;play-services&lt;/code&gt;를 다운 받기 위해서 다음과 같이 &lt;code&gt;dependencies&lt;/code&gt;에  &lt;code&gt;compile &amp;quot;com.google.android.gms:play-services:7.5.+”&lt;/code&gt;을 추가한다. 이것은 컴파일할 때 &lt;code&gt;play-services&lt;/code&gt; 라이브러리가 필요하니 없으면 다운 받아서 컴파일할 때 사용하라는 의미이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;apply plugin: &amp;#39;com.android.application&amp;#39;
+apply plugin: &amp;#39;com.google.gms.google-services&amp;#39;
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion &amp;quot;22.0.1&amp;quot;
+
+    defaultConfig {
+        applicationId &amp;quot;net.saltfactory.demo.gcm&amp;quot;
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName &amp;quot;1.0&amp;quot;
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(&amp;#39;proguard-android.txt&amp;#39;), &amp;#39;proguard-rules.pro&amp;#39;
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: &amp;#39;libs&amp;#39;, include: [&amp;#39;*.jar&amp;#39;])
+    compile &amp;#39;com.google.android.gms:play-services-gcm:7.5.+&amp;#39;
+    compile &amp;#39;com.android.support:appcompat-v7:22.1.1&amp;#39;
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 필요한 &lt;strong&gt;라이브러리 설치&lt;/strong&gt;와 &lt;strong&gt;클래스패스 설정&lt;/strong&gt;을 모두 완료하였다. Gradle을 사용하여 아주 쉽게 설정을 하였다.&lt;/p&gt;
+
+&lt;h2 id=&quot;androidmanifest.xml-설정&quot;&gt;AndroidManifest.xml 설정&lt;/h2&gt;
+
+&lt;p&gt;이젠 Android 앱의 메타정보를 설정하는 &lt;code&gt;AndroidManifest.xml&lt;/code&gt; 파일을 열어서 GCM 서비스를 만들기 위한 메타정보를 정의해야한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;AndroidManifest.xml&lt;/code&gt;에 추가해야할 핵심 내용은 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GCM Permission&lt;/strong&gt; : 디바이스에 GCM 서비스를 사용하기 위한 권한 설정&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GCM Receiver&lt;/strong&gt; : GCM을 받았을 때 동작하기 위한 리시버&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GCM Listener Service&lt;/strong&gt; : GCM을 요청을 대기하고 있는 리스너 서비스&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;InstanceID Listener Service&lt;/strong&gt; : InstanceID 요청을 대기하고 있는 리스너 서비스&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GCM Registration Service&lt;/strong&gt; : GCM을 등록하기 위한 서비스&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;위 내용을 입력하기 전에 우선 &lt;code&gt;&amp;lt;!-- comment --&amp;gt;&lt;/code&gt;로 &lt;code&gt;AndroidManifest.xml&lt;/code&gt;에 추가해보자.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;manifest&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:android=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;package=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_permission] --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_permission] --&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;application&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:allowBackup=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:icon=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@mipmap/ic_launcher&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@string/app_name&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@style/AppTheme&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;activity&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;.MainActivity&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@string/app_name&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android.intent.action.MAIN&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android.intent.category.LAUNCHER&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/activity&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_receiver] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_receiver] --&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_listener_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_listener_service] --&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START instanceId_listener_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END instanceId_listener_service] --&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_registration_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_registration_service] --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/manifest&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;uses-permission&quot;&gt;uses-permission&lt;/h3&gt;
+
+&lt;p&gt;먼저 &lt;strong&gt;GCM Permission&lt;/strong&gt;을 설정하자. 디바이스에서 GCM을 사용하기 위해서는 &lt;code&gt;com.google.android.c2dm.permission.RECEIVE&lt;/code&gt;와 &lt;code&gt;android.permission.WAKE_LOCK&lt;/code&gt; 권한이 필요하다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;com.google.android.c2dm.permission.RECEIVE&lt;/strong&gt; : GCM은 원래 &lt;a href=&quot;https://developers.google.com/android/c2dm/&quot;&gt;c2dm&lt;/a&gt; 이름으로 베타 운영되다가 정식으로 GCM 이름으로 변경이된다. 그래서 패키지 이름이 c2dm 그대로 유지하게 된듯핟.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;android.permission.WAKE_LOCK&lt;/strong&gt; : 디바이스가 잠금이되어 화면이 꺼져있을 경우에도 GCM을 받을 수 있기 위해서 디바이스를 깨우는 권한이 필요하다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_permission] --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.permission.RECEIVE&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android.permission.WAKE_LOCK&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_permission] --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;gcm-reciever&quot;&gt;GCM Reciever&lt;/h3&gt;
+
+&lt;p&gt;GCM을 받기 위한 리시버를 만들어야하는데 GCM 리시버는 특별히 구현할 필요가 없다. GCM 라이브러리 안에 이미 구현체가 있기 때문에 정의만하면 된다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_receiver] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;receiver&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.gms.gcm.GcmReceiver&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:permission=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.permission.SEND&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.intent.RECEIVE&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/receiver&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_receiver] --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;gcm-listener-service&quot;&gt;GCM Listener Service&lt;/h3&gt;
+
+&lt;p&gt;GCM 리스너 서비스는 GCM 메세지가 디바이스로 전송이되면 메세지를 받아서 처리하는 프로그램을 서비스로 정의한다. GCM 받아서 실제 Notification Center에 어떻게 나타내는지를 정의한다. 이후에 살펴볼 &lt;code&gt;MyGcmListenerService.java&lt;/code&gt;에 내용을 구현할 것이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_listener_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;service&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm.MyGcmListenerService&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.intent.RECEIVE&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/service&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_listener_service] --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;instanceid-listener-service&quot;&gt;InstanceID Listener Service&lt;/h3&gt;
+
+&lt;p&gt;최근 GCM 서비스에서는 &lt;a href=&quot;https://developers.google.com/instance-id/&quot;&gt;Instance ID&lt;/a&gt;를 사용한다. 이것은 Android, iOS의 고유한 ID로 GCM에서 디바이스를 구분하기 위한 것이다. Instance ID를 위한 리서너를 &lt;code&gt;MyInstanceIDListener.java&lt;/code&gt;에서 구현할 것이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START instanceId_listener_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;service&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm.MyInstanceIDListenerService&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.gms.iid.InstanceID&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/service&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END instanceId_listener_service] --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;gcm-registration-service&quot;&gt;GCM Registration Service&lt;/h3&gt;
+
+&lt;p&gt;실제 디바이스에서 &lt;strong&gt;Instance ID&lt;/strong&gt;를 사용하여 디바이스를 GCM에 등록하고 &lt;strong&gt;디바이스 고유 토큰&lt;/strong&gt;을 생성하기 위한 서비스를 &lt;code&gt;RegistrationIntentService.java&lt;/code&gt;에서 구현할 것이다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_registration_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;service&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm.RegistrationIntentService&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/service&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_registration_service] --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;androidmanifest.xml&quot;&gt;AndroidManifest.xml&lt;/h3&gt;
+
+&lt;p&gt;GCM을 사용하기 위한 메니페스트 파일 전체 내용은 다음과 같다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;manifest&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:android=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;package=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_permission] --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.permission.RECEIVE&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android.permission.WAKE_LOCK&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_permission] --&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;application&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:allowBackup=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:icon=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@mipmap/ic_launcher&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@string/app_name&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:theme=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@style/AppTheme&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;activity&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;.MainActivity&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:label=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@string/app_name&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android.intent.action.MAIN&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android.intent.category.LAUNCHER&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/activity&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_receiver] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;receiver&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.gms.gcm.GcmReceiver&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:permission=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.permission.SEND&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.intent.RECEIVE&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;category&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/receiver&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_receiver] --&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_listener_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;service&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm.MyGcmListenerService&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.c2dm.intent.RECEIVE&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/service&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_listener_service] --&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START instanceId_listener_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;service&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm.MyInstanceIDListenerService&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;intent-filter&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;action&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;com.google.android.gms.iid.InstanceID&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/intent-filter&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/service&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END instanceId_listener_service] --&amp;gt;&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [START gcm_registration_service] --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;service&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;net.saltfactory.demo.gcm.RegistrationIntentService&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;android:exported=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/service&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- [END gcm_registration_service] --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/application&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/manifest&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;gcm-demo&quot;&gt;GCM Demo&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;GCM Demo&lt;/strong&gt;를 좀더 사용할만한 데모 앱을 만들기 위해서 &lt;a href=&quot;http://developer.android.com/reference/android/widget/Button.html&quot;&gt;Button&lt;/a&gt;, &lt;a href=&quot;http://developer.android.com/reference/android/widget/TextView.html&quot;&gt;TextView&lt;/a&gt; 그리고 &lt;a href=&quot;https://developer.android.com/reference/android/widget/ProgressBar.html&quot;&gt;ProgressBar&lt;/a&gt;를 사용하여 UI를 구성하였다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/device-2015-06-09-151902.png?m=1433830851&quot; alt=&quot;GCM Demo start&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/device-2015-06-09-151926.png?m=1433830894&quot; alt=&quot;GCM Demo finish&quot;&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;string.xml&quot;&gt;string.xml&lt;/h3&gt;
+
+&lt;p&gt;데모에 사용하기 위한 스트링을 정의한 &lt;code&gt;app/src/main/res/values/string.xml&lt;/code&gt;을 다음 내용으로 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;resources&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;app_name&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;GCM Demo&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;registering_message_ready&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;InstanceID 토큰 가져오기&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;registering_message_generating&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;InstanceID 토큰 생성중...&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;string&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;registering_message_complete&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;완료!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/resources&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;style.xml&quot;&gt;style.xml&lt;/h3&gt;
+
+&lt;p&gt;데모에 사용하기 위한 스타일을 정의한 &lt;code&gt;app/src/main/res/values/style.xml&lt;/code&gt;을 다음 내용으로 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;resources&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Base application theme. --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;style&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;AppTheme&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;parent=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Theme.AppCompat.Light.DarkActionBar&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Customize your theme here. --&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android:textColor&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;@android:color/white&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;item&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;android:textSize&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;16sp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/resources&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;demens.xml&quot;&gt;demens.xml&lt;/h3&gt;
+
+&lt;p&gt;데모에 사용하기 위한 크기를 정의한 &lt;code&gt;app/src/main/res/values/dimens.xml&lt;/code&gt;을 다음 내용으로 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;resources&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- Default screen margins, per the Android Design guidelines. --&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;dimen&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;activity_horizontal_margin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;16dp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dimen&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;dimen&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;activity_vertical_margin&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;16dp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dimen&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/resources&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;layout.xml&quot;&gt;layout.xml&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;app/src/main/res/layout/activity_main.xml&lt;/code&gt; 레이아웃 파일을 열어서 다음 내용을 입력하고 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;LinearLayout&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:android=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;xmlns:tools=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;http://schemas.android.com/tools&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;match_parent&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;match_parent&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:paddingLeft=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@dimen/activity_horizontal_margin&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:paddingRight=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@dimen/activity_horizontal_margin&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:paddingTop=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@dimen/activity_vertical_margin&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:paddingBottom=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@dimen/activity_vertical_margin&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:background=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@color/blue_grey_700&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;android:orientation=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;vertical&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;tools:context=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;.MainActivity&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;Button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@+id/registrationButton&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;fill_parent&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:text=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@string/registering_message_ready&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;TextView&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@+id/informationTextView&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:textAppearance=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;?android:attr/textAppearanceMedium&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;ProgressBar&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:layout_width=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:layout_height=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;android:id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;@+id/registrationProgressBar&amp;quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/LinearLayout&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;quickstartpreferences.java&quot;&gt;QuickstartPreferences.java&lt;/h3&gt;
+
+&lt;p&gt;이 파일은 &lt;strong&gt;GCM Demo&lt;/strong&gt;에서 사용하는 LocalBoardcast의 액션을 정의한 파일이다. &lt;code&gt;app/src/main/java/net/saltfactory/demo/gcm/QuickstartPreferences.java&lt;/code&gt;에 아래내용을 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saltfactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;demo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Created by saltfactory on 6/8/15.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;QuickstartPreferences&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;REGISTRATION_READY&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;registrationReady&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;REGISTRATION_GENERATING&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;registrationGenerating&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;REGISTRATION_COMPLETE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;registrationComplete&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;mainactivity.java&quot;&gt;MainActivity.java&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;GCM Demo&lt;/strong&gt;의 메인 엑티비티 클래스를 정의하자. &lt;code&gt;app/src/main/java/net/saltfactory/demo/gcm/MainActivity.java&lt;/code&gt; 파일을 열어서 다음 내용을 추가한다. 핵심 메소드는 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;onCreate()&lt;/strong&gt; : UI를 정의하고 이벤트와 핸들러를 정의한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onResume()&lt;/strong&gt; : 화면이 보여질때 LocalBroadcastManager를 정의한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;onPause()&lt;/strong&gt; : 화면이 사라질때 LocalBoradcastManager에 등록된 것을 제거한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;checkPlayService()&lt;/strong&gt; : Google Play Service를 사용할 수 있는 환경인지 체크한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;registBroadcastReciever()&lt;/strong&gt; : LocalBroadcast 액션에 해당하는 작업을 정의한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;getInstanceIdToken()&lt;/strong&gt; : GCM을 등록하고 Instance ID에 해당하는 token을 가져온다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;자세한 내용은 코드의 주석으로 대신하고 다음 내용을 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saltfactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;demo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.BroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.Context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.IntentFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.os.Bundle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.support.v4.content.LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.support.v7.app.AppCompatActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.util.Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.view.View&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.widget.Button&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.widget.ProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.widget.TextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.google.android.gms.common.ConnectionResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.google.android.gms.common.GooglePlayServicesUtil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MainActivity&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AppCompatActivity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PLAY_SERVICES_RESOLUTION_REQUEST&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;MainActivity&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Button&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mRegistrationButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProgressBar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mRegistrationProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BroadcastReceiver&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mRegistrationBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TextView&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * Instance ID를 이용하여 디바이스 토큰을 가져오는 RegistrationIntentService를 실행한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getInstanceIdToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;checkPlayServices&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Start IntentService to register this application with GCM.&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegistrationIntentService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;startService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * LocalBroadcast 리시버를 정의한다. 토큰을 획득하기 위한 READY, GENERATING, COMPLETE 액션에 따라 UI에 변화를 준다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;registBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mRegistrationBroadcastReceiver&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;BroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onReceive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_READY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)){&lt;/span&gt;
+                    &lt;span class=&quot;c1&quot;&gt;// 액션이 READY일 경우&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mRegistrationProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GONE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;View&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GONE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_GENERATING&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)){&lt;/span&gt;
+                    &lt;span class=&quot;c1&quot;&gt;// 액션이 GENERATING일 경우&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mRegistrationProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;VISIBLE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;View&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;VISIBLE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registering_message_generating&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_COMPLETE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)){&lt;/span&gt;
+                    &lt;span class=&quot;c1&quot;&gt;// 액션이 COMPLETE일 경우&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mRegistrationProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GONE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mRegistrationButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registering_message_complete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mRegistrationButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setEnabled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getStringExtra&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;token&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onCreate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Bundle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;savedInstanceState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onCreate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;savedInstanceState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;setContentView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;activity_main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;registBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// 토큰을 보여줄 TextView를 정의&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;findViewById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;informationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mInformationTextView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;View&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GONE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 토큰을 가져오는 동안 인디케이터를 보여줄 ProgressBar를 정의&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mRegistrationProgressBar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;findViewById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registrationProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mRegistrationProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setVisibility&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ProgressBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;GONE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 토큰을 가져오는 Button을 정의&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mRegistrationButton&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Button&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;findViewById&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registrationButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mRegistrationButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setOnClickListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;View&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;OnClickListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * 버튼을 클릭하면 토큰을 가져오는 getInstanceIdToken() 메소드를 실행한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             * @param view&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;             */&lt;/span&gt;
+            &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onClick&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;View&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;getInstanceIdToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * 앱이 실행되어 화면에 나타날때 LocalBoardcastManager에 액션을 정의하여 등록한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onResume&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onResume&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registerReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mRegistrationBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IntentFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_READY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registerReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mRegistrationBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IntentFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_GENERATING&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;registerReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mRegistrationBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IntentFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_COMPLETE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * 앱이 화면에서 사라지면 등록된 LocalBoardcast를 모두 삭제한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onPause&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;unregisterReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mRegistrationBroadcastReceiver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;onPause&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * Google Play Service를 사용할 수 있는 환경이지를 체크한다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;checkPlayServices&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resultCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GooglePlayServicesUtil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isGooglePlayServicesAvailable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConnectionResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;SUCCESS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GooglePlayServicesUtil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isUserRecoverableError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultCode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;GooglePlayServicesUtil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getErrorDialog&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resultCode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;PLAY_SERVICES_RESOLUTION_REQUEST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;This device is not supported.&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;finish&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;registrationintentservice.java&quot;&gt;RegistrationIntentService.java&lt;/h3&gt;
+
+&lt;p&gt;이 파일은 &lt;strong&gt;Instance ID&lt;/strong&gt;를 가지고 &lt;strong&gt;토큰&lt;/strong&gt;을 가져오는 작업을 한다. &lt;strong&gt;GCM Demo&lt;/strong&gt; 앱을 위해 토큰을 가져오기 전에 &lt;strong&gt;ProgressBar&lt;/strong&gt;를 동작시키고, 토큰을 가져오는 작업을 완료하면 ProgressBar를 멈추고 &lt;strong&gt;TextView&lt;/strong&gt;에 토큰 정보를 업데이트하기 위한 &lt;strong&gt;LocalBoardcast&lt;/strong&gt; 액션을 추가하였다.  &lt;code&gt;app/src/main/java/net/saltfactory/demo/gcm/RegistrationIntentService.java&lt;/code&gt;  파일에 아래 내용을 저장한다. 자세한 내용은 주석으로 대신한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saltfactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;demo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.annotation.SuppressLint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.app.IntentService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.support.v4.content.LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.util.Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.google.android.gms.gcm.GoogleCloudMessaging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.google.android.gms.iid.InstanceID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.io.IOException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Created by saltfactory on 6/8/15.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RegistrationIntentService&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IntentService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;RegistrationIntentService&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;RegistrationIntentService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * GCM을 위한 Instance ID의 토큰을 생성하여 가져온다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * @param intent&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@SuppressLint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;LongLogTag&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onHandleIntent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// GCM Instance ID의 토큰을 가져오는 작업이 시작되면 LocalBoardcast로 GENERATING 액션을 알려 ProgressBar가 동작하도록 한다.&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendBroadcast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_GENERATING&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// GCM을 위한 Instance ID를 가져온다.&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;InstanceID&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instanceID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InstanceID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// GCM 앱을 등록하고 획득한 설정파일인 google-services.json을 기반으로 SenderID를 자동으로 가져온다.&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_senderId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;gcm_defaultSenderId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// GCM 기본 scope는 &amp;quot;GCM&amp;quot;이다.&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GoogleCloudMessaging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;INSTANCE_ID_SCOPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// Instance ID에 해당하는 토큰을 생성하여 가져온다.&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instanceID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getToken&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default_senderId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+                &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;GCM Registration Token: &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printStackTrace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// GCM Instance ID에 해당하는 토큰을 획득하면 LocalBoardcast에 COMPLETE 액션을 알린다.&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// 이때 토큰을 함께 넘겨주어서 UI에 토큰 정보를 활용할 수 있도록 했다.&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registrationComplete&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QuickstartPreferences&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;REGISTRATION_COMPLETE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;registrationComplete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;putExtra&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;token&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LocalBroadcastManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendBroadcast&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registrationComplete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;myinstanceidlistenerservice.java&quot;&gt;MyInstanceIDListenerService.java&lt;/h2&gt;
+
+&lt;p&gt;이 파일은 &lt;strong&gt;Instance ID&lt;/strong&gt;를 획득하기 위한 리스너를 상속받아서 토큰을 갱신하는 코드를 추가한다. &lt;code&gt;app/src/main/java/net/saltfactory/demo/gcm/MyInstanceIDListenerService.java&lt;/code&gt; 파일에 아래 내용을 저장한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saltfactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;demo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.google.android.gms.iid.InstanceIDListenerService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Created by saltfactory on 6/8/15.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyInstanceIDListenerService&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InstanceIDListenerService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;MyInstanceIDLS&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onTokenRefresh&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RegistrationIntentService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;startService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;mygcmlistenerservice.java&quot;&gt;MyGcmListenerService.java&lt;/h3&gt;
+
+&lt;p&gt;이 파일은 GCM으로 메시지가 도착하면 디바이스에 받은 메세지를 어떻게 사용할지에 대한 내용을 정의하는 클래스이다.
+* &lt;strong&gt;onMessageReceived()&lt;/strong&gt; : GCM으로부터 이 함수를 통해 메세지를 받는다. 이때 전송한 &lt;strong&gt;SenderID&lt;/strong&gt;와 &lt;code&gt;Set&lt;/code&gt; 타입의 데이터 컬렉션 형태로 받게된다.
+* &lt;strong&gt;sendNotification()&lt;/strong&gt; : GCM으로부터 받은 메세지를 디바이스에 알려주는 함수이다.
+&lt;code&gt;app/src/main/java/net/saltfactory/demo/gcm/MyGcmListenerService.java&lt;/code&gt; 파일에 아래 내용을 저장한다. 자세한 내용은 주석으로 대신한다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;saltfactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;demo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.app.NotificationManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.app.PendingIntent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.Context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.content.Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.media.RingtoneManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.net.Uri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.os.Bundle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.support.v4.app.NotificationCompat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;android.util.Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.google.android.gms.gcm.GcmListenerService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; * Created by saltfactory on 6/8/15.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyGcmListenerService&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GcmListenerService&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;MyGcmListenerService&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     *&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * @param from SenderID 값을 받아온다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * @param data Set형태로 GCM으로 받은 데이터 payload이다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onMessageReceived&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Bundle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;title&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;title&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;From: &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Title: &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Message: &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;c1&quot;&gt;// GCM으로 받은 메세지를 디바이스에 알려주는 sendNotification()을 호출한다.&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;sendNotification&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+
+    &lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * 실제 디바에스에 GCM으로부터 받은 메세지를 알려주는 함수이다. 디바이스 Notification Center에 나타난다.&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * @param title&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     * @param message&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;     */&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sendNotification&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MainActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addFlags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;FLAG_ACTIVITY_CLEAR_TOP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;PendingIntent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pendingIntent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PendingIntent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getActivity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;cm&quot;&gt;/* Request code */&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;intent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;PendingIntent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;FLAG_ONE_SHOT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;Uri&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;defaultSoundUri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RingtoneManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getDefaultUri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RingtoneManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;TYPE_NOTIFICATION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;NotificationCompat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notificationBuilder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NotificationCompat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setSmallIcon&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;drawable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ic_stat_ic_notification&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setContentTitle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setContentText&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAutoCancel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setSound&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultSoundUri&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setContentIntent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pendingIntent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;NotificationManager&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notificationManager&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NotificationManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getSystemService&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NOTIFICATION_SERVICE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;notificationManager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;notify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;cm&quot;&gt;/* ID of notification */&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notificationBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;기타 필요한 resources들은 github에 올려놓은 예제에서 받아서 복사하여 사용하면 된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;gcm-demo-실행&quot;&gt;GCM Demo 실행&lt;/h2&gt;
+
+&lt;p&gt;이제 GCM 서비스를 만들기 위한 Android에 관한 모든 설정이 끝났다. &lt;strong&gt;gradle&lt;/strong&gt;을 사용하여 디바이스로 실행하면 앱이 실행이 될 것이다. 간단하게 Android Studio에서 Run을 실행하면 된다. 앱을 실행하여 토큰을 획득하면 아래와 같이 &lt;strong&gt;Instance ID&lt;/strong&gt;에 해당하는 &lt;strong&gt;token&lt;/strong&gt;을 가져올 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/device-2015-06-09-151926.png?m=1433830894&quot; alt=&quot;GCM Demo finish&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;node.js를-이용한-gcm-provider-만들기&quot;&gt;Node.js를 이용한 GCM Provider 만들기&lt;/h2&gt;
+
+&lt;p&gt;Android 디바이스에서 GCM을 사용하기 위한 &lt;strong&gt;토큰&lt;/strong&gt;을 획득하였다. 이제 서버에서 Android 디바이스에 GCM을 사용하여 메세지를 보내도록 하자. 이전 블로그에서도 Node.js로 GCM을 사용하여 메세지를 보내기 위한 코드를 소개한적이 있는데 그대로 사용하면 된다.&lt;/p&gt;
+
+&lt;p&gt;우선 &lt;a href=&quot;https://github.com/ToothlessGear/node-gcm&quot;&gt;node-gcm&lt;/a&gt; 이 필요하기 때문에 설치를 한다. (시스템에 node.js가 설치되어 있다고 가정한다.)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;npm install node-gcm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 GCM을 사용하여 메세지를 보내기 위한 간단한 provider 소스코드를 작성하자. &lt;code&gt;gcm-provider.js&lt;/code&gt;라는 파일로 다음 내용을 저장한다. 서버에서 GCM을 사용하여 메세지를 보낼때 2가지 중요한 변수가 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Server API Key&lt;/strong&gt; : 처음 GCM 웹 페이지에서 앱을 등록하고 획득한 Server API Key 이다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;InstanceID token&lt;/strong&gt; : Android 디바이스에서 Instance ID의 token을 획득한 것을 사용한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot_2015-06-08_at_8_32_01_PM.png?m=1433763179&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;node-gcm&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;collapseKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;demo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;delayWhileIdle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;timeToLive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;saltfactory GCM demo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Google Cloud Messaging 테스트’,&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;        custom_key1: &amp;#39;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;custom&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data1&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;,&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;        custom_key2: &amp;#39;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;custom&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;server_api_key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;‘&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;GCM&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;앱을&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;등록할때&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;획득한&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Server&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;API&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Key&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;gcm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;server_api_key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;registrationIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;‘&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Android&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;디바이스에서&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Instance&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;의&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;registrationIds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;registrationIds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 메세지를 발송해보자. 정상적으로 발송되면 아래와 같은 화면이 나타난다.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;node gcm_provider.js
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-09%20at%204_24_34%20PM.png?m=1433834682&quot; alt=&quot;gcm_provider&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 Android 디바이스에 GCM으로 메세지가 전송되었는지 Notification Center를 확인하자.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/device-2015-06-09-162526.png?m=1433834834&quot; alt=&quot;GCM message&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http-connection-server&quot;&gt;HTTP Connection Server&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;GCM&lt;/strong&gt; 서비스가 지속적으로 업그레이드되면서 더이상 GCM 서버를 만들 필요가 없게 되었다. 이제 서버구현없이 &lt;a href=&quot;https://developers.google.com/cloud-messaging/http&quot;&gt;HTTP&lt;/a&gt;로 바로 GCM 메시지 전송을 보낼 수 있기 때문이다. 아래와 같이 GCM에서 제공하는 &lt;strong&gt;HTTP Conection Server&lt;/strong&gt;를 사용하기 위해서 터미널에서 특별한 프로그램없이 바로 GCM을 사용할 수 있다. &lt;strong&gt;Server API Key&lt;/strong&gt;만 있으면 &lt;a href=&quot;https://gcm-http.googleapis.com/gcm/send&quot;&gt;https://gcm-http.googleapis.com/gcm/send&lt;/a&gt; 로 인증과 함께 메세지를 바로 전송할 수 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;$server_api_key&lt;/strong&gt; : GCM에 앱을 등록할 때 획득한 Server API Key&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;$token&lt;/strong&gt; : 디바이스 Instance ID의 token 값&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;curl --header &lt;span class=&quot;s2&quot;&gt;&amp;quot;Authorization: key=$server_api_key&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+--header Content-Type:&lt;span class=&quot;s2&quot;&gt;&amp;quot;application/json&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+https://gcm-http.googleapis.com/gcm/send &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+-d &lt;span class=&quot;s2&quot;&gt;&amp;quot;{\&amp;quot;data\&amp;quot;:{\&amp;quot;title\&amp;quot;:\&amp;quot;saltfactory GCM demo\&amp;quot;,\&amp;quot;message\&amp;quot;:\&amp;quot;Google Cloud Messaging 테스트\&amp;quot;},\&amp;quot;to\&amp;quot;:\&amp;quot;$token\&amp;quot;}&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://assets.hibrainapps.net/images/var/albums/hbncloud/public/Screen_Shot%202015-06-09%20at%204_59_18%20PM.png?m=1433836765&quot; alt=&quot;HTTP Connection Server&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;이전에 블로그에 &lt;a href=&quot;http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html&quot;&gt;Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)&lt;/a&gt; 라는 글을 작성하고 많은 질문을 받았다. Google의 푸시 서비스는 &lt;a href=&quot;https://developers.google.com/android/c2dm/&quot;&gt;C2DM&lt;/a&gt; 부터 설정이 꽤 복잡했다. GCM이라는 이름을 변경하고 &lt;strong&gt;Google Play Service&lt;/strong&gt;로 GCM을 통합하면서 &lt;code&gt;gcm.jar&lt;/code&gt;를 사용하여 그 방법을 개선하다가, Android Studio와 &lt;strong&gt;Gradle&lt;/strong&gt;의 조합으로 최근에 GCM 서비스를 개발하기에는 매우 간편해졌다. (아직 조금은 복잡하지만) 이 블로그의 글로 최신 GCM을 사용하는데 조금이라도 도움이 되길 바란다. 이번 GCM 업데이트에서는 &lt;a href=&quot;https://developers.google.com/instance-id/&quot;&gt;Instance ID&lt;/a&gt;와 &lt;a href=&quot;https://developers.google.com/cloud-messaging/http&quot;&gt;HTTP connection Server&lt;/a&gt;의 등장으로 GCM을 위한 서버를 구축하지 않아도 되어 GCM 서비스를 구축하는데 더욱 간편해졌다. 한간지 더! 이번 GCM 업데이트로 iOS도 GCM으로 푸시서비스를 구현할 수 있다는 것이다. 이제 Android, iOS 디바이스로 푸시를 발송하기 위해서 따로 푸시 서버(Push Provider)를 구축하지 않아도 된다는 말이다. iOS 디바이스에 GCM을 사용하여 푸시 서비스를 구현하는 방법은 이후에 블로그를 통해 소개할 예정이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;소스코드&quot;&gt;소스코드&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&quot;&gt;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html&quot;&gt;http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/cloud-messaging/&quot;&gt;https://developers.google.com/cloud-messaging/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/cloud-messaging/android/start&quot;&gt;https://developers.google.com/cloud-messaging/android/start&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/cloud-messaging/registration&quot;&gt;https://developers.google.com/cloud-messaging/registration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/cloud-messaging/android/client&quot;&gt;https://developers.google.com/cloud-messaging/android/client&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/cloud-messaging/http&quot;&gt;https://developers.google.com/cloud-messaging/http&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
+&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
+&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 09 Jun 2015 00:00:00 +0900</pubDate>
+        <link>/android/implement-push-service-via-gcm.html</link>
+        <guid isPermaLink="true">/android/implement-push-service-via-gcm.html</guid>
+        
+        <category>android</category>
+        
+        <category>gcm</category>
+        
+        <category>java</category>
+        
+        <category>push</category>
+        
+        <category>notification</category>
+        
+        
+        <category>android</category>
+        
+      </item>
     
       <item>
         <title>Tistory에서 Jekyll을 이용하여 GitHub Pages로 블로그 이전</title>
@@ -2036,103 +2962,6 @@ gems:
         
         
         <category>ionic</category>
-        
-      </item>
-    
-      <item>
-        <title>Nginx와 git 연동 시 The remote end hung up unexpectedly 에러 문제 해결</title>
-        <description>&lt;h2 id=&quot;서론&quot;&gt;서론&lt;/h2&gt;
-
-&lt;p&gt;Nginx와 git 연동 시 &lt;code&gt;git push&lt;/code&gt; 명령어를 실행할 때, &lt;strong&gt;The remote and hung up unexpectedly&lt;/strong&gt; 라는 에러를 보여주면서 &lt;code&gt;git push&lt;/code&gt;가 정상적으로 동작하지 않는 문제를 만날 수 있다. 이것은 NginX에서 POST의 크기의 제한 때문에 발생하는 문제이다.
-Nginx의 문제를 파악하고 NginX의 설정을 변경하여 이 문제를 해결하는 방법에 대해서 알아본다.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2 id=&quot;git-push-에러-발생&quot;&gt;git push 에러 발생&lt;/h2&gt;
-
-&lt;p&gt;우리는 &lt;a href=&quot;http://yobi.io&quot;&gt;Yobi&lt;/a&gt;와 &lt;a href=&quot;http://nginx.com/&quot;&gt;NGINX&lt;/a&gt;를 연동하여 사용하고 있다. 이전 포스팅에서 소개했지만, 우리는 다양한 리눅스 서버에 운영될 수 있는 환경을 구축하기 위해서 &lt;a href=&quot;https://docker.com/&quot;&gt;Docker&lt;/a&gt;를 사용하여 &lt;a href=&quot;https://github.com/saltfactory/docker-yobi&quot;&gt;saltfactory/yobi&lt;/a&gt;와 &lt;a href=&quot;https://github.com/saltfactory/docker-nginx&quot;&gt;saltfactory/nginx&lt;/a&gt; 이미지를 만들어서 git를 운영하고 있다. yobi는 ssh로 git를 사용하는 것 대신에 http로 git를 쉽게 사용할 수 있게 지원해주고 있다. 사내에서 http 포트만 외부에서 사용할 수 있는 우리 연구소에서 yobi를 선택했던 가장 큰 이유중에 하나가 http로 git를 사용할 수 있다는 것이였다. 우리는 http 서비스의 빠른 응답속도와 확장성을 위해서 웹 서버로 NGINX를 선택했고 이것을 yobi와 연동하여 사용하고 있다.&lt;/p&gt;
-
-&lt;p&gt;프로젝트 소스코드를 원격 리파지토리에 저장해서 서버에서 병합하는 방법을 취하고 있는데 어느날 갑자기 로컬에서 작업하여 이력을 관리한 &lt;code&gt;commit&lt;/code&gt;들이 다음과 같이 &lt;strong&gt;&lt;em&gt;The remote end hung up unexpectedly&lt;/em&gt;&lt;/strong&gt; 에러를 발생하면서 서버의 원격 리파지토리에 &lt;code&gt;push&lt;/code&gt;가 되지 않는 것이다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Counting objects: 19, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (5/5), done.
-Writing objects: 100% (5/5), 1.27 MiB | 0 bytes/s, done.
-Total 5 (delta 2), reused 0 (delta 0)
-error: RPC failed; result=22, HTTP code = 413
-fatal: The remote end hung up unexpectedly
-fatal: The remote end hung up unexpectedly
-Everything up-to-date
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;하지만 &lt;code&gt;fetch&lt;/code&gt;와 &lt;code&gt;pull&lt;/code&gt; 과 같은 리모트 명령어들은 정상적으로 동작하고 있었다. 그래서 우리는 서버에서 nginx의 로그를 살펴보기로 했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;nginx-에러-발생&quot;&gt;NGINX 에러 발생&lt;/h2&gt;
-
-&lt;p&gt;Docker로 구성한 서버 환경에서 우리는 NGINX의 로그를 VOLUME으로 마운트시킨 디렉토리 파일에서 로그를 바로 확인할 수 있었다. 클라이언트에서 &lt;code&gt;git push&lt;/code&gt;를 요청할 때마다 다음과 같이 &lt;strong&gt;&lt;em&gt;client intended to send too large body&lt;/em&gt;&lt;/strong&gt;  에러가 로그에 남는 것을 확인했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;2014/09/12 01:38:50 [error] 11#0: *155 client intended to send too large body: 1326741 bytes, client: 클라이언트 아이피, server: 서버네임, request: &amp;quot;POST /프로젝트명/git-receive-pack HTTP/1.0&amp;quot;, host: &amp;quot;호스트네임&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위 에러는 &lt;strong&gt;POST&lt;/strong&gt; request를 요청할 때 서버에서 처리할 수 있는 body의 사이즈보다 큰 요청이 들어오면 생기는 에러이다. 그래서 우리는 NGINX의 설정값을 수정하기로 했다.&lt;/p&gt;
-
-&lt;h2 id=&quot;client_max_body_size-수정&quot;&gt;client_max_body_size 수정&lt;/h2&gt;
-
-&lt;p&gt;NGINX에서 클라이언트에서 요청하는 body의 사이즈를 설정하는 옵션은 &lt;strong&gt;client_max_body_size&lt;/strong&gt; 이다. 우리는 yobi를 docker에서 운영하기 때문에 서버에 직접 들어가서 수정하지 않고, &lt;em&gt;VOLUME&lt;/em&gt;으로 마운트 시키는 디렉토리 안의  &lt;code&gt;yobis-site.conf&lt;/code&gt; 파일을 다음과 같이 수정했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;client_max_body_size 1000M;
-
-upstream yobi-upstream {
-  server  서버네임:9000;
-}
-
-server {
-  listen 80;
-  server_name 서버네임;
-}
-... 생략
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Ubuntu에 설치되는 NGINX는 &lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt; 설정 파일을 가지고 있고 그 파일 안에서 외부 설정 파일들을 로드시키는데 우리는 Docker를 설정할 때 &lt;code&gt;/site-enabed/*.conf&lt;/code&gt; 파일들을 로드시키도록 지정하였다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;http {
-... 생략 ...
-include /etc/nginx/sites-enabled/*;
-... 생략 ...
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;NGINX의 각 설정파일은 &lt;code&gt;http&lt;/code&gt; 설정 안에 포함이 되도록 설정되어 있다. &lt;strong&gt;client_max_body_size&lt;/strong&gt; 설정은 &lt;strong&gt;http&lt;/strong&gt; 설정 안에 지정되어야 하기 때문에 위의 &lt;code&gt;yobi-site.conf&lt;/code&gt;의 첫번째 라인에 바로 이 값을 설정하도록 한 것을 유의해야한다. 설정이 끝나면 NGINX을 다시 제시작 한다. 우리는 docker를 사용했기 때문에 &lt;code&gt;docker start&lt;/code&gt; 명령어로 재시작을 했다.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;sudo docker start nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;다시 클라이언트에 돌아가서 &lt;code&gt;git push&lt;/code&gt; 명령을 실행하면 문제 없이 원격 리파지토리에 commit들이 모두 push 되는 것을 확인할 수 있을 것이다.&lt;/p&gt;
-
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
-
-&lt;p&gt;git는 로컬에서 뿐만 아니라 원격 저장소에서 소스코드 형상관리를 할 수 있다. 사내 망 내부가 아닌 경우 http를 이용해서 git를 사용할 경우 접근도가 높아진다. http로 git 환경을 만드는 것은 그렇게 쉬운 일은 아니다. 하지만 yobi를 사용하면 복잡한 git를 http로 사용할 수 있는 환경을 쉽게 구축할 수 있다. http 서비스의 성능과 확장성을 위해서 &lt;a href=&quot;http://playframework.com&quot;&gt;Play framework&lt;/a&gt;을 단독으로 웹 서버로 사용하는 것 보다 NGINX나 Apaach와 같은 웹 서버를 함께 사용하는 것이 좋다. 하지만 git를 http로 사용할 때 한가지 기억해 둬야할 것이다. &lt;strong&gt;HTTP로 git의 commit을 전송할 때 POST로 전송이 되며, 웹 서버는 POST의 body 사이즈를 제한하고 있다&lt;/strong&gt;다는 것이다. 즉, 더 큰 사이즈의 데이터를 HTTP의 POST로 전송하기 위해서는 웹 서버의 &lt;strong&gt;HTTP POST body&lt;/strong&gt; 설정을 변경해야한다. 우리가 겪은 문제도 동일한 문제이다. 하이브리드 어플리케이션 개발을 하는 프로젝트에서 commit하고 push하는 데이터량이 많아져서 NGINX에서 기본적으로 설정한 HTTP POST 사이즈보다 커서 원격 저장소에 정상적으로 업데이트 정보를 전송하지 못하는 문제를 갖게 되었다. 우리는 NGINX 웹 서버를 사용하고 있었고 Docker를 사용해서 nginx의 설정파일을 외부 디렉토리에서 VOLUME으로 마운트시켜서 사용하고 있었기 때문에 설정파일에 &lt;strong&gt;client_max_body_size&lt;/strong&gt;의 값을 변경하여 이 문제를 해결했다.&lt;/p&gt;
-
-&lt;p&gt;git와 HTTP를 연동하여 사용한다면 반드시 HTTP POST body의 사이즈를 결정하는 옵션을 한번 더 체크해보기 바란다. 이 부분을 간과하고 넘어간다면 언젠가 큰 소스코드를 한번에 push 할 때  &amp;#39;fatal: The remote end hung up unexpectedly&amp;#39;를 만나게 될 것이다. 이 에러를 만나게 되면 웹 서버의 HTTP POST body 사이즈를 늘려주고 서버를 재시작하면 된다.&lt;/p&gt;
-
-&lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/2056124/nginx-client-max-body-size-has-no-effect&quot;&gt;http://stackoverflow.com/questions/2056124/nginx-client-max-body-size-has-no-effect&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;연구원-소개&quot;&gt;연구원 소개&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;작성자 : &lt;a href=&quot;http://about.me/saltfactory&quot;&gt;송성광&lt;/a&gt; 개발 연구원&lt;/li&gt;
-&lt;li&gt;블로그 : &lt;a href=&quot;http://blog.saltfactory.net&quot;&gt;http://blog.saltfactory.net&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;이메일 : &lt;a href=&quot;mailto:saltfactory@gmail.com&quot;&gt;saltfactory@gmail.com&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;트위터 : &lt;a href=&quot;https://twitter.com/saltfactory&quot;&gt;@saltfactory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;페이스북 : &lt;a href=&quot;https://facebook.com/salthub&quot;&gt;https://facebook.com/salthub&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
-&lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 12 Sep 2014 00:00:00 +0900</pubDate>
-        <link>/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</link>
-        <guid isPermaLink="true">/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</guid>
-        
-        <category>nginx</category>
-        
-        <category>git</category>
-        
-        
-        <category>nginx</category>
         
       </item>
     

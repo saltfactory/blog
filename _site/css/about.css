@@ -1,4 +1,4 @@
-.post img{
+.post img[alt='profile']{
   width:128px;
   height:128px;
   -webkit-border-radius: 50%;
