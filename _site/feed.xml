@@ -5,8 +5,8 @@
     <description></description>
     <link>http://blog.saltfactory.net/</link>
     <atom:link href="http://blog.saltfactory.net/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 10 Jun 2015 14:57:06 +0900</pubDate>
-    <lastBuildDate>Wed, 10 Jun 2015 14:57:06 +0900</lastBuildDate>
+    <pubDate>Wed, 10 Jun 2015 19:05:44 +0900</pubDate>
+    <lastBuildDate>Wed, 10 Jun 2015 19:05:44 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -893,7 +893,9 @@ https://gcm-http.googleapis.com/gcm/send &lt;span class=&quot;se&quot;&gt;\&lt;/
 
 &lt;h2 id=&quot;소스코드&quot;&gt;소스코드&lt;/h2&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&quot;&gt;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&quot;&gt;https://github.com/saltfactory/saltfactory-android-tutorial/tree/gcm-demo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&quot;참고&quot;&gt;참고&lt;/h2&gt;
 
@@ -917,6 +919,10 @@ https://gcm-http.googleapis.com/gcm/send &lt;span class=&quot;se&quot;&gt;\&lt;/
 &lt;li&gt;연구소 : &lt;a href=&quot;http://www.hibrain.net&quot;&gt;하이브레인넷&lt;/a&gt; 부설연구소&lt;/li&gt;
 &lt;li&gt;연구실 : &lt;a href=&quot;http://dblab.changwon.ac.kr&quot;&gt;창원대학교 데이터베이스 연구실&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h2 id=&quot;기부&quot;&gt;기부&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;amp;business=NR99D2BERKK8Y&amp;amp;lc=KR&amp;amp;item_name=donate%2esaltfactory%2enet&amp;amp;item_number=net%2esaltfactory%2edonate&amp;amp;currency_code=USD&amp;amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted&quot;&gt;&lt;img src=&quot;https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif&quot; alt=&quot;paypal button&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Tue, 09 Jun 2015 00:00:00 +0900</pubDate>
         <link>http://blog.saltfactory.net/android/implement-push-service-via-gcm.html</link>
