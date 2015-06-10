@@ -9,8 +9,817 @@
     <title>Sencah Touch2를 이용한 하이브리드 앱 개발 - 4.Navigation Components</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Sencah Touch2를 이용한 하이브리드 앱 개발 - 4.Navigation Components" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Sencha Touch를  사용하면 웹 프로그래밍으로 네이티브 UI와 동일하게 만들 수 있다는 것을 장점으로 말할 수 있겠다. 사용자에게 익숙한 UI를 개발자가 직접 만들지 않고 이렇게 템플릿으로 제공해주기 때문에 UI 개발 시간을 많이 줄일 수 있기 때문이다. 이번 포스팅에는 그런 네이티브의 UI를 어떻게 Sencha에서 사용할 수 있는지 차례대로 살펴보기로 하자. 뷰를 구성하기 위해서는 Ext.Component를 사용하는데 컴포넌트를 생성하고 추가하는 방법에 대해서는 Sencah Touch2를 이용한 하이브리드 앱 개발 - 2.View 생성 글을 참조하기 바란다. 이 포스팅에서는 센차에서 컴포넌트를 생성하는 것을 모두 이해했다는 과정에서 진행하겠다.
+
+Sencha Touch의 뷰 구성은 Ext.Component 를 상속받은 여러 컴포넌트를 가지고 뷰를 구성할 수 있다. 이번 포스팅에서는 Ext.Component 를 상속받은 컴포넌트 그룹중에서도 Navigation Components에 대해서 알아보기로 한다.
+
+Toolbar
+
+http://blog.saltfactory.net/142 글에서 우리는 Toolbar와 그 안에 들어가는 Button 들을 구성하는 방법에 대해서 알아 보았다. 코드는 다음과 같다.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var leftTopButton = {
+            xtype: &#39;button&#39;,
+            text: &#39;Back&#39;,
+            ui: &#39;back&#39;
+        }
+
+        var rightTopButton = {
+            xtype: &#39;button&#39;,
+            text: &#39;New&#39;,
+            ui: &#39;action&#39;
+        }
+
+        var spacer = {
+            xtype: &#39;spacer&#39;
+        }
+
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            title: &#39;Home&#39;,
+            docked: &#39;top&#39;,
+            items: [leftTopButton, spacer, rightTopButton]
+        }
+
+        this.add([toolbar])
+    }
+});
+
+
+
+하지만 보통 툴바는 상단에 위치하는 것이 아니고 하단에 위치하도록 하여 만든다. 그리고 Toolbar에는 info 버턴만 나타나게 해보자.
+그래서 우리는 다음과 같이 Toolbar를 하단에 위치하도록 해보자.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([toolbar])
+    }
+});
+
+
+
+Button
+
+앞에서는 언급하지 않았던 iconCls라는 것이 나온다. 이것은 Sencha에서 이미 아이콘에 관한 것을 CSS class로 정의해 두었는데 다음과 같은 iconCls가 정의되어 있다.
+
+
+action
+add
+arrow_up
+arrow_right
+arrow_down
+arrow_left
+bookmarks
+compose
+delete
+download
+favorites
+info
+more
+refresh
+reply
+search
+settings
+star
+team
+time
+trash
+user
+
+
+위의 버턴에 관련된 iconCls를 모두 출력해보자. iconMask는 iconCls가 적용되어서 text가 아닌 아이콘이 나타나게하려고 mask를 적용한 것이다.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var titlebar = {
+            xtype: &#39;titlebar&#39;,
+            docked: &#39;top&#39;,
+            title: &#39;Home&#39;,
+            items: [
+            {
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                align: &#39;right&#39;
+            }
+            ]
+        }
+
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([titlebar,
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;action&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;add&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;arrow_up&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;arrow_right&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;arrow_down&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;arrow_left&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;bookmarks&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;delete&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;download&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;favorates&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;more&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;refresh&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;reply&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;search&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;settings&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;start&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;team&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;time&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;time&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;trash&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;user&#39;,
+                iconMask: true,
+                margin: &#39;5&#39;
+            },
+             toolbar])
+    }
+});
+
+
+
+Titlebar (with Button)
+
+이제 Titlebar를 구현해보도록 하자. title을 입력하고, 글을 작성할 수 있는 Compose 버턴을 추가해보자.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var titlebar = {
+            xtype: &#39;titlebar&#39;,
+            docked: &#39;top&#39;,
+            title: &#39;Home&#39;,
+            items: [
+            {
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                align: &#39;right&#39;
+            }
+            ]
+        }
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([titlebar, toolbar])
+    }
+});
+
+
+
+SegmentedButton
+
+아이폰에서는 UISegmentedControl 이라고 불리는 세그멘트 메뉴를 구성해서 추가해보자. Sencha에서는 이와 동일한 UI를 SegmentedButton이라고 말하고 있다.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var titlebar = {
+            xtype: &#39;titlebar&#39;,
+            docked: &#39;top&#39;,
+            title: &#39;Home&#39;,
+            items: [
+            {
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                align: &#39;right&#39;
+            }
+            ]
+        }
+
+        var segmentedbutton = {
+            xtype: &#39;segmentedbutton&#39;,
+            allowMultiple: false,
+            allowDepress: false,
+            docked: &#39;top&#39;,
+            activeItem: 0,
+
+            items:[
+            {
+                text: &#39;Option1&#39;,
+                pressed: true
+            },
+            {
+                text: &#39;Option2&#39;,
+            },
+            {
+                text: &#39;Option3&#39;,
+            },
+            {
+                text: &#39;Option4&#39;,
+            }
+            ]
+        }
+
+
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([titlebar, segmentedbutton, toolbar])
+    }
+});
+
+
+
+SegmentedButton이 추가되었지만 우리가 원하는대로 출력은 되지 않았다. 우리는 이 세그먼트버턴이 중앙에 위치하면서 가로가 화면에 가득차게 나타나길 원하고 있기 때문이다. 그래서 다음과 같이 수정한다.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var titlebar = {
+            xtype: &#39;titlebar&#39;,
+            docked: &#39;top&#39;,
+            title: &#39;Home&#39;,
+            items: [
+            {
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                align: &#39;right&#39;
+            }
+            ]
+        }
+
+        var segmentedbutton = {
+            xtype: &#39;segmentedbutton&#39;,
+            allowMultiple: false,
+            allowDepress: false,
+            docked: &#39;top&#39;,
+            activeItem: 0,
+            centered: true,
+
+            layout: {
+                type: &#39;hbox&#39;,
+                pack: &#39;center&#39;,
+                align: &#39;stretchmax&#39;
+            },
+
+            items:[
+            {
+                text: &#39;Option1&#39;,
+                pressed: true,
+                width: &#39;25%&#39;
+            },
+            {
+                text: &#39;Option2&#39;,
+                width: &#39;25%&#39;
+
+            },
+            {
+                text: &#39;Option3&#39;,
+                width: &#39;25%&#39;
+
+            },
+            {
+                text: &#39;Option4&#39;,
+                width: &#39;25%&#39;
+
+            }
+            ]
+        }
+
+
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([titlebar, segmentedbutton, toolbar])
+    }
+});
+
+
+
+이벤트 추가하기
+
+우리는 Ext.Toolbar와 Ext.Titlebar 컴포넌트를 추가하였고 그 안에 Ext.Button 을 추가하였다. 마지막으로 Ext.SegmentedButton 컴포넌트를 추가하였는데, 마지막으로 버턴에 이벤트를 추가하는 방법을 알아보자.
+Toolbar 에 있는 compose 버턴을 눌렀을때 console로 로그를 출력해보기 위해서 다음과 같이 코드를 수정한다. compose 버턴을 정의하는 속성에 handler 속성을 추가하고 console.log를 할 수 있는 메소드를 구현해서 추가한다.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var titlebar = {
+            xtype: &#39;titlebar&#39;,
+            docked: &#39;top&#39;,
+            title: &#39;Home&#39;,
+            items: [
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                align: &#39;right&#39;,
+                handler:function(){
+                    console.log(&#39;tap compose button&#39;)
+                }
+            }
+            ]
+        }
+
+        var segmentedbutton = {
+            xtype: &#39;segmentedbutton&#39;,
+            allowMultiple: false,
+            allowDepress: false,
+            docked: &#39;top&#39;,
+            activeItem: 0,
+            centered: true,
+
+            layout: {
+                type: &#39;hbox&#39;,
+                pack: &#39;center&#39;,
+                align: &#39;stretchmax&#39;
+            },
+
+            items:[
+            {
+                text: &#39;Option1&#39;,
+                pressed: true,
+                width: &#39;25%&#39;
+            },
+            {
+                text: &#39;Option2&#39;,
+                width: &#39;25%&#39;
+
+            },
+            {
+                text: &#39;Option3&#39;,
+                width: &#39;25%&#39;
+
+            },
+            {
+                text: &#39;Option4&#39;,
+                width: &#39;25%&#39;
+
+            }
+            ]
+        }
+
+
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([titlebar, segmentedbutton, toolbar])
+    }
+});
+
+
+
+다음은 SegmentedButton에 이벤트를 처리할 코드를 등록할 것인데, 단순한 Button과 달리 SegmentedButton은 여러가지 버턴들의 조합으로 이루어져있다. SegmentedButton에 이벤트를 감지하기 위해서 listeners를 등록할 수 있다. 다음 코드를 살펴보자.
+/**
+* file : MainView.js
+* author : saltfactory
+* email : saltfactory@gmail.com
+*/
+
+Ext.define(&#39;SaltfactorySenchaTutorial.view.MainView&#39;, {
+    extend: &#39;Ext.Panel&#39;,
+    alias: &#39;main_view&#39;,
+
+    config: {
+        styleHtmlContent: true,
+        html: &#39;&lt;h1&gt;Hello, World!&lt;/h1&gt;&#39;,
+        fullscreen: true,
+    },
+
+    initialize: function(){
+        var titlebar = {
+            xtype: &#39;titlebar&#39;,
+            docked: &#39;top&#39;,
+            title: &#39;Home&#39;,
+            items: [
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;compose&#39;,
+                iconMask: true,
+                align: &#39;right&#39;,
+                handler:function(){
+                    console.log(&#39;tap compose button&#39;)
+                }
+            }
+            ]
+        }
+
+        var segmentedbutton = {
+            xtype: &#39;segmentedbutton&#39;,
+            allowMultiple: false,
+            allowDepress: false,
+            docked: &#39;top&#39;,
+            activeItem: 0,
+            centered: true,
+
+            layout: {
+                type: &#39;hbox&#39;,
+                pack: &#39;center&#39;,
+                align: &#39;stretchmax&#39;
+            },
+
+            items:[
+            {
+                text: &#39;Option1&#39;,
+                pressed: true,
+                width: &#39;25%&#39;
+            },
+            {
+                text: &#39;Option2&#39;,
+                width: &#39;25%&#39;
+
+            },
+            {
+                text: &#39;Option3&#39;,
+                width: &#39;25%&#39;
+
+            },
+            {
+                text: &#39;Option4&#39;,
+                width: &#39;25%&#39;
+
+            }
+            ],
+            listeners: {
+                toggle: function(container, button, pressed){
+                    console.log(&quot;User toggled the &#39;&quot; + button.config.text + &quot;&#39; button: &quot; + (pressed ? &#39;on&#39; : &#39;off&#39;));
+                }
+            }
+
+        }
+
+
+        var toolbar = {
+            xtype : &#39;toolbar&#39;,
+            docked: &#39;bottom&#39;,
+            items: [
+            {
+                xtype: &#39;spacer&#39;
+            },
+            {
+                xtype: &#39;button&#39;,
+                iconCls: &#39;info&#39;,
+                iconMask: true
+            }
+            ]
+        }
+
+        this.add([titlebar, segmentedbutton, toolbar])
+    }
+});
+
+리스너를 등록하는데 버턴이 눌러졌을 때의 버턴의 activity를 출력할 수 있도록 toggle 속성에 메소드를 추가하였다. index.html 을 새로 고침하여 SegmentedButton 을 순서대로 출력하면 다음과 같이 console.log를 출력하는 것을 확인할 수 있다.
+
+
+
+결론
+
+이번 포스트는 Ext.Component를 상속받은 뷰를 구성하는 컴포넌트 중에서도 Navigation Components에 대해서 알아보았다. 뿐만 아니라, 버턴에 이벤트를 처리하는 메소드를 등록하는 방법에 대해서도 살펴보았다. 버턴과 같은 단순한 이벤트에 handler 속성에 이벤트를 처리하는 메소드를 구현해서 등록할 수 있었고, 또는 listeners를 이용해서 세그먼트버턴에 이벤트를 처리하는 기능을 등록할 수 있었다. 이벤트를 관장하는 부분은 간단히 소개했는데, 이유는 나중에 Sencha의 MVC 개발 방법 중에 Controller로 뷰의 이벤트를 담당할 수 있게 처리할 수 있는 부분이 나오는데 그 때 좀더 자세히 설명하기 위해서이다. 이 포스트에서는 뷰를 구성하는 Ext.Component를 구성하는 방법에 대해서 소개하는 것이 주제이기 때문에 이벤트 처리에 대해서는 간단히 소개만하고 넘어간다.
+
+참고
+
+
+http://docs.sencha.com/touch/2-0/#!/api/Ext.Toolbar
+http://docs.sencha.com/touch/2-0/#!/api/Ext.TitleBar
+http://docs.sencha.com/touch/2-0/#!/api/Ext.Button
+http://docs.sencha.com/touch/2-0/#!/api/Ext.SegmentedButton
+
+
+연구원 소개
+
+
+작성자 : 송성광 개발 연구원
+블로그 : http://blog.saltfactory.net
+이메일 : saltfactory@gmail.com
+트위터 : @saltfactory
+페이스북 : https://facebook.com/salthub
+연구소 : 하이브레인넷 부설연구소
+연구실 : 창원대학교 데이터베이스 연구실
+
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/sencha/navigation-components-in-sencha.html" property="og:url">
+    
+    
+    <meta content="2012-05-16T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="sencha" property="article:section">
+    
+    
+    
+    
+    <meta content="sencha" property="article:tag">
+    
+    <meta content="sencha touch" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="view" property="article:tag">
+    
+    <meta content="component" property="article:tag">
+    
+    <meta content="navigation" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/sencha/navigation-components-in-sencha.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/sencha/navigation-components-in-sencha.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

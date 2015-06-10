@@ -9,8 +9,63 @@
     <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 10.Sencha 뷰 추가하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 하이브리드앱 개발하기 - 10.Sencha 뷰 추가하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Appspresso (앱스프레소)는 하이브리드 앱을 개발할 수 있는 개발 프레임워크이다. 이 말을 잘못 이해해서 앱스프레소가 마치 Xcode나 Adobe Dreamweaver 와 같이 Drag &amp; Drop 으로 UI를 만들고 코드 snippet이 제공된다고 오해하면 안된다. Appspresso는 멀티 디바이스 (현재는 iOS, Android 만 제공한다) 하이브리드 앱 개발을 할 수 있는 SDK 와 WAC, 써드파티 Plugins 들이 포함된 웹 프로그래밍과 네이티브 프로그래밍을 조화롭게 개발할 수 있는 IDE를 제공하는 하이브리드 개발 프레임워크이다.
+
+Appspresso (앱스프레소)는 UI 템플릿을 제공한다. 이 프레임워크에는 Sencha Touch, JQuery Touch, JO 등의 템플릿을 제공하고 있다. 즉, 이렇게 자바스크립트나 HTML5 기반의 라이브러리를 이용해서 UI를 만들 수 있다는 것이다. 그럼 왜 자바스크립트 라이브러리를 사용해야하느냐 의문이 생길 수도 있는데 하이브리드 앱을 정의할 때는 크게 두가지 관점에서 정의를 할 수 있다. 네이티브 앱에 웹 앱이 포함되는 경우와 웹 앱에 네이티브 앱이 포함되는 경우를 말한다. 전자는 흔히 Xcode나 elcipse등 네이티브 코드를 작성하다가 필요한 순간 UIWebView나 android.widget.WebView를 프로그램에 포함시켜(embeded)서 네이티브 코드와 서로 데이터를 주고 받으며 처리한다. 후자는 Appspresso (앱스프레소)와 같은 하이브리드 앱 개발 프레임워크를 이용해서 웹에서 네이티브코드를 호출해서 사용하는 것이다. 전, 후자 모두 각각 장단점이 있다. 전자와 같은 경우는 네이티브코드가 운영되고 있기 때문에 후자보다 자원사용이 효과적이다. 쉽게 말해서 더 빠르다는 것이다. 반면에 디바이스에 각각 독릭접인 UI를 핸들링하기 때문에 실제 공통으로 사용할 수 있는 코드는 embeded되는 웹 속의 적은 코드만 재활용할 수 있게 된다. 즉 개발 비용을 감축시키는데 효과적이지 못하다는 것이다. 반면 후자는 전자보다 공동으로 사용할 수 있는 코드가 상대적으로 많아지게 된다. 동일한 UI를 제공하면(꼭 동일한게 좋은 것은 아니지만, 대부분의 하이브리드 개발자는 혼자힘으로 멀티 디바이스를 감당하기 힘들기 때문에 단일 UI를 개발할거라 생각한다.) 웹으로 작성한 코드는 그대로 사용할 수 있기 때문이다. 다만, 브라우저 자원의 한계 때문에 네이티브 코드보다 성는이 낮다는 약점이 있다. 하이브리드 앱 개발자는 이 두가지의 trade off를 잘 이해하고 접목해야할 것이다. 후자와 같이 개발하면서 네이티브와 비슷한 액션 게임을 만들려고하는 개발자가 있을 수 있을까? 물론 그런 시도도 여러군데서 많이 하고 있지만 아직까지 디바이스의 물리적 제한때문에 별로 추천하고 싶지 않는 방법이다. 상황에 맞게 가장 적합한 개발 모델을 도입하는게 개발비용대 효과를 얻을 수 있을 것이라 생각된다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/using-sencha-view-in-appspresso.html" property="og:url">
+    
+    
+    <meta content="2012-05-14T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="sencha" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/using-sencha-view-in-appspresso.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/using-sencha-view-in-appspresso.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

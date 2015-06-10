@@ -1,1258 +1,1258 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/android/implement-push-service-via-gcm.html</loc>
+    <loc>http://blog.saltfactory.net/android/implement-push-service-via-gcm.html</loc>
     <lastmod>2015-06-09T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</loc>
+    <loc>http://blog.saltfactory.net/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</loc>
     <lastmod>2015-06-03T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/nginx/redirect-using-with-parameter-on-nginx.html</loc>
+    <loc>http://blog.saltfactory.net/nginx/redirect-using-with-parameter-on-nginx.html</loc>
     <lastmod>2015-05-06T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/java/solving-character-in-war-prolbem-via-os-and-jvm.html</loc>
+    <loc>http://blog.saltfactory.net/java/solving-character-in-war-prolbem-via-os-and-jvm.html</loc>
     <lastmod>2015-03-20T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/linux/install-oracle-xe-on-ubuntu.html</loc>
+    <loc>http://blog.saltfactory.net/linux/install-oracle-xe-on-ubuntu.html</loc>
     <lastmod>2015-03-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</loc>
     <lastmod>2015-03-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/introduce-node-gallery3.html</loc>
+    <loc>http://blog.saltfactory.net/node/introduce-node-gallery3.html</loc>
     <lastmod>2015-03-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</loc>
+    <loc>http://blog.saltfactory.net/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</loc>
     <lastmod>2015-03-06T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/jekyll/introduce-jekyll-img-converter.html</loc>
+    <loc>http://blog.saltfactory.net/jekyll/introduce-jekyll-img-converter.html</loc>
     <lastmod>2014-11-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ionic/create-hybrid-app-using-ionic.html</loc>
+    <loc>http://blog.saltfactory.net/ionic/create-hybrid-app-using-ionic.html</loc>
     <lastmod>2014-10-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</loc>
+    <loc>http://blog.saltfactory.net/nginx/The-remote-end-hung-up-unexpectedly-when-git-push.html</loc>
     <lastmod>2014-09-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/git/running-yobi-on-docker.html</loc>
+    <loc>http://blog.saltfactory.net/git/running-yobi-on-docker.html</loc>
     <lastmod>2014-08-28T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/linux/mount-external-harddisk-on-ubuntu.html</loc>
+    <loc>http://blog.saltfactory.net/linux/mount-external-harddisk-on-ubuntu.html</loc>
     <lastmod>2014-08-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/git/korean-foldername-in-yobi.html</loc>
+    <loc>http://blog.saltfactory.net/git/korean-foldername-in-yobi.html</loc>
     <lastmod>2014-08-25T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/git/solve-redirect-encoded-slash-in-apache.html</loc>
+    <loc>http://blog.saltfactory.net/git/solve-redirect-encoded-slash-in-apache.html</loc>
     <lastmod>2014-08-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/exclude-gpu-error-when-using-genymotion.html</loc>
+    <loc>http://blog.saltfactory.net/android/exclude-gpu-error-when-using-genymotion.html</loc>
     <lastmod>2014-08-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/jekyll/upgrade-github-pages-dependency-versions.html</loc>
+    <loc>http://blog.saltfactory.net/jekyll/upgrade-github-pages-dependency-versions.html</loc>
     <lastmod>2014-08-08T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/docker/upgrade-latest-docker-using-with-homebrew.html</loc>
+    <loc>http://blog.saltfactory.net/docker/upgrade-latest-docker-using-with-homebrew.html</loc>
     <lastmod>2014-08-06T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mark2html/mark2html-v.0.0.5-upgrade.html</loc>
+    <loc>http://blog.saltfactory.net/mark2html/mark2html-v.0.0.5-upgrade.html</loc>
     <lastmod>2014-08-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mark2html/mark2html-v.0.0.4-upgrade.html</loc>
+    <loc>http://blog.saltfactory.net/mark2html/mark2html-v.0.0.4-upgrade.html</loc>
     <lastmod>2014-07-29T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mark2html/using-mark2html.html</loc>
+    <loc>http://blog.saltfactory.net/mark2html/using-mark2html.html</loc>
     <lastmod>2014-07-28T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/git/migrate-git-repository.html</loc>
+    <loc>http://blog.saltfactory.net/git/migrate-git-repository.html</loc>
     <lastmod>2014-07-22T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/passport-tistory/using-passport-tistory-in-express.html</loc>
+    <loc>http://blog.saltfactory.net/passport-tistory/using-passport-tistory-in-express.html</loc>
     <lastmod>2014-07-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/passport-tistory/create-passport-tistory.html</loc>
+    <loc>http://blog.saltfactory.net/passport-tistory/create-passport-tistory.html</loc>
     <lastmod>2014-07-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/markdown/make-ready-to-refactorying-blog-to-using-markdown.html</loc>
+    <loc>http://blog.saltfactory.net/markdown/make-ready-to-refactorying-blog-to-using-markdown.html</loc>
     <lastmod>2014-07-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/create-hybird-app-push-notification-apn-gcm.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/create-hybird-app-push-notification-apn-gcm.html</loc>
     <lastmod>2014-06-20T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/solve-external-link-tag-in-phonegap.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/solve-external-link-tag-in-phonegap.html</loc>
     <lastmod>2014-06-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/distribute-ios-app-using-with-dropbox-without-server.html</loc>
+    <loc>http://blog.saltfactory.net/ios/distribute-ios-app-using-with-dropbox-without-server.html</loc>
     <lastmod>2014-06-11T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/use-tumblr-api-using-with-tumblr.js.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/use-tumblr-api-using-with-tumblr.js.html</loc>
     <lastmod>2014-06-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/create-tabmenu-slidemenu-in-ionic.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/create-tabmenu-slidemenu-in-ionic.html</loc>
     <lastmod>2014-06-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/database/install-oracle-instant-client-on-mac-osx.html</loc>
+    <loc>http://blog.saltfactory.net/database/install-oracle-instant-client-on-mac-osx.html</loc>
     <lastmod>2014-04-30T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/create-phonegap-android-plugin.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/create-phonegap-android-plugin.html</loc>
     <lastmod>2014-03-19T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/create-phonegap-ios-plugin.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/create-phonegap-ios-plugin.html</loc>
     <lastmod>2014-03-17T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/solving-phonegap-project-name-problem.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/solving-phonegap-project-name-problem.html</loc>
     <lastmod>2014-03-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/install-phonegap-plugin.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/install-phonegap-plugin.html</loc>
     <lastmod>2014-03-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/web-scraping-using-with-casperjs.html</loc>
+    <loc>http://blog.saltfactory.net/node/web-scraping-using-with-casperjs.html</loc>
     <lastmod>2014-03-04T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/remote-build-using-phonegap.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/remote-build-using-phonegap.html</loc>
     <lastmod>2014-02-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/extending-object-using-util-extend.html</loc>
+    <loc>http://blog.saltfactory.net/node/extending-object-using-util-extend.html</loc>
     <lastmod>2014-02-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/create-online-dictionary-automator-in-macosx.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/create-online-dictionary-automator-in-macosx.html</loc>
     <lastmod>2014-02-18T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/hybridapp/developing-hybridapp-using-phonegap-and-node.html</loc>
+    <loc>http://blog.saltfactory.net/hybridapp/developing-hybridapp-using-phonegap-and-node.html</loc>
     <lastmod>2014-02-17T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/Introduce-Android-Studio.html</loc>
+    <loc>http://blog.saltfactory.net/android/Introduce-Android-Studio.html</loc>
     <lastmod>2014-02-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mobile/using-kakaostory-api.html</loc>
+    <loc>http://blog.saltfactory.net/mobile/using-kakaostory-api.html</loc>
     <lastmod>2014-02-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mobile/using-kakaolink-api.html</loc>
+    <loc>http://blog.saltfactory.net/mobile/using-kakaolink-api.html</loc>
     <lastmod>2014-02-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/web-scraping-using-with-node-and-phantomjs.html</loc>
+    <loc>http://blog.saltfactory.net/node/web-scraping-using-with-node-and-phantomjs.html</loc>
     <lastmod>2014-02-07T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/send-mail-using-nodemailer.html</loc>
+    <loc>http://blog.saltfactory.net/node/send-mail-using-nodemailer.html</loc>
     <lastmod>2014-02-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/javascript-method-chaining-pattern.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/javascript-method-chaining-pattern.html</loc>
     <lastmod>2014-02-03T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/using-https-on-android.html</loc>
+    <loc>http://blog.saltfactory.net/android/using-https-on-android.html</loc>
     <lastmod>2014-01-29T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/debugging-android-database-using-sqlite3.html</loc>
+    <loc>http://blog.saltfactory.net/android/debugging-android-database-using-sqlite3.html</loc>
     <lastmod>2014-01-24T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/java/create-java-diagram-using-doxygen-on-macosx.html</loc>
+    <loc>http://blog.saltfactory.net/java/create-java-diagram-using-doxygen-on-macosx.html</loc>
     <lastmod>2014-01-24T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/axconfig-port-1-not-active-error-in-ubuntu.html</loc>
+    <loc>http://blog.saltfactory.net/node/axconfig-port-1-not-active-error-in-ubuntu.html</loc>
     <lastmod>2014-01-24T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/implementing-push-notification-service-for-android-using-google-play-service.html</loc>
+    <loc>http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html</loc>
     <lastmod>2014-01-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/implementing-push-notification-service-for-ios.html</loc>
+    <loc>http://blog.saltfactory.net/node/implementing-push-notification-service-for-ios.html</loc>
     <lastmod>2014-01-15T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/using-java-callback-to-async-on-android.html</loc>
+    <loc>http://blog.saltfactory.net/android/using-java-callback-to-async-on-android.html</loc>
     <lastmod>2014-01-02T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mac/untracked-working-tree-files-when-brew-update.html</loc>
+    <loc>http://blog.saltfactory.net/mac/untracked-working-tree-files-when-brew-update.html</loc>
     <lastmod>2013-03-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/open-local-file-from-chrome-to-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/open-local-file-from-chrome-to-sencha.html</loc>
     <lastmod>2013-02-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/managing-view-event-from-controller-on-sencha-touch.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/managing-view-event-from-controller-on-sencha-touch.html</loc>
     <lastmod>2013-01-02T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ruby/understanding-mixin-using-with-ruby.html</loc>
+    <loc>http://blog.saltfactory.net/ruby/understanding-mixin-using-with-ruby.html</loc>
     <lastmod>2012-11-22T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/note/create-personal-web-site-using-with-github-pages.html</loc>
+    <loc>http://blog.saltfactory.net/note/create-personal-web-site-using-with-github-pages.html</loc>
     <lastmod>2012-11-21T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/using-jsonp-in-sencha-touch.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/using-jsonp-in-sencha-touch.html</loc>
     <lastmod>2012-11-15T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/html5/growing-response-performance-using-with-application-cache.html</loc>
+    <loc>http://blog.saltfactory.net/html5/growing-response-performance-using-with-application-cache.html</loc>
     <lastmod>2012-10-19T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/javascript-unit-test-using-with-intellij-and-jstestdriver.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/javascript-unit-test-using-with-intellij-and-jstestdriver.html</loc>
     <lastmod>2012-10-18T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/html5/using-html5-custom-data-attributes.html</loc>
+    <loc>http://blog.saltfactory.net/html5/using-html5-custom-data-attributes.html</loc>
     <lastmod>2012-10-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/html5/using-html5-selector-api.html</loc>
+    <loc>http://blog.saltfactory.net/html5/using-html5-selector-api.html</loc>
     <lastmod>2012-10-09T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/css/using-css-media-query-for-responsive-web-2.html</loc>
+    <loc>http://blog.saltfactory.net/css/using-css-media-query-for-responsive-web-2.html</loc>
     <lastmod>2012-10-08T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/css/using-css-media-query-for-responsive-web.html</loc>
+    <loc>http://blog.saltfactory.net/css/using-css-media-query-for-responsive-web.html</loc>
     <lastmod>2012-10-08T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/node/using-single-javascript-code-on-front-and-server-side.html</loc>
+    <loc>http://blog.saltfactory.net/node/using-single-javascript-code-on-front-and-server-side.html</loc>
     <lastmod>2012-09-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/java-method-size-limit-in-rhino.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/java-method-size-limit-in-rhino.html</loc>
     <lastmod>2012-09-26T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/developing-javascript-without-browser-using-with-envjs.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/developing-javascript-without-browser-using-with-envjs.html</loc>
     <lastmod>2012-09-26T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/javascript-unit-test-using-with-qunit.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/javascript-unit-test-using-with-qunit.html</loc>
     <lastmod>2012-09-24T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/why-used-var-in-javascript.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/why-used-var-in-javascript.html</loc>
     <lastmod>2012-09-22T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/javascript/implement-callback-in-javascript.html</loc>
+    <loc>http://blog.saltfactory.net/javascript/implement-callback-in-javascript.html</loc>
     <lastmod>2012-09-20T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/implement-layout-using-with-fragment.html</loc>
+    <loc>http://blog.saltfactory.net/android/implement-layout-using-with-fragment.html</loc>
     <lastmod>2012-09-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/rotating-android-emulator.html</loc>
+    <loc>http://blog.saltfactory.net/android/rotating-android-emulator.html</loc>
     <lastmod>2012-09-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ruby/solving-gem-path-error.html</loc>
+    <loc>http://blog.saltfactory.net/ruby/solving-gem-path-error.html</loc>
     <lastmod>2012-09-08T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/speed-up-android-emulator-using-with-haxm-x86.html</loc>
+    <loc>http://blog.saltfactory.net/android/speed-up-android-emulator-using-with-haxm-x86.html</loc>
     <lastmod>2012-09-07T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/speed-up-android-emulator-using-with-x86.html</loc>
+    <loc>http://blog.saltfactory.net/android/speed-up-android-emulator-using-with-x86.html</loc>
     <lastmod>2012-09-06T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/php/creating-model-using-bake-in-cakephp.html</loc>
+    <loc>http://blog.saltfactory.net/php/creating-model-using-bake-in-cakephp.html</loc>
     <lastmod>2012-09-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/php/creating-controller-using-bake-in-cakephp.html</loc>
+    <loc>http://blog.saltfactory.net/php/creating-controller-using-bake-in-cakephp.html</loc>
     <lastmod>2012-09-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/php/phpcake-scaffolding.html</loc>
+    <loc>http://blog.saltfactory.net/php/phpcake-scaffolding.html</loc>
     <lastmod>2012-09-04T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/php/createing-mvc-based-application-in-cakephp.html</loc>
+    <loc>http://blog.saltfactory.net/php/createing-mvc-based-application-in-cakephp.html</loc>
     <lastmod>2012-09-04T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ruby/speedly-developing-web-service-via-scaffolding.html</loc>
+    <loc>http://blog.saltfactory.net/ruby/speedly-developing-web-service-via-scaffolding.html</loc>
     <lastmod>2012-09-01T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/sharing-ios-files-using-itunes.html</loc>
+    <loc>http://blog.saltfactory.net/ios/sharing-ios-files-using-itunes.html</loc>
     <lastmod>2012-08-17T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/chrome/chrome-temporary-file-location-in-macosx.html</loc>
+    <loc>http://blog.saltfactory.net/chrome/chrome-temporary-file-location-in-macosx.html</loc>
     <lastmod>2012-08-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mac/implementing-mac-app-apns.html</loc>
+    <loc>http://blog.saltfactory.net/mac/implementing-mac-app-apns.html</loc>
     <lastmod>2012-08-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mac/using-nsusernotification-nsusernotificationcenter.html</loc>
+    <loc>http://blog.saltfactory.net/mac/using-nsusernotification-nsusernotificationcenter.html</loc>
     <lastmod>2012-08-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/using-ios-addressbook-api-in-viewcontroller.html</loc>
+    <loc>http://blog.saltfactory.net/ios/using-ios-addressbook-api-in-viewcontroller.html</loc>
     <lastmod>2012-08-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/get-group-using-ios-addressbook-api.html</loc>
+    <loc>http://blog.saltfactory.net/ios/get-group-using-ios-addressbook-api.html</loc>
     <lastmod>2012-08-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/using-ios-addressbook-api.html</loc>
+    <loc>http://blog.saltfactory.net/ios/using-ios-addressbook-api.html</loc>
     <lastmod>2012-08-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/using-uitableviewcelstyle.html</loc>
+    <loc>http://blog.saltfactory.net/ios/using-uitableviewcelstyle.html</loc>
     <lastmod>2012-07-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/editing-header-and-footer-height-in-uitableview.html</loc>
+    <loc>http://blog.saltfactory.net/ios/editing-header-and-footer-height-in-uitableview.html</loc>
     <lastmod>2012-07-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/xcode/solving-highlighting-or-code-completion-in-xcode.html</loc>
+    <loc>http://blog.saltfactory.net/xcode/solving-highlighting-or-code-completion-in-xcode.html</loc>
     <lastmod>2012-07-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/database/setting-file-to-sqlite.html</loc>
+    <loc>http://blog.saltfactory.net/database/setting-file-to-sqlite.html</loc>
     <lastmod>2012-07-03T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/using-allowmultipleselectionduringediting-in-uitableview.html</loc>
+    <loc>http://blog.saltfactory.net/ios/using-allowmultipleselectionduringediting-in-uitableview.html</loc>
     <lastmod>2012-06-26T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/using-wac-geolocation-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/ios/using-wac-geolocation-in-appspresso.html</loc>
     <lastmod>2012-06-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/php/ctp-of-cakephp-custom-syntax-mode-coda2.html</loc>
+    <loc>http://blog.saltfactory.net/php/ctp-of-cakephp-custom-syntax-mode-coda2.html</loc>
     <lastmod>2012-06-13T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-sencha-mvc-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-sencha-mvc-in-appspresso.html</loc>
     <lastmod>2012-06-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/php/installing-apache-php-mongodb-on-macosx.html</loc>
+    <loc>http://blog.saltfactory.net/php/installing-apache-php-mongodb-on-macosx.html</loc>
     <lastmod>2012-06-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-sencha-model-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-sencha-model-in-appspresso.html</loc>
     <lastmod>2012-06-07T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-daum-map-api-sencha-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-daum-map-api-sencha-in-appspresso.html</loc>
     <lastmod>2012-06-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/model-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/model-in-sencha.html</loc>
     <lastmod>2012-06-04T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/controller-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/controller-in-sencha.html</loc>
     <lastmod>2012-06-04T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/meet-appspresso-developers-in-kth.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/meet-appspresso-developers-in-kth.html</loc>
     <lastmod>2012-06-03T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/bigdata/opencloud-and-big-data-2012-review.html</loc>
+    <loc>http://blog.saltfactory.net/bigdata/opencloud-and-big-data-2012-review.html</loc>
     <lastmod>2012-06-02T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/general-components-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/general-components-in-sencha.html</loc>
     <lastmod>2012-05-23T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-sencha-view-navigation-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-sencha-view-navigation-in-appspresso.html</loc>
     <lastmod>2012-05-22T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/form-components-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/form-components-in-sencha.html</loc>
     <lastmod>2012-05-22T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/build-to-device-in-appspress.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/build-to-device-in-appspress.html</loc>
     <lastmod>2012-05-20T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/resize-heap-size-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/resize-heap-size-in-appspresso.html</loc>
     <lastmod>2012-05-19T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/big-issue-of-mobile.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/big-issue-of-mobile.html</loc>
     <lastmod>2012-05-18T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/store-bound-components-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/store-bound-components-in-sencha.html</loc>
     <lastmod>2012-05-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/navigation-components-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/navigation-components-in-sencha.html</loc>
     <lastmod>2012-05-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/create-component-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/create-component-in-sencha.html</loc>
     <lastmod>2012-05-15T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-sencha-view-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-sencha-view-in-appspresso.html</loc>
     <lastmod>2012-05-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/create-view-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/create-view-in-sencha.html</loc>
     <lastmod>2012-05-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/sencha/install-and-build-and-packaging-in-sencha.html</loc>
+    <loc>http://blog.saltfactory.net/sencha/install-and-build-and-packaging-in-sencha.html</loc>
     <lastmod>2012-05-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-wac-addressbook-contact-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-wac-addressbook-contact-in-appspresso.html</loc>
     <lastmod>2012-05-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-wac-devicestatus-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-wac-devicestatus-in-appspresso.html</loc>
     <lastmod>2012-05-09T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-wac-deviceapi-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-wac-deviceapi-in-appspresso.html</loc>
     <lastmod>2012-05-09T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/implementing-android-c2dm-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/implementing-android-c2dm-in-appspresso.html</loc>
     <lastmod>2012-05-07T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/implementing-ios-push-notification-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/implementing-ios-push-notification-in-appspresso.html</loc>
     <lastmod>2012-05-04T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/localization-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/localization-in-appspresso.html</loc>
     <lastmod>2012-05-02T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/building-using-with-xcode-select-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/building-using-with-xcode-select-in-appspresso.html</loc>
     <lastmod>2012-05-02T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-pdk-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-pdk-in-appspresso.html</loc>
     <lastmod>2012-04-30T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/using-appspresso-debug-extension.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/using-appspresso-debug-extension.html</loc>
     <lastmod>2012-04-30T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/request-remote-data-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/request-remote-data-in-appspresso.html</loc>
     <lastmod>2012-04-30T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/on-the-fly-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/on-the-fly-in-appspresso.html</loc>
     <lastmod>2012-04-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/appspresso/build-in-appspresso.html</loc>
+    <loc>http://blog.saltfactory.net/appspresso/build-in-appspresso.html</loc>
     <lastmod>2012-04-27T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/mac/install-unix-packages-on-macosx-via-homebrew.html</loc>
+    <loc>http://blog.saltfactory.net/mac/install-unix-packages-on-macosx-via-homebrew.html</loc>
     <lastmod>2012-03-28T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/linux/change-prompt-in-terminal.html</loc>
+    <loc>http://blog.saltfactory.net/linux/change-prompt-in-terminal.html</loc>
     <lastmod>2012-02-03T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/async-upload-url-image-using-gcd.html</loc>
+    <loc>http://blog.saltfactory.net/ios/async-upload-url-image-using-gcd.html</loc>
     <lastmod>2012-01-31T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/linux/solvoing-yum-rpm-database-problem-in-centos.html</loc>
+    <loc>http://blog.saltfactory.net/linux/solvoing-yum-rpm-database-problem-in-centos.html</loc>
     <lastmod>2012-01-19T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/linux/restict-allowing-ip-in-linux.html</loc>
+    <loc>http://blog.saltfactory.net/linux/restict-allowing-ip-in-linux.html</loc>
     <lastmod>2012-01-18T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ruby/solving-installing-linecache19-problem-using-rvm-gem.html</loc>
+    <loc>http://blog.saltfactory.net/ruby/solving-installing-linecache19-problem-using-rvm-gem.html</loc>
     <lastmod>2012-01-17T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/note/review-macbook-pro.html</loc>
+    <loc>http://blog.saltfactory.net/note/review-macbook-pro.html</loc>
     <lastmod>2012-01-16T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/deubugging-old-ipod-touch-using-xcode.html</loc>
+    <loc>http://blog.saltfactory.net/ios/deubugging-old-ipod-touch-using-xcode.html</loc>
     <lastmod>2012-01-14T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/rabbitmq/install-rabbitmq.html</loc>
+    <loc>http://blog.saltfactory.net/rabbitmq/install-rabbitmq.html</loc>
     <lastmod>2012-01-12T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/reduce-xml-codes-using-style.xml-in-android.html</loc>
+    <loc>http://blog.saltfactory.net/android/reduce-xml-codes-using-style.xml-in-android.html</loc>
     <lastmod>2012-01-11T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/create-custom-button-using-android-draw-9-patch-image-straching.html</loc>
+    <loc>http://blog.saltfactory.net/android/create-custom-button-using-android-draw-9-patch-image-straching.html</loc>
     <lastmod>2012-01-10T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/android/create-custom-button-in-android.html</loc>
+    <loc>http://blog.saltfactory.net/android/create-custom-button-in-android.html</loc>
     <lastmod>2012-01-06T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ios/javascript-and-objective-c-interrelation.html</loc>
+    <loc>http://blog.saltfactory.net/ios/javascript-and-objective-c-interrelation.html</loc>
     <lastmod>2012-01-05T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/spring/solving-lost-hibernate-connection-mysql-in-springframework.html</loc>
+    <loc>http://blog.saltfactory.net/spring/solving-lost-hibernate-connection-mysql-in-springframework.html</loc>
     <lastmod>2011-11-09T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/ruby/install-nokogiri-on-ubuntu.html</loc>
+    <loc>http://blog.saltfactory.net/ruby/install-nokogiri-on-ubuntu.html</loc>
     <lastmod>2011-03-30T00:00:00+09:00</lastmod>
   </url>
   <url>
-    <loc>/about/</loc>
+    <loc>http://blog.saltfactory.net/about/</loc>
   </url>
   <url>
-    <loc>/categories/android/</loc>
+    <loc>http://blog.saltfactory.net/categories/android/</loc>
   </url>
   <url>
-    <loc>/categories/appspresso/</loc>
+    <loc>http://blog.saltfactory.net/categories/appspresso/</loc>
   </url>
   <url>
-    <loc>/categories/bigdata/</loc>
+    <loc>http://blog.saltfactory.net/categories/bigdata/</loc>
   </url>
   <url>
-    <loc>/categories/</loc>
+    <loc>http://blog.saltfactory.net/categories/</loc>
   </url>
   <url>
-    <loc>/categories/chrome/</loc>
+    <loc>http://blog.saltfactory.net/categories/chrome/</loc>
   </url>
   <url>
-    <loc>/categories/css/</loc>
+    <loc>http://blog.saltfactory.net/categories/css/</loc>
   </url>
   <url>
-    <loc>/categories/database/</loc>
+    <loc>http://blog.saltfactory.net/categories/database/</loc>
   </url>
   <url>
-    <loc>/categories/docker/</loc>
+    <loc>http://blog.saltfactory.net/categories/docker/</loc>
   </url>
   <url>
-    <loc>/categories/git/</loc>
+    <loc>http://blog.saltfactory.net/categories/git/</loc>
   </url>
   <url>
-    <loc>/guestbook/</loc>
+    <loc>http://blog.saltfactory.net/guestbook/</loc>
   </url>
   <url>
-    <loc>/categories/html5/</loc>
+    <loc>http://blog.saltfactory.net/categories/html5/</loc>
   </url>
   <url>
-    <loc>/categories/hibridapp/</loc>
+    <loc>http://blog.saltfactory.net/categories/hibridapp/</loc>
   </url>
   <url>
-    <loc>/</loc>
+    <loc>http://blog.saltfactory.net/</loc>
   </url>
   <url>
-    <loc>/categories/ionic/</loc>
+    <loc>http://blog.saltfactory.net/categories/ionic/</loc>
   </url>
   <url>
-    <loc>/categories/ios/</loc>
+    <loc>http://blog.saltfactory.net/categories/ios/</loc>
   </url>
   <url>
-    <loc>/categories/java/</loc>
+    <loc>http://blog.saltfactory.net/categories/java/</loc>
   </url>
   <url>
-    <loc>/categories/javascript/</loc>
+    <loc>http://blog.saltfactory.net/categories/javascript/</loc>
   </url>
   <url>
-    <loc>/categories/jekyll/</loc>
+    <loc>http://blog.saltfactory.net/categories/jekyll/</loc>
   </url>
   <url>
-    <loc>/categories/linux/</loc>
+    <loc>http://blog.saltfactory.net/categories/linux/</loc>
   </url>
   <url>
-    <loc>/categories/mac/</loc>
+    <loc>http://blog.saltfactory.net/categories/mac/</loc>
   </url>
   <url>
-    <loc>/categories/markdown/</loc>
+    <loc>http://blog.saltfactory.net/categories/markdown/</loc>
   </url>
   <url>
-    <loc>/categories/node/</loc>
+    <loc>http://blog.saltfactory.net/categories/node/</loc>
   </url>
   <url>
-    <loc>/categories/note/</loc>
+    <loc>http://blog.saltfactory.net/categories/note/</loc>
   </url>
   <url>
-    <loc>/categories/php/</loc>
+    <loc>http://blog.saltfactory.net/categories/php/</loc>
   </url>
   <url>
-    <loc>/categories/python/</loc>
+    <loc>http://blog.saltfactory.net/categories/python/</loc>
   </url>
   <url>
-    <loc>/categories/rabbitmq/</loc>
+    <loc>http://blog.saltfactory.net/categories/rabbitmq/</loc>
   </url>
   <url>
-    <loc>/categories/ruby/</loc>
+    <loc>http://blog.saltfactory.net/categories/ruby/</loc>
   </url>
   <url>
-    <loc>/categories/sencha/</loc>
+    <loc>http://blog.saltfactory.net/categories/sencha/</loc>
   </url>
   <url>
-    <loc>/categories/spring/</loc>
+    <loc>http://blog.saltfactory.net/categories/spring/</loc>
   </url>
   <url>
-    <loc>/categories/xcode/</loc>
+    <loc>http://blog.saltfactory.net/categories/xcode/</loc>
   </url>
   <url>
-    <loc>/17/</loc>
+    <loc>http://blog.saltfactory.net/17/</loc>
   </url>
   <url>
-    <loc>/59/</loc>
+    <loc>http://blog.saltfactory.net/59/</loc>
   </url>
   <url>
-    <loc>/86/</loc>
+    <loc>http://blog.saltfactory.net/86/</loc>
   </url>
   <url>
-    <loc>/87/</loc>
+    <loc>http://blog.saltfactory.net/87/</loc>
   </url>
   <url>
-    <loc>/88/</loc>
+    <loc>http://blog.saltfactory.net/88/</loc>
   </url>
   <url>
-    <loc>/89/</loc>
+    <loc>http://blog.saltfactory.net/89/</loc>
   </url>
   <url>
-    <loc>/90/</loc>
+    <loc>http://blog.saltfactory.net/90/</loc>
   </url>
   <url>
-    <loc>/93/</loc>
+    <loc>http://blog.saltfactory.net/93/</loc>
   </url>
   <url>
-    <loc>/92/</loc>
+    <loc>http://blog.saltfactory.net/92/</loc>
   </url>
   <url>
-    <loc>/31/</loc>
+    <loc>http://blog.saltfactory.net/31/</loc>
   </url>
   <url>
-    <loc>/95/</loc>
+    <loc>http://blog.saltfactory.net/95/</loc>
   </url>
   <url>
-    <loc>/96/</loc>
+    <loc>http://blog.saltfactory.net/96/</loc>
   </url>
   <url>
-    <loc>/97/</loc>
+    <loc>http://blog.saltfactory.net/97/</loc>
   </url>
   <url>
-    <loc>/99/</loc>
+    <loc>http://blog.saltfactory.net/99/</loc>
   </url>
   <url>
-    <loc>/109/</loc>
+    <loc>http://blog.saltfactory.net/109/</loc>
   </url>
   <url>
-    <loc>/125/</loc>
+    <loc>http://blog.saltfactory.net/125/</loc>
   </url>
   <url>
-    <loc>/126/</loc>
+    <loc>http://blog.saltfactory.net/126/</loc>
   </url>
   <url>
-    <loc>/127/</loc>
+    <loc>http://blog.saltfactory.net/127/</loc>
   </url>
   <url>
-    <loc>/128/</loc>
+    <loc>http://blog.saltfactory.net/128/</loc>
   </url>
   <url>
-    <loc>/129/</loc>
+    <loc>http://blog.saltfactory.net/129/</loc>
   </url>
   <url>
-    <loc>/132/</loc>
+    <loc>http://blog.saltfactory.net/132/</loc>
   </url>
   <url>
-    <loc>/133/</loc>
+    <loc>http://blog.saltfactory.net/133/</loc>
   </url>
   <url>
-    <loc>/134/</loc>
+    <loc>http://blog.saltfactory.net/134/</loc>
   </url>
   <url>
-    <loc>/135/</loc>
+    <loc>http://blog.saltfactory.net/135/</loc>
   </url>
   <url>
-    <loc>/136/</loc>
+    <loc>http://blog.saltfactory.net/136/</loc>
   </url>
   <url>
-    <loc>/137/</loc>
+    <loc>http://blog.saltfactory.net/137/</loc>
   </url>
   <url>
-    <loc>/138/</loc>
+    <loc>http://blog.saltfactory.net/138/</loc>
   </url>
   <url>
-    <loc>/139/</loc>
+    <loc>http://blog.saltfactory.net/139/</loc>
   </url>
   <url>
-    <loc>/139/</loc>
+    <loc>http://blog.saltfactory.net/139/</loc>
   </url>
   <url>
-    <loc>/141/</loc>
+    <loc>http://blog.saltfactory.net/141/</loc>
   </url>
   <url>
-    <loc>/142/</loc>
+    <loc>http://blog.saltfactory.net/142/</loc>
   </url>
   <url>
-    <loc>/143/</loc>
+    <loc>http://blog.saltfactory.net/143/</loc>
   </url>
   <url>
-    <loc>/144/</loc>
+    <loc>http://blog.saltfactory.net/144/</loc>
   </url>
   <url>
-    <loc>/144/</loc>
+    <loc>http://blog.saltfactory.net/144/</loc>
   </url>
   <url>
-    <loc>/146/</loc>
+    <loc>http://blog.saltfactory.net/146/</loc>
   </url>
   <url>
-    <loc>/127/</loc>
+    <loc>http://blog.saltfactory.net/127/</loc>
   </url>
   <url>
-    <loc>/148/</loc>
+    <loc>http://blog.saltfactory.net/148/</loc>
   </url>
   <url>
-    <loc>/147/</loc>
+    <loc>http://blog.saltfactory.net/147/</loc>
   </url>
   <url>
-    <loc>/149/</loc>
+    <loc>http://blog.saltfactory.net/149/</loc>
   </url>
   <url>
-    <loc>/152/</loc>
+    <loc>http://blog.saltfactory.net/152/</loc>
   </url>
   <url>
-    <loc>/153/</loc>
+    <loc>http://blog.saltfactory.net/153/</loc>
   </url>
   <url>
-    <loc>/154/</loc>
+    <loc>http://blog.saltfactory.net/154/</loc>
   </url>
   <url>
-    <loc>/150/</loc>
+    <loc>http://blog.saltfactory.net/150/</loc>
   </url>
   <url>
-    <loc>/155/</loc>
+    <loc>http://blog.saltfactory.net/155/</loc>
   </url>
   <url>
-    <loc>/156/</loc>
+    <loc>http://blog.saltfactory.net/156/</loc>
   </url>
   <url>
-    <loc>/157/</loc>
+    <loc>http://blog.saltfactory.net/157/</loc>
   </url>
   <url>
-    <loc>/158/</loc>
+    <loc>http://blog.saltfactory.net/158/</loc>
   </url>
   <url>
-    <loc>/159/</loc>
+    <loc>http://blog.saltfactory.net/159/</loc>
   </url>
   <url>
-    <loc>/160/</loc>
+    <loc>http://blog.saltfactory.net/160/</loc>
   </url>
   <url>
-    <loc>/161/</loc>
+    <loc>http://blog.saltfactory.net/161/</loc>
   </url>
   <url>
-    <loc>/162/</loc>
+    <loc>http://blog.saltfactory.net/162/</loc>
   </url>
   <url>
-    <loc>/163/</loc>
+    <loc>http://blog.saltfactory.net/163/</loc>
   </url>
   <url>
-    <loc>/165/</loc>
+    <loc>http://blog.saltfactory.net/165/</loc>
   </url>
   <url>
-    <loc>/166/</loc>
+    <loc>http://blog.saltfactory.net/166/</loc>
   </url>
   <url>
-    <loc>/167/</loc>
+    <loc>http://blog.saltfactory.net/167/</loc>
   </url>
   <url>
-    <loc>/169/</loc>
+    <loc>http://blog.saltfactory.net/169/</loc>
   </url>
   <url>
-    <loc>/168/</loc>
+    <loc>http://blog.saltfactory.net/168/</loc>
   </url>
   <url>
-    <loc>/170/</loc>
+    <loc>http://blog.saltfactory.net/170/</loc>
   </url>
   <url>
-    <loc>/171/</loc>
+    <loc>http://blog.saltfactory.net/171/</loc>
   </url>
   <url>
-    <loc>/172/</loc>
+    <loc>http://blog.saltfactory.net/172/</loc>
   </url>
   <url>
-    <loc>/173/</loc>
+    <loc>http://blog.saltfactory.net/173/</loc>
   </url>
   <url>
-    <loc>/177/</loc>
+    <loc>http://blog.saltfactory.net/177/</loc>
   </url>
   <url>
-    <loc>/181/</loc>
+    <loc>http://blog.saltfactory.net/181/</loc>
   </url>
   <url>
-    <loc>/182/</loc>
+    <loc>http://blog.saltfactory.net/182/</loc>
   </url>
   <url>
-    <loc>/185/</loc>
+    <loc>http://blog.saltfactory.net/185/</loc>
   </url>
   <url>
-    <loc>/183/</loc>
+    <loc>http://blog.saltfactory.net/183/</loc>
   </url>
   <url>
-    <loc>/186/</loc>
+    <loc>http://blog.saltfactory.net/186/</loc>
   </url>
   <url>
-    <loc>/187/</loc>
+    <loc>http://blog.saltfactory.net/187/</loc>
   </url>
   <url>
-    <loc>/188/</loc>
+    <loc>http://blog.saltfactory.net/188/</loc>
   </url>
   <url>
-    <loc>/189/</loc>
+    <loc>http://blog.saltfactory.net/189/</loc>
   </url>
   <url>
-    <loc>/190/</loc>
+    <loc>http://blog.saltfactory.net/190/</loc>
   </url>
   <url>
-    <loc>/192/</loc>
+    <loc>http://blog.saltfactory.net/192/</loc>
   </url>
   <url>
-    <loc>/193/</loc>
+    <loc>http://blog.saltfactory.net/193/</loc>
   </url>
   <url>
-    <loc>/194/</loc>
+    <loc>http://blog.saltfactory.net/194/</loc>
   </url>
   <url>
-    <loc>/195/</loc>
+    <loc>http://blog.saltfactory.net/195/</loc>
   </url>
   <url>
-    <loc>/196/</loc>
+    <loc>http://blog.saltfactory.net/196/</loc>
   </url>
   <url>
-    <loc>/199/</loc>
+    <loc>http://blog.saltfactory.net/199/</loc>
   </url>
   <url>
-    <loc>/199/</loc>
+    <loc>http://blog.saltfactory.net/199/</loc>
   </url>
   <url>
-    <loc>/200/</loc>
+    <loc>http://blog.saltfactory.net/200/</loc>
   </url>
   <url>
-    <loc>/201/</loc>
+    <loc>http://blog.saltfactory.net/201/</loc>
   </url>
   <url>
-    <loc>/203/</loc>
+    <loc>http://blog.saltfactory.net/203/</loc>
   </url>
   <url>
-    <loc>/204/</loc>
+    <loc>http://blog.saltfactory.net/204/</loc>
   </url>
   <url>
-    <loc>/202/</loc>
+    <loc>http://blog.saltfactory.net/202/</loc>
   </url>
   <url>
-    <loc>/206/</loc>
+    <loc>http://blog.saltfactory.net/206/</loc>
   </url>
   <url>
-    <loc>/208/</loc>
+    <loc>http://blog.saltfactory.net/208/</loc>
   </url>
   <url>
-    <loc>/209/</loc>
+    <loc>http://blog.saltfactory.net/209/</loc>
   </url>
   <url>
-    <loc>/210/</loc>
+    <loc>http://blog.saltfactory.net/210/</loc>
   </url>
   <url>
-    <loc>/212/</loc>
+    <loc>http://blog.saltfactory.net/212/</loc>
   </url>
   <url>
-    <loc>/213/</loc>
+    <loc>http://blog.saltfactory.net/213/</loc>
   </url>
   <url>
-    <loc>/214/</loc>
+    <loc>http://blog.saltfactory.net/214/</loc>
   </url>
   <url>
-    <loc>/215/</loc>
+    <loc>http://blog.saltfactory.net/215/</loc>
   </url>
   <url>
-    <loc>/216/</loc>
+    <loc>http://blog.saltfactory.net/216/</loc>
   </url>
   <url>
-    <loc>/219/</loc>
+    <loc>http://blog.saltfactory.net/219/</loc>
   </url>
   <url>
-    <loc>/218/</loc>
+    <loc>http://blog.saltfactory.net/218/</loc>
   </url>
   <url>
-    <loc>/217/</loc>
+    <loc>http://blog.saltfactory.net/217/</loc>
   </url>
   <url>
-    <loc>/220/</loc>
+    <loc>http://blog.saltfactory.net/220/</loc>
   </url>
   <url>
-    <loc>/222/</loc>
+    <loc>http://blog.saltfactory.net/222/</loc>
   </url>
   <url>
-    <loc>/223/</loc>
+    <loc>http://blog.saltfactory.net/223/</loc>
   </url>
   <url>
-    <loc>/224/</loc>
+    <loc>http://blog.saltfactory.net/224/</loc>
   </url>
   <url>
-    <loc>/225/</loc>
+    <loc>http://blog.saltfactory.net/225/</loc>
   </url>
   <url>
-    <loc>/226/</loc>
+    <loc>http://blog.saltfactory.net/226/</loc>
   </url>
   <url>
-    <loc>/227/</loc>
+    <loc>http://blog.saltfactory.net/227/</loc>
   </url>
   <url>
-    <loc>/228/</loc>
+    <loc>http://blog.saltfactory.net/228/</loc>
   </url>
   <url>
-    <loc>/230/</loc>
+    <loc>http://blog.saltfactory.net/230/</loc>
   </url>
   <url>
-    <loc>/231/</loc>
+    <loc>http://blog.saltfactory.net/231/</loc>
   </url>
   <url>
-    <loc>/229/</loc>
+    <loc>http://blog.saltfactory.net/229/</loc>
   </url>
   <url>
-    <loc>/232/</loc>
+    <loc>http://blog.saltfactory.net/232/</loc>
   </url>
   <url>
-    <loc>/233/</loc>
+    <loc>http://blog.saltfactory.net/233/</loc>
   </url>
   <url>
-    <loc>/234/</loc>
+    <loc>http://blog.saltfactory.net/234/</loc>
   </url>
   <url>
-    <loc>/235/</loc>
+    <loc>http://blog.saltfactory.net/235/</loc>
   </url>
   <url>
-    <loc>/236/</loc>
+    <loc>http://blog.saltfactory.net/236/</loc>
   </url>
   <url>
-    <loc>/237/</loc>
+    <loc>http://blog.saltfactory.net/237/</loc>
   </url>
   <url>
-    <loc>/240/</loc>
+    <loc>http://blog.saltfactory.net/240/</loc>
   </url>
   <url>
-    <loc>/241/</loc>
+    <loc>http://blog.saltfactory.net/241/</loc>
   </url>
   <url>
-    <loc>/242/</loc>
+    <loc>http://blog.saltfactory.net/242/</loc>
   </url>
   <url>
-    <loc>/243/</loc>
+    <loc>http://blog.saltfactory.net/243/</loc>
   </url>
   <url>
-    <loc>/245/</loc>
+    <loc>http://blog.saltfactory.net/245/</loc>
   </url>
   <url>
-    <loc>/248/</loc>
+    <loc>http://blog.saltfactory.net/248/</loc>
   </url>
   <url>
-    <loc>/249/</loc>
+    <loc>http://blog.saltfactory.net/249/</loc>
   </url>
   <url>
-    <loc>/251/</loc>
+    <loc>http://blog.saltfactory.net/251/</loc>
   </url>
   <url>
-    <loc>/250/</loc>
+    <loc>http://blog.saltfactory.net/250/</loc>
   </url>
   <url>
-    <loc>/252/</loc>
+    <loc>http://blog.saltfactory.net/252/</loc>
   </url>
   <url>
-    <loc>/253/</loc>
+    <loc>http://blog.saltfactory.net/253/</loc>
   </url>
   <url>
-    <loc>/254/</loc>
+    <loc>http://blog.saltfactory.net/254/</loc>
   </url>
   <url>
-    <loc>/255/</loc>
+    <loc>http://blog.saltfactory.net/255/</loc>
   </url>
   <url>
-    <loc>/256/</loc>
+    <loc>http://blog.saltfactory.net/256/</loc>
   </url>
   <url>
-    <loc>/257/</loc>
+    <loc>http://blog.saltfactory.net/257/</loc>
   </url>
   <url>
-    <loc>/258/</loc>
+    <loc>http://blog.saltfactory.net/258/</loc>
   </url>
   <url>
-    <loc>/259/</loc>
+    <loc>http://blog.saltfactory.net/259/</loc>
   </url>
   <url>
-    <loc>/260/</loc>
+    <loc>http://blog.saltfactory.net/260/</loc>
   </url>
   <url>
-    <loc>/261/</loc>
+    <loc>http://blog.saltfactory.net/261/</loc>
   </url>
   <url>
-    <loc>/262/</loc>
+    <loc>http://blog.saltfactory.net/262/</loc>
   </url>
   <url>
-    <loc>/263/</loc>
+    <loc>http://blog.saltfactory.net/263/</loc>
   </url>
   <url>
-    <loc>/264/</loc>
+    <loc>http://blog.saltfactory.net/264/</loc>
   </url>
   <url>
-    <loc>/265/</loc>
+    <loc>http://blog.saltfactory.net/265/</loc>
   </url>
   <url>
-    <loc>/266/</loc>
+    <loc>http://blog.saltfactory.net/266/</loc>
   </url>
   <url>
-    <loc>/268/</loc>
+    <loc>http://blog.saltfactory.net/268/</loc>
   </url>
   <url>
-    <loc>/267/</loc>
+    <loc>http://blog.saltfactory.net/267/</loc>
   </url>
   <url>
-    <loc>/269/</loc>
+    <loc>http://blog.saltfactory.net/269/</loc>
   </url>
   <url>
-    <loc>/270/</loc>
+    <loc>http://blog.saltfactory.net/270/</loc>
   </url>
   <url>
-    <loc>/category/Android/</loc>
+    <loc>http://blog.saltfactory.net/category/Android/</loc>
   </url>
   <url>
-    <loc>/category/Hybrid%20App/Appspresso/</loc>
+    <loc>http://blog.saltfactory.net/category/Hybrid%20App/Appspresso/</loc>
   </url>
   <url>
-    <loc>/category/</loc>
+    <loc>http://blog.saltfactory.net/category/</loc>
   </url>
   <url>
-    <loc>/category/Database/</loc>
+    <loc>http://blog.saltfactory.net/category/Database/</loc>
   </url>
   <url>
-    <loc>/category/Database/Oracle/</loc>
+    <loc>http://blog.saltfactory.net/category/Database/Oracle/</loc>
   </url>
   <url>
-    <loc>/category/Database/MySQK/</loc>
+    <loc>http://blog.saltfactory.net/category/Database/MySQK/</loc>
   </url>
   <url>
-    <loc>/category/Database/MongoDB/</loc>
+    <loc>http://blog.saltfactory.net/category/Database/MongoDB/</loc>
   </url>
   <url>
-    <loc>/category/Database/SQLite/</loc>
+    <loc>http://blog.saltfactory.net/category/Database/SQLite/</loc>
   </url>
   <url>
-    <loc>/category/Database/Redis/</loc>
+    <loc>http://blog.saltfactory.net/category/Database/Redis/</loc>
   </url>
   <url>
-    <loc>/category/Web/</loc>
+    <loc>http://blog.saltfactory.net/category/Web/</loc>
   </url>
   <url>
-    <loc>/category/Web/HTHML5/</loc>
+    <loc>http://blog.saltfactory.net/category/Web/HTHML5/</loc>
   </url>
   <url>
-    <loc>/category/Hybrid%20App/</loc>
+    <loc>http://blog.saltfactory.net/category/Hybrid%20App/</loc>
   </url>
   <url>
-    <loc>/category/Hybrid%20App/Phonegap/</loc>
+    <loc>http://blog.saltfactory.net/category/Hybrid%20App/Phonegap/</loc>
   </url>
   <url>
-    <loc>/category/iOS/</loc>
+    <loc>http://blog.saltfactory.net/category/iOS/</loc>
   </url>
   <url>
-    <loc>/category/Java/</loc>
+    <loc>http://blog.saltfactory.net/category/Java/</loc>
   </url>
   <url>
-    <loc>/category/Java/Scala/</loc>
+    <loc>http://blog.saltfactory.net/category/Java/Scala/</loc>
   </url>
   <url>
-    <loc>/category/JavaScript/</loc>
+    <loc>http://blog.saltfactory.net/category/JavaScript/</loc>
   </url>
   <url>
-    <loc>/category/JavaScript/AngularJS/</loc>
+    <loc>http://blog.saltfactory.net/category/JavaScript/AngularJS/</loc>
   </url>
   <url>
-    <loc>/category/Unix/Linux/</loc>
+    <loc>http://blog.saltfactory.net/category/Unix/Linux/</loc>
   </url>
   <url>
-    <loc>/category/Mac/</loc>
+    <loc>http://blog.saltfactory.net/category/Mac/</loc>
   </url>
   <url>
-    <loc>/category/javascript/node.js/</loc>
+    <loc>http://blog.saltfactory.net/category/javascript/node.js/</loc>
   </url>
   <url>
-    <loc>/category/freeboard/</loc>
+    <loc>http://blog.saltfactory.net/category/freeboard/</loc>
   </url>
   <url>
-    <loc>/category/FreeBoard/</loc>
+    <loc>http://blog.saltfactory.net/category/FreeBoard/</loc>
   </url>
   <url>
-    <loc>/category/%EB%B0%B0%EC%9B%80%EC%9D%98%20%EB%86%80%EC%9D%B4%ED%84%B0/</loc>
+    <loc>http://blog.saltfactory.net/category/%EB%B0%B0%EC%9B%80%EC%9D%98%20%EB%86%80%EC%9D%B4%ED%84%B0/</loc>
   </url>
   <url>
-    <loc>/category/PHP/</loc>
+    <loc>http://blog.saltfactory.net/category/PHP/</loc>
   </url>
   <url>
-    <loc>/category/Python/</loc>
+    <loc>http://blog.saltfactory.net/category/Python/</loc>
   </url>
   <url>
-    <loc>/category/Ruby/</loc>
+    <loc>http://blog.saltfactory.net/category/Ruby/</loc>
   </url>
   <url>
-    <loc>/category/Ruby/Ruby%20On%20Rails/</loc>
+    <loc>http://blog.saltfactory.net/category/Ruby/Ruby%20On%20Rails/</loc>
   </url>
   <url>
-    <loc>/category/Hybrid%20App/Sencha/</loc>
+    <loc>http://blog.saltfactory.net/category/Hybrid%20App/Sencha/</loc>
   </url>
   <url>
-    <loc>/category/Java/springframework/</loc>
+    <loc>http://blog.saltfactory.net/category/Java/springframework/</loc>
   </url>
   <url>
-    <loc>/page2/</loc>
+    <loc>http://blog.saltfactory.net/page2/</loc>
   </url>
   <url>
-    <loc>/page3/</loc>
+    <loc>http://blog.saltfactory.net/page3/</loc>
   </url>
   <url>
-    <loc>/page4/</loc>
+    <loc>http://blog.saltfactory.net/page4/</loc>
   </url>
   <url>
-    <loc>/page5/</loc>
+    <loc>http://blog.saltfactory.net/page5/</loc>
   </url>
   <url>
-    <loc>/page6/</loc>
+    <loc>http://blog.saltfactory.net/page6/</loc>
   </url>
   <url>
-    <loc>/page7/</loc>
+    <loc>http://blog.saltfactory.net/page7/</loc>
   </url>
   <url>
-    <loc>/page8/</loc>
+    <loc>http://blog.saltfactory.net/page8/</loc>
   </url>
   <url>
-    <loc>/page9/</loc>
+    <loc>http://blog.saltfactory.net/page9/</loc>
   </url>
   <url>
-    <loc>/page10/</loc>
+    <loc>http://blog.saltfactory.net/page10/</loc>
   </url>
   <url>
-    <loc>/page11/</loc>
+    <loc>http://blog.saltfactory.net/page11/</loc>
   </url>
   <url>
-    <loc>/page12/</loc>
+    <loc>http://blog.saltfactory.net/page12/</loc>
   </url>
   <url>
-    <loc>/page13/</loc>
+    <loc>http://blog.saltfactory.net/page13/</loc>
   </url>
   <url>
-    <loc>/page14/</loc>
+    <loc>http://blog.saltfactory.net/page14/</loc>
   </url>
   <url>
-    <loc>/page15/</loc>
+    <loc>http://blog.saltfactory.net/page15/</loc>
   </url>
   <url>
-    <loc>/page16/</loc>
+    <loc>http://blog.saltfactory.net/page16/</loc>
   </url>
   <url>
-    <loc>/page17/</loc>
+    <loc>http://blog.saltfactory.net/page17/</loc>
   </url>
   <url>
-    <loc>/page18/</loc>
+    <loc>http://blog.saltfactory.net/page18/</loc>
   </url>
   <url>
-    <loc>/page19/</loc>
+    <loc>http://blog.saltfactory.net/page19/</loc>
   </url>
   <url>
-    <loc>/page20/</loc>
+    <loc>http://blog.saltfactory.net/page20/</loc>
   </url>
   <url>
-    <loc>/page21/</loc>
+    <loc>http://blog.saltfactory.net/page21/</loc>
   </url>
   <url>
-    <loc>/page22/</loc>
+    <loc>http://blog.saltfactory.net/page22/</loc>
   </url>
   <url>
-    <loc>/page23/</loc>
+    <loc>http://blog.saltfactory.net/page23/</loc>
   </url>
   <url>
-    <loc>/page24/</loc>
+    <loc>http://blog.saltfactory.net/page24/</loc>
   </url>
   <url>
-    <loc>/page25/</loc>
+    <loc>http://blog.saltfactory.net/page25/</loc>
   </url>
   <url>
-    <loc>/page26/</loc>
+    <loc>http://blog.saltfactory.net/page26/</loc>
   </url>
   <url>
-    <loc>/page27/</loc>
+    <loc>http://blog.saltfactory.net/page27/</loc>
   </url>
   <url>
-    <loc>/page28/</loc>
+    <loc>http://blog.saltfactory.net/page28/</loc>
   </url>
   <url>
-    <loc>/page29/</loc>
+    <loc>http://blog.saltfactory.net/page29/</loc>
   </url>
 </urlset>

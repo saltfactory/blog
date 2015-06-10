@@ -9,8 +9,65 @@
     <title>Appspresso를 사용하여 네이티브앱을 하이브리드 앱으로 전환 - 3.Sencha MVC 적용</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 네이티브앱을 하이브리드 앱으로 전환 - 3.Sencha MVC 적용" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+이번 포스팅에서는 Appspresso를 사용해서 Sencha의 MVC (http://blog.saltfactory.net/category/Sencha) 기반으로 앱을 만드는 과정을 소개한다. 이전 아티클에서 상단 타이틀바 왼쪽에 위치한 &quot;건물찾기&quot;라는 버턴을 누르면 새로운 View가 열리게되고 이들 각각의 View와 Controller가 어떻게 상호 연동되어서 이벤트를 핸들링하는지, 이 때 Controller와 View에서 Model과 Store를 어떻게 활용하는지에 대한 내용도 포함이 되어 있다.
+
+Appspresso를 사용하여 하이브리드앱 개발하기 - 18.Sencha Model과 원격데이터 요청에서 Appspresso(앱스프레소)의 plugins인 ax.ext.net.curl를 이용해서 서버로  json 형태의 데이터를 요청해서 json 데이터를 Sencha의 Model로 정의된 Store를 이용해서 다음 맵 API로 지도위에 Marker를 추가하는 작업을 하였다. 이때 우리는 Store 개념을 이해했을거라 예상된다. 한번 load된 Store를 재활용하는 방법도 이 글에서 소개된다. 이번 포스팅은 복잡도가 높은 편이다. 개념적으로 뷰에서 event를 핸들링하기 위해서 controller에서 view의 identifier로 찾아서 처리했던 부분을 View 마다 widget으로 인식해서 해당되는 widget 안에서 이벤트를 fireEvent로 등록해서 전파하는 방법을 사용하기 때문이다. 이 방법을 사용하기 위해서 우리는 단순하게 alias로 사용했던 View를 모두 widget으로 변경하는 작업을 할 것이다. 그리고 앱에서 필요한 View를 추가하고 각 View를 핸들링할 수 있는 Controller를 추가할 것이다. 복잡한 코드와 설명인만큼 주의하여 같이 진행해보도록 하자.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/using-sencha-mvc-in-appspresso.html" property="og:url">
+    
+    
+    <meta content="2012-06-12T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="sencha" property="article:tag">
+    
+    <meta content="mvc" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/using-sencha-mvc-in-appspresso.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/using-sencha-mvc-in-appspresso.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

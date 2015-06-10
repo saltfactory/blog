@@ -3,10 +3,10 @@
   <channel>
     <title>saltfactory&#39;s blog</title>
     <description></description>
-    <link>/</link>
-    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 10 Jun 2015 00:26:47 +0900</pubDate>
-    <lastBuildDate>Wed, 10 Jun 2015 00:26:47 +0900</lastBuildDate>
+    <link>http://blog.saltfactory.net/</link>
+    <atom:link href="http://blog.saltfactory.net/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 10 Jun 2015 14:18:21 +0900</pubDate>
+    <lastBuildDate>Wed, 10 Jun 2015 14:18:21 +0900</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -919,8 +919,8 @@ https://gcm-http.googleapis.com/gcm/send &lt;span class=&quot;se&quot;&gt;\&lt;/
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 09 Jun 2015 00:00:00 +0900</pubDate>
-        <link>/android/implement-push-service-via-gcm.html</link>
-        <guid isPermaLink="true">/android/implement-push-service-via-gcm.html</guid>
+        <link>http://blog.saltfactory.net/android/implement-push-service-via-gcm.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/android/implement-push-service-via-gcm.html</guid>
         
         <category>android</category>
         
@@ -1053,8 +1053,8 @@ https://gcm-http.googleapis.com/gcm/send &lt;span class=&quot;se&quot;&gt;\&lt;/
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 03 Jun 2015 00:00:00 +0900</pubDate>
-        <link>/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</link>
-        <guid isPermaLink="true">/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</guid>
+        <link>http://blog.saltfactory.net/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/note/renewal-blog-from-tistory-to-github-pages-via-jekyll.html</guid>
         
         <category>note</category>
         
@@ -1185,8 +1185,8 @@ https://gcm-http.googleapis.com/gcm/send &lt;span class=&quot;se&quot;&gt;\&lt;/
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 06 May 2015 00:00:00 +0900</pubDate>
-        <link>/nginx/redirect-using-with-parameter-on-nginx.html</link>
-        <guid isPermaLink="true">/nginx/redirect-using-with-parameter-on-nginx.html</guid>
+        <link>http://blog.saltfactory.net/nginx/redirect-using-with-parameter-on-nginx.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/nginx/redirect-using-with-parameter-on-nginx.html</guid>
         
         <category>nginx</category>
         
@@ -1304,8 +1304,8 @@ LC_ALL=
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 20 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/java/solving-character-in-war-prolbem-via-os-and-jvm.html</link>
-        <guid isPermaLink="true">/java/solving-character-in-war-prolbem-via-os-and-jvm.html</guid>
+        <link>http://blog.saltfactory.net/java/solving-character-in-war-prolbem-via-os-and-jvm.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/java/solving-character-in-war-prolbem-via-os-and-jvm.html</guid>
         
         <category>java</category>
         
@@ -1624,8 +1624,8 @@ SQL&amp;gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 13 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/linux/install-oracle-xe-on-ubuntu.html</link>
-        <guid isPermaLink="true">/linux/install-oracle-xe-on-ubuntu.html</guid>
+        <link>http://blog.saltfactory.net/linux/install-oracle-xe-on-ubuntu.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/linux/install-oracle-xe-on-ubuntu.html</guid>
         
         <category>database</category>
         
@@ -1774,8 +1774,8 @@ SQL&amp;gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 13 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</link>
-        <guid isPermaLink="true">/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</guid>
+        <link>http://blog.saltfactory.net/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/javascript/access-opener-after-redirecting-popup-window-using-iframe.html</guid>
         
         <category>javascript</category>
         
@@ -2207,8 +2207,8 @@ var gallery3 = new Gallery3(options);
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 10 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/node/introduce-node-gallery3.html</link>
-        <guid isPermaLink="true">/node/introduce-node-gallery3.html</guid>
+        <link>http://blog.saltfactory.net/node/introduce-node-gallery3.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/node/introduce-node-gallery3.html</guid>
         
         <category>javascript</category>
         
@@ -2379,8 +2379,8 @@ VOLUME /shared
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 06 Mar 2015 00:00:00 +0900</pubDate>
-        <link>/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</link>
-        <guid isPermaLink="true">/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</guid>
+        <link>http://blog.saltfactory.net/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/docker/sharing-directory-on-boot2docker-using-with-ssfs.html</guid>
         
         <category>mac</category>
         
@@ -2702,8 +2702,8 @@ gems:
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 12 Nov 2014 00:00:00 +0900</pubDate>
-        <link>/jekyll/introduce-jekyll-img-converter.html</link>
-        <guid isPermaLink="true">/jekyll/introduce-jekyll-img-converter.html</guid>
+        <link>http://blog.saltfactory.net/jekyll/introduce-jekyll-img-converter.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/jekyll/introduce-jekyll-img-converter.html</guid>
         
         <category>jekyll</category>
         
@@ -2949,8 +2949,8 @@ gems:
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 13 Oct 2014 00:00:00 +0900</pubDate>
-        <link>/ionic/create-hybrid-app-using-ionic.html</link>
-        <guid isPermaLink="true">/ionic/create-hybrid-app-using-ionic.html</guid>
+        <link>http://blog.saltfactory.net/ionic/create-hybrid-app-using-ionic.html</link>
+        <guid isPermaLink="true">http://blog.saltfactory.net/ionic/create-hybrid-app-using-ionic.html</guid>
         
         <category>android</category>
         

@@ -9,8 +9,56 @@
     <title>센차터치(Sencha Touch)에서 JSONP로 크로스도메인 Ajax요청 문제 해결하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="센차터치(Sencha Touch)에서 JSONP로 크로스도메인 Ajax요청 문제 해결하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- Sencha Touch는 모바일 웹 앱을 쉽게 만들 수 있는 환경을 제공하고 있다. 그래서 Sencha Touch에서는 웹앱에서 서버측으로 JSON 데이터를 요청해서 Sencha Touch 기반의 application에서 사용할 수 있는 Data Model로 쉽게 사용할 수 있다. 그런데 Sencha Touch를 모바일 어플리케이션으로 개발하게 된다면 즉, 하이브리드 앱으로 네이티브 앱에 패키징하여 개발하게 된다면 어플리케이션의 자원들이 모두 local에 저장하기 때문에 http://domain 으로 요청행하는 크로스 도메인 문제가 발생하게 된다. 이렇게 서로 다른 도메인에서 JSON 데이터를 요청하여 처리할 수 있는 것이 바로 JSONP(JSON with Padding)이다. JSONP는 content-type을 application/json으로 json 데이터를 요청하는 것이 아니라 application/javascript로 JSON을 가지는 callback function을 요청해서 callback function의 JSON 데이터를 사용하는 방법이다. Javascript 에서 callback 구현하기 글에서 callback function 자체를 parameter로  넘겨서 callback function 이름에 ()를 표시해서 callback 함수를 실행시키듯, JavaScript는 call by name 으로 함수를 참조하고 dynamic parameter passing을 하기 때문에 JSONP라는 특수한 기능을 사용할 수 있다. 위키에서 소개한 SJONP를 살펴보면  callback function 이름으로 JSON payload를 가지도록 해서 JSONP의 요청을 처리하는 것을 볼 수 있다.
+http://en.wikipedia.org/wiki/JSONP
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/sencha/using-jsonp-in-sencha-touch.html" property="og:url">
+    
+    
+    <meta content="2012-11-15T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="sencha" property="article:section">
+    
+    
+    
+    
+    <meta content="sencha" property="article:tag">
+    
+    <meta content="sencha touch" property="article:tag">
+    
+    <meta content="jsonp" property="article:tag">
+    
+    <meta content="json" property="article:tag">
+    
+    <meta content="cross domain" property="article:tag">
+    
+    <meta content="domain" property="article:tag">
+    
+    <meta content="ajax" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/sencha/using-jsonp-in-sencha-touch.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/sencha/using-jsonp-in-sencha-touch.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

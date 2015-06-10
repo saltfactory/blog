@@ -9,8 +9,49 @@
     <title>popup 창에서 리다이렉트 이후 window.opener 사라지는 문제 해결하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="popup 창에서 리다이렉트 이후 window.opener 사라지는 문제 해결하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+웹 프로그램을 개발할 때 현재 열려 있는 페이지를 그대로 유지하면서 사용자에게 다른 액션을 유도하기 위해서 우리는 Popup으로 새로운 창을 열도록 개발하는 경우가 있다. 예를 들어서 i-PIN 인증을 처리하는 경우 회원가입 화면에서 i-PIN 인증 화면을 Popup으로 열어서 사용자 인증을 거친 이후 인증이 완료되면 열었던 창으로 결과를 던져주는 경우가 있다. JavaScript로 Popup을 사용하여 새로운 창을 열고 Popup에서 처리한 결과를 Popup을 열게한 window.opener에 접근해서 이벤트를 전달하는 것은 어렵지않게 이미 알려진 방법으로 해결할 수 있다. 하지만 특정 브라우저에서 Popup한 창에 열려진 사이트가 Redirect를 하여 다른 host로 이동을 할 경우 window.opener 객체를 잃게 되버리는 문제를 발견했다. 이번 포스팅은 JavaScript로 Popup을 사용하는 방법 중에 Popup의 호스트가 이동후 opener에 접근할 수 있는 방법에 대해서 소개한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/javascript/access-opener-after-redirecting-popup-window-using-iframe.html" property="og:url">
+    
+    
+    <meta content="2015-03-13T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="javascript" property="article:section">
+    
+    
+    
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="opener" property="article:tag">
+    
+    <meta content="window" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/javascript/access-opener-after-redirecting-popup-window-using-iframe.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/javascript/access-opener-after-redirecting-popup-window-using-iframe.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

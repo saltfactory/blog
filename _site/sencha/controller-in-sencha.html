@@ -9,8 +9,56 @@
     <title>Sencah Touch2를 이용한 하이브리드 앱 개발 - 9.Controller</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Sencah Touch2를 이용한 하이브리드 앱 개발 - 9.Controller" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+이 포스팅은 Sencah Touch의 MVC 에 관한 아티클 중에 마지막 컨트롤러(Controller)에 관한 이야기이다. 우리는 Sencha 의 MVC 중에서 시각적 요소를 만들기 위한 View와 데이터와 로직을 담당하는 Model을 같이 살펴보았다. 이제 사용자의 이벤트를 받거나 데이터 처리 후에 특정 Model이나 View 작업을 지시하는 컨트롤러에 대해서 살펴보자. 이미 Springframework과  Ruby on Rails의 MVC에 익숙해져 있는 상태에서 Sencha MVC의 컨트롤러는 조금 당황스럽게 느껴졌다. 아마 Client Software를 개발해본 개발자에게는 익숙할 수 있는 컨트롤러의 동작일 수도 있지만 웹 개발에서 MVC를 주로 다루는 나에게 URL 요청 없이 사용자의 이벤트를 특정 동작으로 매핑시키는 것이 어색했던 것이다. 하지만, Sencha에서는 이런 동작이 너무 당연하다. Sencha는 Javascript 기반의 프레임워크로 사용자의 이벤트와 데이터 워크프롤우를 메소드로 연결시켜서 작업하기 때문에, 특정 이벤트를 특정 메소드로 연결시켜주는 기능이 바로 컨트롤러의 기능인 것이다.
+그럼 이벤트를 어떻게 받을 것인가에 대해서 살펴봐야하는데 Sencha Touch 2.x 부터 refs 라는 속성이 추가되면서 HTML의 DOM이나 View 등의 객체를 쉽게 참조(References)할 수 있게 구현해 두었다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/sencha/controller-in-sencha.html" property="og:url">
+    
+    
+    <meta content="2012-06-04T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="sencha" property="article:section">
+    
+    
+    
+    
+    <meta content="sencha" property="article:tag">
+    
+    <meta content="sencha touch" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="view" property="article:tag">
+    
+    <meta content="controller" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/sencha/controller-in-sencha.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/sencha/controller-in-sencha.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

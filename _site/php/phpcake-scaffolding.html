@@ -9,8 +9,63 @@
     <title>CakePHP의 scaffolding 사용하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="CakePHP의 scaffolding 사용하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+CakePHP는 Ruby on Rails와 매우 닮았다고 모든 사람들은 공감을 할 것이라고 생각든다. 그래서 CakePHP를 사용하면서 당연히 RoR의 scaffoding을 찾아볼 수 밖에 없었다. scaffoding에 대한 내용은 Scaffolding으로 빠르게 웹 개발하기 글을 참조하길 바란다. scaffolding은 MVC 프레임워크에서 마술사와 같이 알아서 척척 가장 기본이 되는 코드를 생성해서 구조화 시켜준다. 그럼 CakePHP에서 scaffolding은 어떠할까?
+
+두가지 의문으로 접근한다.
+1. RoR과 동일하게 shell command로 코드를 생성하는 것인가?
+2. RoR과 동일하게 물리적인 코드를 생성해서 MVC 패턴에 맞게 파일을 추가하여 기본 코드를 만들어주는 것인가?
+
+CakePHP 의 scaffoding는 다음과 같다.
+1. RoR과 다르게 shell command를 사용하지 않는다. CakePHP는 PHP로 만들어진 프레임워크이기 때문에, 이말을 다시말하자면 웹 페이지에서 돌아가는 언어이기 때문에 PHP 코드 안에서 $ 변수로 scaffoding을 인식해서 CakePHP가 제공하는 템플릿으로 MVC가 자동으로 구현되어진다. (php shell 명령으로 커멘드 라인에서 명령어 수준으로 처리할 수 있지만 CakePHP에서는 public scaffod 변수 scaffolding을 한다.)
+2. RoR과 달리 실제 물리적인 파일이 생성되는 것이아니라, CakePHP가 제공하는 scaffolding 템플릿 기반으로 Model, View, Controller가 내부적으로 구현되어지기 때문에 기본 Template이 아닌 custom scaffolding 파일을 추가해서 처리할 수도 있다.
+
+우리는 앞서 Scaffolding으로 빠르게 웹 개발하기 와 CakePHP를 이용하여 MVC 기반 웹 서비스 CRUD 개발하기 글에서 간단한 블로그 예제를 해보았다. 이어서 scaffoding 기능을 가지고 코드를 추가해 나갈 것이다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/php/phpcake-scaffolding.html" property="og:url">
+    
+    
+    <meta content="2012-09-04T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="php" property="article:section">
+    
+    
+    
+    
+    <meta content="cakephp" property="article:tag">
+    
+    <meta content="php" property="article:tag">
+    
+    <meta content="scaffolding" property="article:tag">
+    
+    <meta content="scaffold" property="article:tag">
+    
+    <meta content="mvc" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/php/phpcake-scaffolding.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/php/phpcake-scaffolding.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

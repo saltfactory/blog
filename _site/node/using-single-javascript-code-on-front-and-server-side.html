@@ -9,8 +9,55 @@
     <title>Node.js를 사용하여 웹과 서버프로그램 동시에 사용 가능한 코드 개발하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Node.js를 사용하여 웹과 서버프로그램 동시에 사용 가능한 코드 개발하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Rhino를 소개하면서 Javascript를 브라우저 없이 개발하는 방법을 소개했는데 이번 포스팅은 브라우저에서 동작하는 Javascript 코드가 아니라 서버에서 동작하는 Javascript를 소개한다. 뿐만아니라 브라우저 없이 서버에서 개발한 Javascript 코드를 웹 어플리케이션에서 동작하는 Javascript로 사용할 수 있는 것을 소개할 것이다. 브라우저가 아닌 곳에서 Javascript를 개발한다... 어쩌면 이것은 말이 안되는 이야기일 수도 있지만 V8 엔진이 등장하면서 그 이야기는 현실이 되었다. 뿐만아니라 nodejs 등장은 이미 개발자 사이에서 개발 방법론에 대한 변경이 일어날 정도로 큰 이슈가 되었다. nodejs에 대한 설명은 한 포스팅에 해결할 수 있을만큼의 분량이 아니다. nodejs는 점점 개발자들이 많아지고 있고 다양한 모듈들이 만들어지고 있기 때문에 앞으로 nodejs라는 주제로 포스팅을 계속 이어 갈 예정이다.
+이 포스팅은 javascript 코드를 브라우저 없이 개발해서 서버와 웹 페이지에서 동일하게 사용할 수 있다는 것이 요점이기 때문에 nodejs에 대한 간략한 소개만 한다.
+위키에서는 nodeJS에 대해서 다음과 같이 정의하고 있다.
+
+
+Node.js는 V8 (자바스크립트 엔진) 위에서 동작하는 이벤트 처리 I/O 프레임워크이다. 웹 서버와 같이 확장성 있는 네트워크 프로그램 제작을 위해 고안되었다.
+
+
+위의 정의는 많은 기술이 포함되어 있지만 이번 포스팅에서는 V8 엔진 위에서 웹 서버 프로그램을 만들 수 있다는 것만 알고 설명한다. V8 엔진은 구글에서 개발한 오픈소스 JIT(Just In Time) 가상머신 형식의 자바스크립트 엔진이며 구글 브라우저와 안드로이드 브라우저에 포함이 되어 있다. V8 엔진은 ECMAScript-3의 규약으로 C++로 개발이 되어져 있는데 독립적으로 실행이 가능하다. nodejs는 이러한 V8 엔진위에서 동작을 하고 nodejs는 서버 프로그램을 작성할 수 있기 때문에 V8 위에 동작하는 Javascript 코드를 가지고 서버와 웹 어플리케이션에 돌아가는 코드를 동일하게 사용할 수 있는 것이다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/node/using-single-javascript-code-on-front-and-server-side.html" property="og:url">
+    
+    
+    <meta content="2012-09-27T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="node" property="article:section">
+    
+    
+    
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="node" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/node/using-single-javascript-code-on-front-and-server-side.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/node/using-single-javascript-code-on-front-and-server-side.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

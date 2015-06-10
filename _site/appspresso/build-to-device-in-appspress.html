@@ -9,8 +9,64 @@
     <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 6.디바이스 빌드하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 하이브리드앱 개발하기 - 6.디바이스 빌드하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Appspresso를 사용해서 하는 하이브리드 앱 개발은 대부분 디바이스 없이 진행 될거라고 예상이 된다. Xcode의 console이나 Android의 logcat 등으로 디버깅을 할 수 없기 때문에 유일하게 디버깅할 수 있는 것이 Appspresso의 on the fly이다. 다행이 Appsrpess 1.1 부터는 크롬 브라우저의 확장으로 ADE(Appspresso Debugging Extension)을 사용할 수 있지만 이것 역시 web inspector로 웹의 자원만 디버깅 할 수 있다. UI Framework 테스트를 하기 위해서 Sencha 2 touch를 시뮬레이터에서 테스트를 하고 실제 단말기로 로드했는데 시뮬레이터에서는 이상 없었던 버턴 이미지가 최초 로드가 늦게 되어서 찌그러지는 것을 확인할 수 있었다. 이렇게 단말기는 시뮬레이터와 메모리도 다리그 프로세서도 차이가 많이 나기 때문에 반드시 디바이스에 설치해서 동작하는 것을 확인 해야만 한다. 아쉽게 Appspresso에서 네이티브 레벨의 디바이스 디버깅은 될 수 없는 것 같다.
+
+그럼 Xcode를 사용하지 않는데 어떻게 앱을 디바이스로 설치할 수 있을까?
+Appspresso는 eclipse 기반으로 만들어져있기 때문에 android 앱을 android 디바이스로 설치하는데 큰 어려움이 없지만 iOS 디바이스는 상황이 좀 다른다. iOS는 Xcode를 가지고 개발할 수 있기 때문에 Xcode 없이 iOS 디바이스로 앱을 빌드하여 런칭시키는 것이 어렵기 때문이다. Appspresso에 내부적으로 command line tool을 이용해서 .ipa (DRM이 되어 있는 iPhone App) 파일을 빌드하여 iTunes에 추가하여 iPhone과 자동 동기화를 실행하여 iPhone으로 설치하는 과정으로 처리한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/build-to-device-in-appspress.html" property="og:url">
+    
+    
+    <meta content="2012-05-20T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="request" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/build-to-device-in-appspress.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/build-to-device-in-appspress.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

@@ -9,8 +9,64 @@
     <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 12.WAC DeviceStatus 사용하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 하이브리드앱 개발하기 - 12.WAC DeviceStatus 사용하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Appspresso로 하이브리드 앱을 만들 때 최고의 강점은 UI 개발을 단일 코드로 진행할 수 있다는 것이 아닌가 생각한다. 그러면 UI가 디바이스 종류와 상관없이 모두 동일해진다는 말이 된다는 이야기인데 우리는 기존 UX를 무시하고 무조건적으로 일방적으로 아이폰의 UX나 안드로이드의 UX를 강요하기 위해서 단일 UI를 만들어버릴 수 있다. 고객은 특정 모델에 따라 다른 UI를 요구할 수도 있다.  또는 UI에서 디바이스의 상태를 확인하기 기능을 넣기 원할 수도 있다. 배터리의 충전 상태나, 디바이스가 가속도 센스를 지원하는지, 또는 디스플레이의 상태에 따라서 다른 UI를 제공하고 싶어할 수도 있을 것이다. WAC의 deviceStatus를 이용하면 이런 문제를 쉽게 해결할 수 있다. 만약 이러한 속성을  Appspresso의 WAC를 사용하지 않는다면 아마도 네이티브 코드로 디바이스의 상태를 확인하고 stub method를 이용해서 javascript와 call by name으로 메세지 전송을 해야할 것이다. 그럼 WAC의 deviceStatus를 이용해서 얼마나 편리하게 디바이스 정보를 얻을 수 있는지 살펴보자.
+(ADE의 Inspector의 사용법을 알고 있어야하기 때문에 이 방법에 대해서는 Appspresso를 사용하여 하이브리드앱 개발하기 - 11.WAC Devicepai 사용하기 글을 참고한다.)
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/using-wac-devicestatus-in-appspresso.html" property="og:url">
+    
+    
+    <meta content="2012-05-09T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="wac" property="article:tag">
+    
+    <meta content="devicestatus" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/using-wac-devicestatus-in-appspresso.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/using-wac-devicestatus-in-appspresso.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

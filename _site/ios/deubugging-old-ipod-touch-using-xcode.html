@@ -9,8 +9,55 @@
     <title>최신 Xcode에서 구형 iPod Touch를 이용하여 디바이스 디버깅하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="최신 Xcode에서 구형 iPod Touch를 이용하여 디바이스 디버깅하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+
+
+iOS의 개발자에게 Xcode는 마법과 같은 개발 도구가 아닌가 생각이 든다. 지금 아이폰과 안드로이드를 동시에 개발하는데 안드로이드를 개발할 때 운영체제나 SDK가 아니라 Xcode와 같은 툴이 안드로이드를 지원해주지 않는다는 것이 가장 많이 아쉬웠다. Xcode는 빠르고 편리하고 아름답기까지 하기 때문에 개발자에게 개발을 즐겁게 해주는 멋진 개발툴이라는 것은 모두다 아는 사실이다. 이런 Xcode를 잠시 실망할뻔한 적이다. Mac OS X snow leopard에서 Mac OS X Lion으로 업데이트하고 App Store에서 배포하는 Xcode 4.2를 설치하고 나서 구형 iPod touch로 디바이스 디버깅을 할 수 없게 된 것이다. 애플은 새로운 상품이 나와도 이전의 상품을 무시하거나 구형으로 만들지 않는 철학이 있다. 지금까지도 iPhone 3gs의 업데이트를 계속 진행하고 있는것도 그 전략중에 하나이다. 하지만 iPod touch 2세대는 물리적한계 때문에 iOS 4.2에서 업데이트가 멈추어진 상태이다. 문제는 이 기계가 더이상 개발용 디바이스로 사용할수 없다는 것이 충격적인 문제였다. 왜냐하면 비록 구형 디바이스지만 iOS 4.2라는 iOS 4.x 버전대의 운영체제가 동작하고 있고 아직 iOS의 모든 운영체제 통계치를 보면 iOS 4.x 를 사용하는 사용자가 많기 때문이다. 그래서 iOS 개발을 할때 최소 target 버전을 항상 iOS 4.0버전을 타겟으로 두고 개발을 해왔다. 구형 iPod touch를 가지고 이러한 문제를 고민하는 사람들이 없을까 자료를 찾아보는 가운데 http://useyourloaf.com/blog/2012/1/10/xcode-42-building-for-ios-31x-and-older-devices.html 블로그에서 동일한 문제를 가지고 고민했고 해결한 글을 찾을 수 있었다. 하지만 이 포스팅대로 하니까 Xcode에서 디버깅을 할 수 있게 iPod touch를 인식하고 빌드할수 있게 되었으나 문제는 Build &amp; Run을 하였을때 디바이쪽에 앱이 설치가 되지 않는 것이였다. Xcode에서 에러나 발생하지 않고 정상적으로 빌드되고 인스톨이 되었다고 나오는데 실제 디바이스에 앱은 설치가 되지 않고 디바이스의 console 로그를 살펴보면 handle_connection: Could not receive USB message #6 from MDCrashReportTool. 가 출력된다. 이 참조 블로그를 통해서 구형 iPod touch를 디바이스 디버깅을 사용하기 위해서 어떻게 했으면 이 문제를 어떻게 해결했는지를 포스팅하려고 한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/ios/deubugging-old-ipod-touch-using-xcode.html" property="og:url">
+    
+    
+    <meta content="2012-01-14T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="ios" property="article:section">
+    
+    
+    
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="xcode" property="article:tag">
+    
+    <meta content="ipod" property="article:tag">
+    
+    <meta content="ipod touch" property="article:tag">
+    
+    <meta content="debugging" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/ios/deubugging-old-ipod-touch-using-xcode.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/ios/deubugging-old-ipod-touch-using-xcode.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

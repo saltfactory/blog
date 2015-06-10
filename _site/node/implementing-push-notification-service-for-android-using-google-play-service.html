@@ -9,8 +9,63 @@
     <title>Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Node.js와 Google Play Service를 이용하여 안드로이드 푸시서비스 구현하기(GCM)" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+번 사내 프로젝트는 아이폰, 안드로이드 푸시 프로바이더를 springframework에서 Node.js로 마이그레이션하는 작업이 진행되었다. 첫번째 포스팅으로 &quot;Node.js로 푸시서비스 구현하기 1. 아이폰(iOS) 푸시서버 구현하기&quot;에서는 node-apn을 이용해서 아이폰 푸시 프로바이더를 구현한 간단한 예제를 소개하였고, 이번 포스팅에서는 node-gcm을 이용해서 안드로이드 푸시 프로바이더를 구현하는 방법을 소개하고자 한다.
+
+우리는 기존에 C2DM(https://developers.google.com/android/c2dm/?csw=1)을 사용해서 안드로이드 푸시를 구현했었다. 그러나 링크를 보면 알겠지만 C2DM은 2012년 6월 26일부터 더이상 업데이트를 지원하고 있지않다. 그럼 안드로이드 푸시는 어떻게 구현할 수 있는가? 구글에서는 푸시서비스를 위해서 GCM(Google Cloude Messaging) http://developer.android.com/google/gcm/index.html 을 제공하고 있다.
+
+
+이 글은 2015-06-09-최신 Android Studio, GCM(Google Cloud Messaging), Node.js를 이용하여 Android 푸시 서비스 구현하기 글로 업데이트 되었습니다.
+
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html" property="og:url">
+    
+    
+    <meta content="2014-01-16T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="node" property="article:section">
+    
+    
+    
+    
+    <meta content="node" property="article:tag">
+    
+    <meta content="node.js" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="push" property="article:tag">
+    
+    <meta content="notification" property="article:tag">
+    
+    <meta content="gcm" property="article:tag">
+    
+    <meta content="google play service" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/node/implementing-push-notification-service-for-android-using-google-play-service.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/node/implementing-push-notification-service-for-android-using-google-play-service.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

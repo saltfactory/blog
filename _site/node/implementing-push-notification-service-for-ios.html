@@ -9,8 +9,55 @@
     <title>Node.js를 이용하여 iOS 푸시서비스 구현하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Node.js를 이용하여 iOS 푸시서비스 구현하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+이번 프로젝트에서는 Springframework고 구현되어 있는 Push Provider를 nodejs로 마이그레이션하는 작업을 진행하였다. Provider는 일단 간단하게 푸시 전송할 데이터를 사내 데이터베이스 서버에서 RESTful API로 푸시 전송할 항목을 가져와서 Provider 서버의 데이트베이스에 저장하고 순차적으로 push를 전송하는 간단한 로직을 가지고 있는데 Springframework로 구현하니 단순히 Push 서비스만하는데 너무 큰 프레임워크를 도입한 것 같아서 보다 간단한 프레임워크 선정이 필요했고, async push provider를 구현하기 위해서 nodejs를 최종으로 결정해서 구현하기로 했다. 다른 내부적인 로직은 다른 포스팅에서 소개하기로 하고, nodejs 푸시서비스 구현하기 글에서는 Node.js로 아이폰과 안드로이드 Push Provider 서버를 구현하는 글을 소개한다. 첫번째로 아이폰 푸시서버 구현하기에서는 iOS 기계에 푸시를 전송하기 위해서 Push Provider 서버를 구현하는 방법을 간단히 소개한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/node/implementing-push-notification-service-for-ios.html" property="og:url">
+    
+    
+    <meta content="2014-01-15T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="node" property="article:section">
+    
+    
+    
+    
+    <meta content="node" property="article:tag">
+    
+    <meta content="node.js" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="apns" property="article:tag">
+    
+    <meta content="push" property="article:tag">
+    
+    <meta content="notification" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/node/implementing-push-notification-service-for-ios.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/node/implementing-push-notification-service-for-ios.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

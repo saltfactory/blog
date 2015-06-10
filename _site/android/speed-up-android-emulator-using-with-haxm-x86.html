@@ -9,8 +9,53 @@
     <title>HAXM와 Atom x86 이미지로 안드로이드 에뮬레이터 속도 빠르게 하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="HAXM와 Atom x86 이미지로 안드로이드 에뮬레이터 속도 빠르게 하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+
+
+안드로이드 앱을 개발하면 느린 안드로이드 에뮬레이터 때문에 답답함을 느끼는 개발자가 많을 것이다. 그렇다고 안드로이드 공기계를 구입해서 개발하는 여유가 없다면 안드로이드 개발에 대해서 크게 실망하고 있을지도 모르겠다. 그래서 학생이나 안드로이드 앱 개인 개발자들에게 도움이 되길 바라는 마음에 &quot;안드로이드 앱 개발시 느린 에뮬레이터 대신 Android x86을 이용해서 개발환경 구축하기&quot; 라는 글을 포스팅 했었다. 이 글의 내용은 안드로이드 에뮬레이터를 사용하는 것이 아니라 Virtual Machine 인 VirtualBox에 Android x86 이미지를 사용해서 가상머신으로 안드로이드 운영체제를 설치해서 느린 안드로이드 에뮬레이터 대신에 개발할 때 사용하는 방법이다. 이 포스팅이 작성되고 페이스북에서 몇가지 피드백을 받게 되었다. 박태웅 부사장님께서 Intel에서 배포하는 Atom x86 용  Android Image를 사용하는 방법을 링크로 가르쳐주셨다. 이 실험을 다하고 지나고 난 다음에 이제서야 부사장님의 링크가 무슨 의미인지 알게 되었지만,  이때까지만 해도 Atom x86 이미지를 사용한다고 하더라도 느린 에뮬레이터 문제 때문에 속도 문제는 여전할거라는 주장을 가지고 있었다. 그리고 박성서 대표님께서 안드로이드 에뮬레이터가 JVM의 문제가 아니라 QEMU 가상머신 때문이라는 것을  가르쳐주셨고, 안드로이드의 QEMU 가상머신을 HAXM을 이용해서 가속도를 낼 수 있다고 의견을 주셨다. 그래서 다음날 아침 연구소에 출근하자말자 HAXM에 대해서 조사하고 실험에 들어갔다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/android/speed-up-android-emulator-using-with-haxm-x86.html" property="og:url">
+    
+    
+    <meta content="2012-09-07T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="android" property="article:section">
+    
+    
+    
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="x86" property="article:tag">
+    
+    <meta content="atom" property="article:tag">
+    
+    <meta content="haxm" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/android/speed-up-android-emulator-using-with-haxm-x86.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/android/speed-up-android-emulator-using-with-haxm-x86.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

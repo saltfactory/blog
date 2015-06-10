@@ -9,8 +9,53 @@
     <title>Android Draw 9-patch 이미지 스트래칭으로 크기가 다른 버튼튼 만들기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Android Draw 9-patch 이미지 스트래칭으로 크기가 다른 버튼튼 만들기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+프로그램으로 이미지를 다루다 보면 하나의 이미지를 다르게 표현 하는 방법이 필요할 때가 있다. css로 배경이미지를 만들때는 repeat라는 기능을 이용해서 같은 패턴의 이미지를 x나 y로 반복시켜 이미지를 늘렸다 줄였다할 수 있지만 아이폰 개발할때나 안드로이드 개발할 때 Button이라는 것 객체가 가지는 속성을 가지고 만들어야하기 때문에 다른 방법이 필요하다. 기존에는 프로그램을 작성하다가 이미지가 필요하면 디자이너에게 이미지를 요청할 것이다. 아마도 이미지 패턴은 같은데 이미지 크기가 다를때마다 매번 다른 이미지를 디자이너에게 만들어 달라고 해야한다. 하지만 이것은 어떤 관점으로 보면 같은 일을 반복하는 관점으로 보일 수도 있다. 엔지니어적 관점으로 이러한 반복된 작업은 당연 다른 대처 방법이 있을거라 생각할 수 있다.  
+
+우선 아이폰에서는 이러한 문제점을 해결하기 위해서 iOS5 부터는 UIImage 객체의 resizableImgeWithCapInsets:UIEdgeInsetMake: 메소를 이용해서 이미지를 pragmatic하게 스트래칭할 수가 있다. 이에 대한 예제는 이전 포스트인   iOS5에서 UINavigationBar에 배경이미지와 타이틀 색깔 변경하기에서 이 메소드에 사용하는 방법을 설명한적 있다. 아이폰을 먼저 개발하고 같은 앱을 안드로이드용으로 개발하다보니 아이폰의 기능을 안드로이드에서 구현할 수 있는 방법에 대해서 찾는일이 많아 졌다. 그래서 아이폰의 이러한 기능을 안드로이드에서 어떻게 구현하고 있는지 찾아보는 가운데 @krazyeom 님께서 나인페치에 대해서 힌트를 주셨고, 다시 안드로이드 문서와 구글링으로 Android Draw 9-path에 대한 자료를 찾게 되었다. (안드로이드의 9-path가 먼저 구현되었고 아이폰 5에서 이 기능을 지원하였다는 이야기도 해주었다. 사용하는 사람마다 차이가 있겠지만 개인적으로 아이폰의 이미지 스트래칭 방법이 좀더 pragmatic하게 처리할 수 있어서 더 편리한것 같다.)
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/android/create-custom-button-using-android-draw-9-patch-image-straching.html" property="og:url">
+    
+    
+    <meta content="2012-01-10T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="android" property="article:section">
+    
+    
+    
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="draw" property="article:tag">
+    
+    <meta content="9-patch" property="article:tag">
+    
+    <meta content="stretch" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/android/create-custom-button-using-android-draw-9-patch-image-straching.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/android/create-custom-button-using-android-draw-9-patch-image-straching.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

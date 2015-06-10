@@ -9,8 +9,57 @@
     <title>Mac OS X에서 Apache + PHP + MongoDB 연동</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Mac OS X에서 Apache + PHP + MongoDB 연동" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+맥은(Mac OS X) 훌륭한 개발 환경을 제공한다. 내가 Mac을 가장 좋아하는 이유는 데스크탑이나 랩탑안에 PC환경과 Server 환경 모두를 사용할 수 있기 때문이다. 더구나 설정만 잘 한다면 개발했던 경로, 환경을 새로 고침없이 바로 서버로 소스관리툴로 업데이트하여 다운타임 시간 없이 바로 서버 개발을 할 수 있다는 것이다. Mac OS X에서는 서버에서 사용할 수 있는 오픈 소스가 대부분 설치되어 있다. Mac OS X Lion으로 업데이트되면서 Java Runtime Engine이 제외되었지만 다운로드하여 설치할 수 있는 쉬운 방법을 제공해주고 있다. 또는 유닉스(리눅스) 소프트웨어를 Mac OS X에 쉽게 설치할 수 있는 Homebrew나 port로 built-in 되어 있지 않은 공개소프트웨어를 쉽게 추가하거나 관리할 수 있다. 내가 Mac 을 상용하는 이유가 바로 화려하고 이쁜 UI 뿐만 아니라 Unix-like system을 윈도우즈만큼 빠른 UI와 Unix만큼 편리한 command를 사용할 수 있어 서버 프로그램을 개발하는데 아주 유용하기 때문이다.
+
+서비스개발 프로젝트를 하면서 경험적으로 느낀것은 최신기술, 유행하는 프레임워크가 아니라 프로젝트를 성공적으로 끝낼 수 있는 개발자에게 가장 자신있고 빠르게 코드를 리비전할 수 있는 언어를 선택해서 자유도와 완성도를 높게 만들어서 프로젝트를 완료하는게 중요하다는 것을 알게 되었다. 개인 혼자서 Springframework와 ORM framework를 사용하면서 엔터프라이즈급 서비스가 아닌데 무작정 유행하는 프레임워크를 도입하게 되면 프로젝트 개발도 힘들어지고 덩치가 커질염려가 있다. 그래서 이번에는 서버프로젝트를 가볍고 빠르게 개발하려는 목적과 현재 서버 프로그램을 담당할 연구원이 PHP를 사용하고 있던 기술이 있어서 프레임워크 도입을 PHP 기반으로 가기로 했다.
+
+Mac에서는 기본적으로 Apache와 PHP가 설치되어 있다. 이 포스팅에서는 built-in으로 설치된 Apache와 PHP 그리고 Homebrew를 이용해서 mongodb를 설치하고 pear를 이용해서 PHP mongoDB driver를 설치한 후에 PHP에서 mongoDB를 사용할 수 있는 환경을 설정하는 것에 대한 내용을 소개하려고 한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/php/installing-apache-php-mongodb-on-macosx.html" property="og:url">
+    
+    
+    <meta content="2012-06-12T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="php" property="article:section">
+    
+    
+    
+    
+    <meta content="php" property="article:tag">
+    
+    <meta content="apache" property="article:tag">
+    
+    <meta content="mongodb" property="article:tag">
+    
+    <meta content="mac" property="article:tag">
+    
+    <meta content="osx" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/php/installing-apache-php-mongodb-on-macosx.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/php/installing-apache-php-mongodb-on-macosx.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

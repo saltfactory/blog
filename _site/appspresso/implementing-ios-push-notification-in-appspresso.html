@@ -9,8 +9,65 @@
     <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 9.iOS 푸시 적용하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 하이브리드앱 개발하기 - 9.iOS 푸시 적용하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Appspresso (앱스프레소)를 현재 구현되어져 있는 네이티브 앱을 하이브리드 앱으로 구현하기에 있어서 가장 심각하게 고려되는 부분이 바로 푸시지원이였다. 기존에 푸시 서비스를 제공하지 않았더라면 그렇게 큰 문제가 되지 않겠지만 이미 기존에 앱이 푸시 지원을 하고 있기 때문에 하이브리드로 마이그레이션한다고 푸시 서비스를 중단할 수 없기 때문이다. 그런 의미에서 이번 포스팅이 나와 같이 고민하는 개발자에게 좋은 글이 되지 않을까 생각한다. 이 포스팅은 두가지 포스팅으로 연재될 것인 바로 iOS 용 푸시랑  c2dm 용 푸시에 대한 적용 방법이다. 첫번째로 iOS 개발을 하기위한 APN (Apple Push Notification)에 대한 예제이다.
+
+이 포스팅을 참고하는 개발자나 연구원들은 이미 APNS 구축과 Certificates의 개념을 알고 있다고 생각하기에 Push Notification을 하기 위해서 생성해야하는 과정은 생략하려고 한다.
+
+우선 Appspresso에서 푸시 기능을 구현하기 위해서는 PDK(Plugin Development Kit)을 이용해서 Plugin으로 개발을 해야한다. Appspresso를 사용하여 하이브리드앱 개발하기 - 5.PDK(Plugin Development Kit)를 이용하여 네이티브 코드 사용 글을 참조해서 Plugin을 개발하는 방법을 먼저 숙지하면 도움이 될 것 같다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/implementing-ios-push-notification-in-appspresso.html" property="og:url">
+    
+    
+    <meta content="2012-05-04T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="apn" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/implementing-ios-push-notification-in-appspresso.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/implementing-ios-push-notification-in-appspresso.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

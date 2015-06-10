@@ -9,8 +9,64 @@
     <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 7.xcode-select를 사용하여 빌드하기</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 하이브리드앱 개발하기 - 7.xcode-select를 사용하여 빌드하기" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+Appspresso를 사용해서  Appspresso를 사용하여 하이브리드앱 개발하기 - 6.디바이스 빌드하기 글에서보면 Appspresso에서 Android와 iOS 디바이스로 빌드하여 설치하는 것을 살펴보았다. 만약 Xcode4.2 이전 버전을 사요하던 개발자가 Mac OS X 10.6에서 10.7로 마이그레이션 (스노우 레오파드에서 라이언 마이그레이션) 후 Xcode 4.3을 사용하였다면 Xcode가 두가지 경로에 설치가 되어 있을 것이다. Xcode가 4.3부터는 /Applications/Xcode.app으로 맥 앱 형태로 배포하고, 이전에는 package installer로 /Developer에 설치가 되었기 때문이다. 우리는 그래서 Appspresso를 사용하여 하이브리드앱 개발하기 - 1.iOS와 Android 앱 빌드 글에서 Appsspresso의 preferences를 열어서 iOS SDK를 /Applications/Xcode.app/Contents/Developer 로 잡아 주었던 것을 기억할 것이다.
+이렇게 사용하면 Appspresso에서 iOS 시뮬레이터로 테스트하는데 문제가 생기지 않는다. 하지만 Mac의 운영체제에서 Xcode command가 인식하는 경로가 /Developer 이면 iOS 디바이스에 설치하기 위해서 Appspresso 내부에서 .ipa 파일을 만들 때 문제가 발생한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/building-using-with-xcode-select-in-appspresso.html" property="og:url">
+    
+    
+    <meta content="2012-05-02T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="xcode" property="article:tag">
+    
+    <meta content="xcode-select" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/building-using-with-xcode-select-in-appspresso.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/building-using-with-xcode-select-in-appspresso.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     

@@ -9,8 +9,63 @@
     <title>Appspresso를 사용하여 하이브리드앱 개발하기 - 5.PDK(Plugin Development Kit)를 이용하여 네이티브 코드 사용</title>
     <meta name="description" content="">
 
+    <meta content="saltfactory's blog" property="og:site_name">
+    
+    <meta content="Appspresso를 사용하여 하이브리드앱 개발하기 - 5.PDK(Plugin Development Kit)를 이용하여 네이티브 코드 사용" property="og:title">
+    
+    
+    <meta content="article" property="og:type">
+    
+    <!-- 서론
+
+이번 포스팅은 두가지 관점에서 포스팅을 한다. 하나는 앞에서 사용한 ax.ext.net 대신에 네이티브코드로 원격 데이터를 요청하는 것이고 다른 하나는 Appspresso에서 Native Code를 사용하는 것이다. Hybrid의 최고의 약점은 바로 브라우저에 내장되어 있는 javascript 엔진이다. 사실 그 성능에 대해서는 정확한 벤치마킹이 있어야하지만 보통 네이티브에서 처리하는 것이 webkit의 자바스크립트로 처리하는 것보다 성능이 좋다고 알려져 있다. 이러한 이유로 하이브리드 앱에서 성능이 요구되는 일은 네이티브 프로그램으로 처리하길 원하게 될 것이다. 그래서 Appspresso에서 네이티브 코드를 사용할 수 있게 하는 PDK (Plugin Development Kit)을 어떻게 사용할 수 있는냐는 것을 바탕으로 이전에 포스팅한 예제를 ax.ext.net 플러그인 대신에 네이티브 코드로 URL을 요청을 하는 방법에 대해서 포스팅 한다.
+ -->
+
+
+    
+    
+    <meta content="http://blog.saltfactory.net/appspresso/using-pdk-in-appspresso.html" property="og:url">
+    
+    
+    <meta content="2012-04-30T00:00:00+09:00" property="article:published_time">
+    <meta content="http://blog.saltfactory.net/about/" property="article:author">
+    
+    <!-- 
+    <meta content="/img/logo-high-resolution.png" property="og:image">
+     -->
+    
+    
+    <meta content="appspresso" property="article:section">
+    
+    
+    
+    
+    <meta content="appspresso" property="article:tag">
+    
+    <meta content="hybrid" property="article:tag">
+    
+    <meta content="hybridapp" property="article:tag">
+    
+    <meta content="ios" property="article:tag">
+    
+    <meta content="android" property="article:tag">
+    
+    <meta content="javascript" property="article:tag">
+    
+    <meta content="java" property="article:tag">
+    
+    <meta content="objective-c" property="article:tag">
+    
+    <meta content="pdk" property="article:tag">
+    
+    <meta content="plugin" property="article:tag">
+    
+    
+
+
+
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="/appspresso/using-pdk-in-appspresso.html">
+    <link rel="canonical" href="http://blog.saltfactory.net/appspresso/using-pdk-in-appspresso.html">
     <link rel="meta" type="application/rdf+xml" title="FOAF" href="/assets/foaf.rdf" />
 
     
