@@ -1,9 +1,10 @@
 title: saltfactory's blog
 email: saltfactory@gmail.com
 #description: ""
-excerpt_separator : <!--more-->
-
+base_url: ""
 url: "http://blog.saltfactory.net"
+
+excerpt_separator : <!--more-->
 
 paginate: 5
 
@@ -16,11 +17,12 @@ disqus_shortname: saltfactoryblog
 
 # Build settings
 markdown: redcarpet
-redcarpet:
-  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables"]
-
-highlighter: pygments
-permalink: none
+# markdown: redcarpet
+# redcarpet:
+#   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables"]
+#
+# highlighter: pygments
+# permalink: none
 
 # safe: false # if using alias is safe:false
 safe: true
