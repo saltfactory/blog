@@ -6,7 +6,6 @@ tags : [ios, objective-c]
 comments : true
 redirect_from: /122/
 disqus_identifier : http://blog.saltfactory.net/122
-
 ---
 
 ## 서론
