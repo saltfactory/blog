@@ -12,7 +12,7 @@ disqus_identifier : http://blog.saltfactory.net/181
 
 이번 포스팅은 이전 포스팅을 기반으로 CRUD ( Create, Retrieve, Update, Delete)를 기능을 추가하는 예제를 테스트한다. 이번 포스팅도 앞의 포스팅과 동일하게 CakePHP document를 기반으로 실험하도록 한다.
 
-<--more-->
+<!--more-->
 
 웹 서비스에서 CRUD는 특별한 일이 없는 이상 URL 요청으로 처리가 된다. (예외는 API나 소켓 요청인데 이 또한 URL 기반으로 되어져 있다.) 요즘은 이러한 URL 요청대신에 RESTful 서비스라고 말을 하기도 하지만 이말을 쉽게 말하면 URL 과 헤더타입에 따라서 처리를 해주는 서비스라고 생각할 수 있다. 일축하고, 우리는 이러한 CRUD 요청을 처리하기 위해서 이것을 담당하는 것이 Controller라고 앞의 포스팅에서 다루었다. 앞의 포스팅에서는 Post의 전체를 가져와서 리스팅해주는 index 메소드를 하나 생성해 두었는데, 그 아래 CRUD를 처리하기 위해서 view, add, edit, update, delete 메소드를 추가할 것이다.
 

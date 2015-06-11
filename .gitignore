@@ -34,6 +34,6 @@ build/
 .rvmrc
 .DS_Store
 
-_site/category/배움의 놀이터/index.html
-
-_site/category/배움의 놀이터/index.html
+_site/
+.sass-cache/
+.jekyll-metadata

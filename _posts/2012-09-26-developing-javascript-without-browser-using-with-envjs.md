@@ -14,6 +14,7 @@ disqus_identifier : http://blog.saltfactory.net/195
 
 우리 연구소에서는 지금 프로젝트 개발을 하면서 이 Javascript에 대한 오해와 그 오해를 풀기 위한 조사들을 계속 하고 있는 중이다. 그래서 오류없는 Javascript 어플리케이션을 개발하는 것이 우리의 가장 큰 목표이다. 처음 우리가 가진 Javascript의 오해는 바로 브라우저에서만 Javascript를 개발할 수 있다는 것이였는데 일전에 Javascript에서 Callback 구현하기 글에서 Rhino를 소개하면서 Rhino의 쉘에서 Javscript를 디버깅할 수 있다는 것을 포스팅하였다. 이번 포스팅은 브라우저 없이 Javasctipt를 개발하는 연장선으로 Envjs를 소개하려고 한다.
 
+<!--more-->
 
 ## Envjs
 

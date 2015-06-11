@@ -2,7 +2,7 @@
 layout: post
 title : Git 원격 저장소 변경하기
 category : git
-tags : [git]
+tags : [git, github]
 comments : true
 redirect_from : /250/
 disqus_identifier : http://blog.saltfactory.net/250

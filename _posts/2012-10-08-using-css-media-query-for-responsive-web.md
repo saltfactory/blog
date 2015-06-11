@@ -25,6 +25,8 @@ disqus_identifier : http://blog.saltfactory.net/199
 
 ![](http://cfile6.uf.tistory.com/image/13076B4C507233390B531D)
 
+<!--more-->
+
 최근의 다음은 반응형 웹을 사이트에 점차적으로 적용하고 있는 것을 확인할 수 있는데, 이전과 같이 m. 으로 시작하는 모바일 링크가 아니라 PC에서 사용하는 링크를 그대로 사용하면서 디바이스의 스크린에 대응해서 자동적으로 모바일에 최적화된 화면을 보여주고 있다.
 
 ![](http://cfile21.uf.tistory.com/image/12460A485072359A14AC81)

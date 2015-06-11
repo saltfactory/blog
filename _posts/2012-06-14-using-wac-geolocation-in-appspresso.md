@@ -20,6 +20,8 @@ Sencha Touch 자체도 훌륭한 웹 앱 개발 프레임워크이다. 하지만
 이 블로그에서 우리는 "네이티브 앱을 하이브리드 앱으로 전환"이라는 주제로 앱을 마이그레이션 하고 있었다. 이 네이티브 앱은 iOS와 Android가 가지고 있는 네이티브 Map을 포털 재도의 API로 새롭게 만든 Daum Map API를 사용하고 있었기 때문에 우리는 Daum Map V3 API로 Javascript 기반의 API로 하이브리드 앱을 만들 때, Sencha와 연동해서 사용할 수 있도록 개발하였다.
 Sencha Touch 2에서는 Google Map을 API 레벨로 만든 Ext.MapPanel이 존재하지만 우리는 기존의 사용자에게 똑같은 지도 인터페이스를 제공하기 위해서 Sencha의 Map 컴포넌트를 사용하지 않고 Daum에서 제공하는 Map V3 API로 구현을 하였다. 이렇게 Sencha가 지원하지 않는 라이브러를 가지고 UI를 연동하다보니 Sencha가 가지고 있는 기능을 활용하지 못하는 경우가 생긴다.
 
+<!--more-->
+
 지금 우리의 문제점은 바로 "GeoLocation" 정보이다.
 
 쉽게 GPS를 어떻게 활용할지에 대한 고민을 하게 된다. Sencha의 Map 컴포넌트에서는 HTML5의 GPS를 사용하는 코드를 API 레벨로 라이브러리화 시켜놓았지만 우리는 현재 Sencha의 기능을 사용할 수 없다. 이미 우리는 MapPanel 대신에 Daum Map을 일반  Ext.Panel에 추가해서 사용하기 때문이다. 그렇지만 우리는 Appspresso (앱스프레소)라는 하이브리드 개발 플랫폼에서 개발을 하고 있다는 것을 잊으면 안된다. 앱스프레소에 관련된 포스팅 중에 WAC에 관련된 글을 참조하길 바란다.

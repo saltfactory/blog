@@ -14,6 +14,7 @@ Sencha Touch를  사용하면 웹 프로그래밍으로 네이티브 UI와 동�
 
 Sencha Touch의 뷰 구성은 Ext.Component 를 상속받은 여러 컴포넌트를 가지고 뷰를 구성할 수 있다. 이번 포스팅에서는 Ext.Component 를 상속받은 컴포넌트 그룹중에서도 Navigation Components에 대해서 알아보기로 한다.
 
+<!--more-->
 
 ## Toolbar
 
