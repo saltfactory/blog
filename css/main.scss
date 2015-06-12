@@ -14,6 +14,7 @@ $base-line-height: 1.5;
 $spacing-unit:     30px;
 
 $text-color:       #111;
+$text-color-h2:    #E84f89;
 $background-color: #fdfdfd;
 $brand-color:      #2a7ae2;
 
@@ -48,6 +49,11 @@ $on-laptop:        800px;
         "syntax-highlighting"
 ;
 
+// .post-content {
+//   h2 {
+//   color: $text-color-h2 !important;
+//   }
+// }
 
 
 .post-content table {

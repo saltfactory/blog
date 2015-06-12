@@ -10,7 +10,7 @@ layout: default
       <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
 
       <p class="excerpt">
-        {{ post.excerpt | split: '</h2>' | last | strip_html | truncate:300}} <a href="{{post.url | prepend: site.baseurl }}">[본문보기]</a>
+        {{ post.excerpt | split: '</h2>' | last | strip_html | truncate:200}} <a href="{{post.url | prepend: site.baseurl }}">[본문보기]</a>
       </p>
 
     </li>
