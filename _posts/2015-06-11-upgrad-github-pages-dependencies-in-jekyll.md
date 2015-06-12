@@ -1,6 +1,6 @@
 ---
 layout: post
-title : Jekyll을 이용하여 GitHub Pages를 사용할 때 라이브러리 업그레이드
+title : Jekyll 기반 GitHub Pages 라이브러리 업그레이드
 category : jekyll
 tags : [jekyll, ruby, github, github pages]
 comments : true
@@ -8,7 +8,7 @@ comments : true
 
 ## 서론
 
-GitHub Pages로 블로그를 운영하면 글을 작성하고 배포하는 것이 **programmtic**하다. 어떻게보면 재밌는 부분이지만 블로그 호스팅 서비스를 이용하여 사용할 때는 생각하지 않은 부분을 처리해야하는 경우가 발생한다.
+GitHub Pages로 블로그를 운영하면 글을 작성하고 배포하는 것이 **programmtic**하다. 어떻게보면 재미있는 부분이지만 블로그 호스팅 서비스를 이용하여 사용할 때는 생각하지 않은 부분을 처리해야하는 경우가 발생한다.
 [Jekyll](http://jekyllrb.com)과 [GitHub Pages](https://pages.github.com)로 블로그를 운영하고 있다면 [GitHub Pages Dependency versions](https://pages.github.com/versions/)을 지속적으로 살펴볼 필요가 있다. **GitHub**은 시스템 안정성을 높이기 위해 서비스를 지속적으로 개발하고 있고 라이브러리를 높이고 있기 때문에 programmic한 작업을 하기 위해서는 라이브러리를 함께 업데이트해주면 좋다. 이번 글에서 이 작업에 대해서 소개한다.
 
 <!--more-->
