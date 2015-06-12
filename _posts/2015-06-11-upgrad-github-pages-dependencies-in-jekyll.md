@@ -4,6 +4,8 @@ title : Jekyll 기반 GitHub Pages 라이브러리 업그레이드
 category : jekyll
 tags : [jekyll, ruby, github, github pages]
 comments : true
+images:
+  title : http://assets.hibrainapps.net/images/var/albums/hbncloud/public/jekyll.png?m=1434107442
 ---
 
 ## 서론
