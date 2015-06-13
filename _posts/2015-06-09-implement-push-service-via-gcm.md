@@ -1,9 +1,11 @@
 ---
 layout: post
-title : 최신 Android Studio, GCM(Google Cloud Messaging), Node.js를 이용하여 Android 푸시 서비스 구현하기
+title : 최신 Android Studio, Google Cloud Messaging 3.0(GCM)을 이용하여 Android 푸시 서비스 구현하기 
 category : android
 tags : [android, gcm, java, push, notification]
 comments : true
+images:
+  title: http://assets.hibrainapps.net/images/var/albums/hbncloud/public/ioreview-gcm.png?m=1434184115
 ---
 
 ## 서론
@@ -963,5 +965,5 @@ https://gcm-http.googleapis.com/gcm/send \
 * 연구소 : [하이브레인넷](http://www.hibrain.net) 부설연구소
 * 연구실 : [창원대학교 데이터베이스 연구실](http://dblab.changwon.ac.kr)
 
-## 기부 
+## 기부
 [![paypal button](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=NR99D2BERKK8Y&lc=KR&item_name=donate%2esaltfactory%2enet&item_number=net%2esaltfactory%2edonate&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
