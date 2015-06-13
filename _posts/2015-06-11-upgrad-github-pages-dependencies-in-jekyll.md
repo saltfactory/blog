@@ -5,7 +5,7 @@ category : jekyll
 tags : [jekyll, ruby, github, github pages]
 comments : true
 images:
-  title : http://assets.hibrainapps.net/images/var/albums/hbncloud/public/jekyll.png?m=1434107442
+  title : http://assets.hibrainapps.net/images/var/albums/hbncloud/public/jekyll%2Bgithub.png?m=1434206384
 ---
 
 ## 서론
