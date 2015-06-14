@@ -24,7 +24,7 @@ GitHub Pages는 GitHub의 저장소를 웹 사이트를 운영할 수 있는 웹
 
 **개인 사이트**는 GitHub에 가입한 계정의 이름에 **.github.io**라는 저장소를 만들게되면 자동으로 개인 사이트를 위한 GitHub Pages를 만들 수 있는 서비스이다. 다시 말해 **saltfactory**라는 GitHub Pages 계정이 있으면 저장소에 **saltfactory.github.io**라고 만들면 http://saltfactory.github.io 라는 개인 사이트 GitHub Pages 를 위한 만들 수 있다. 이 때 주의 해야할 점은 이 사이트의 저장소를 브랜치는 **master**에서 만들어져야 한다는 것이다.
 
-** 프로젝트 사이트**는 GitHub에 등록한 프로젝트별 사이트를 자동으로 만들 수 있도록 제공되는 서비스이다. 한가지 주의해야할 점은 이 사이트의 저장소를 위한 브랜치가 **gh-pages**라는 브랜치이다. 이렇게 만들어진 프로젝트 사이트는 **{github계정}.github.io/{프로젝트 저장소 이름}**으로 만들어진다. 예를들어 **saltfactory** 계정으로 [mark2html](https://github.com/saltfactory/mark2html) 저장소에 프로젝트를 만들었다면 이 프로젝트 사이트는 http://saltfactory.github.io/mark2html 으로 만들 수 있다.
+**프로젝트 사이트**는 GitHub에 등록한 프로젝트별 사이트를 자동으로 만들 수 있도록 제공되는 서비스이다. 한가지 주의해야할 점은 이 사이트의 저장소를 위한 브랜치가 **gh-pages**라는 브랜치이다. 이렇게 만들어진 프로젝트 사이트는 **{github계정}.github.io/{프로젝트 저장소 이름}**으로 만들어진다. 예를들어 **saltfactory** 계정으로 [mark2html](https://github.com/saltfactory/mark2html) 저장소에 프로젝트를 만들었다면 이 프로젝트 사이트는 http://saltfactory.github.io/mark2html 으로 만들 수 있다.
 
 ## 도메인네임 등록
 
