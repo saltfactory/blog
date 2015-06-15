@@ -77,7 +77,7 @@
       <meta name="twitter:description" content="{{ description }}">
     {% endif %}
     {% if page.images %}
-      <meta name="twitter:image:src" content="{{ page.images.title | replace: '/full/', '/thumb/' }}">
+      <meta name="twitter:image:src" content="{{ page.images.title | replace: '/full/', '/resize/' }}">
     {% endif %}
 
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
