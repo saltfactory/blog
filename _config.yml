@@ -13,6 +13,8 @@ google_analytics : 'UA-8647285-2'
 twitter_username: saltfactory
 github_username:  saltfactory
 facebook_username: salthub
+facebook_admins_id: "1825058169"
+facebook_app_id: "271162092926857"
 disqus_shortname: saltfactoryblog
 
 # Build settings
