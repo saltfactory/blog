@@ -35,7 +35,7 @@ window.fbAsyncInit = function() {
 
 <div class="fb-comments"
 {% if page.disqus_identifier %}
-data-href="{{page.identifier}}"
+data-href="{{ page.disqus_identifier }}"
 {% else %}
 data-href="{{site.url}}{{page.url}}"
 {% endif %}
