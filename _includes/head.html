@@ -7,12 +7,21 @@
 
     {% if page.description %}
       {% assign description = page.description %}
-    {% else %}
+    {% elsif page.excerpt %}
       {% assign description = page.excerpt | replace : '<h2>서론</h2>' | strip_html  %}
+    {% else %}
+      {% assign description = site.description %}
     {% endif %}
 
     <!-- twitter cards -->
-    <meta name="twitter:card" content="summary_large_image">
+    {% if page.images.title %}
+      {% assign meta_image = page.images.title | replace: '/full/', '/resize/' %}
+      <meta name="twitter:card" content="summary_large_image">
+    {% else %}
+      {% assign meta_image = "https://avatars1.githubusercontent.com/u/84361?v=3&s=460" %}
+      <meta name="twitter:card" content="summary">
+    {% endif %}
+
     <meta name="twitter:site" content="@{{ site.twitter_username }}">
     <meta name="twitter:creator" content="@{{ site.twitter_username }}">
     {% if page.title %}
@@ -26,10 +35,10 @@
     {% if description %}
       <meta name="twitter:description" content="{{ description }}">
     {% endif %}
-    {% if page.images %}
-      <!-- <meta name="twitter:image" content="{{ page.images.title | replace: '/full/', '/resize/' }}"> -->
-    {% endif %}
-    <meta name="twitter:image" content="https://avatars1.githubusercontent.com/u/84361?v=3&s=460">
+    <!-- {% if page.images %}
+      <meta name="twitter:image" content="{{ page.images.title | replace: '/full/', '/resize/' }}">
+    {% endif %} -->
+    <meta name="twitter:image" content="{{ meta_image }}">
 
 
     {% if description %}
@@ -67,9 +76,10 @@
     <meta content="/img/logo-high-resolution.png" property="og:image">
     {% endif %} -->
 
-    {% if page.images.title %}
+    <!-- {% if page.images.title %}
     <meta content="{{ page.images.title }}" property="og:image">
-    {% endif %}
+    {% endif %} -->
+    <meta content="{{ meta_image }}" property="og:image">
 
     {% if page.categories %}
     {% for category in page.categories limit:1 %}
