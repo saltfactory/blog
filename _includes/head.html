@@ -1,7 +1,11 @@
-<head>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# profile: http://ogp.me/ns/profile#">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- facebook -->
+    <meta name="fb:app_id" content="{{ site.facebook_app_id }}">
+    <meta name="fb:admins" content="{{ site.facebook_admins_id }}">
+
 
     <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
 
@@ -40,10 +44,6 @@
     {% endif %} -->
     <meta name="twitter:image" content="{{ meta_image }}">
 
-    <!-- facebook -->
-    <meta name="fb:admins" content="{{ site.facebook_admins_id }}">
-    <meta name="fb:app_id" content="{{ site.facebook_app_id }}">
-
     <!-- profile -->
     <meta name="profile:first_name" content="SungKwang">
     <meta name="profile:last_name" content="Song">
@@ -66,6 +66,7 @@
     {% endif %}
     {% if page.title %}
     <meta content="article" property="og:type">
+
     {% else %}
     <meta content="website" property="og:type">
     {% endif %}
