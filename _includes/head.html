@@ -78,6 +78,7 @@
     {% endif %}
     {% if page.images %}
       <meta name="twitter:image:src" content="{{ page.images.title | replace: '/full/', '/resize/' }}">
+      <meta name="twitter:image:width" content="600">
     {% endif %}
 
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
