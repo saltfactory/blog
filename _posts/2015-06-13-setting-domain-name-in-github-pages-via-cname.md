@@ -5,7 +5,7 @@ category : github
 tags : [github, jekyll, pages, domain, dns]
 comments : true
 images:
-  title: http://assets.hibrainapps.net/images/var/albums/hbncloud/public/cover-02.jpg?m=1434352098
+  title: http://assets.hibrainapps.net/images/rest/data/420?size=full&m=1434356458
 ---
 
 

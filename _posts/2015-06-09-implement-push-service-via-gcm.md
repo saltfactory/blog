@@ -1,11 +1,11 @@
 ---
 layout: post
-title : 최신 Android Studio, Google Cloud Messaging 3.0(GCM)을 이용하여 Android 푸시 서비스 구현하기 
+title : 최신 Android Studio, Google Cloud Messaging 3.0(GCM)을 이용하여 Android 푸시 서비스 구현하기
 category : android
 tags : [android, gcm, java, push, notification]
 comments : true
 images:
-  title: http://assets.hibrainapps.net/images/var/albums/hbncloud/public/ioreview-gcm.png?m=1434184115
+  title: http://assets.hibrainapps.net/images/rest/data/422?size=full&m=1434356624
 ---
 
 ## 서론
