@@ -6,6 +6,31 @@
     <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
     <meta name="description" content="{{ site.description }}">
 
+
+    <!-- twitter cards -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@{{ site.twitter_username }}">
+    <meta name="twitter:creator" content="@{{ site.twitter_username }}">
+    {% if page.title %}
+      <meta name="twitter:title" content="{{ page.title }}">
+    {% else %}
+      <meta name="twitter:title" content="{{ site.title }}">
+    {% endif %}
+    {% if page.url %}
+      <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+    {% endif %}
+    {% if page.description %}
+      <meta name="twitter:description" content="{{ page.description }}">
+    {% else %}
+      <meta name="twitter:description" content="{{ page.excerpt | strip_html }}">
+    {% endif %}
+    {% if page.images %}
+      <meta name="twitter:image:src" content="{{ page.images.title}}">
+    {% endif %}
+
+    <!-- open graph -->
+
+
     <meta content="{{ site.title }}" property="og:site_name">
     {% if page.title %}
     <meta content="{{ page.title }}" property="og:title">
@@ -17,11 +42,11 @@
     {% else %}
     <meta content="website" property="og:type">
     {% endif %}
-    <!-- {{ page.excerpt | strip_html | replace('서론','') }} -->
-
 
     {% if page.description %}
       <meta content="{{ page.description }}" property="og:description">
+    {% else %}
+      <meta content="{{ page.excerpt | strip_html }}" property="og:description">
     {% endif %}
     {% if page.url %}
     <meta content="{{ site.url }}{{ page.url }}" property="og:url">
