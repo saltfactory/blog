@@ -19,7 +19,7 @@ disqus_shortname: saltfactoryblog
 
 comments:
   disqus: true
-  facebook: false
+  facebook: true
 
 # Build settings
 markdown: redcarpet
