@@ -19,7 +19,12 @@ layout: default
 
   {% include share_buttons.html %}
   {% if page.comments %}
-  {% include facebook_comments.html %}
+    {% if site.comments.disqus %}
+      {% include disqus.html %}
+    {% endif %}
+    {% if site.comments.facebook %}
+      {% include facebook.html %}
+    {% endif %}
   {% include disqus.html %}
   {% endif %}
 

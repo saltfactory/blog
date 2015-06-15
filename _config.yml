@@ -17,6 +17,10 @@ facebook_admins_id: "1825058169"
 facebook_app_id: "271162092926857"
 disqus_shortname: saltfactoryblog
 
+comments:
+  disqus: true
+  facebook: false
+
 # Build settings
 markdown: redcarpet
 redcarpet:
