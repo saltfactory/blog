@@ -4,12 +4,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+
     {% if page.description %}
-      <meta name="description" content="{{ page.description }}">
+      {% assign description = page.description %}
     {% else %}
-      <meta name="description" content="{{ page.excerpt | strip_html }}">
+      {% assign description = page.excerpt | replace : '<h2>서론</h2>' | strip_html  %}
     {% endif %}
 
+    {% if description %}
+    <meta name="description" content="{{ description }}">
+    {% endif %}
 
 
 
@@ -26,10 +30,8 @@
     <meta content="website" property="og:type">
     {% endif %}
 
-    {% if page.description %}
-      <meta content="{{ page.description }}" property="og:description">
-    {% else %}
-      <meta content="{{ page.excerpt | strip_html }}" property="og:description">
+    {% if description %}
+      <meta content="{{ description }}" property="og:description">
     {% endif %}
     {% if page.url %}
     <meta content="{{ site.url }}{{ page.url }}" property="og:url">
@@ -71,17 +73,12 @@
     {% if page.url %}
       <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
     {% endif %}
-    {% if page.description %}
-      <meta name="twitter:description" content="{{ page.description }}">
-    {% else %}
-      <meta name="twitter:description" content="{{ page.excerpt | strip_html }}">
+    {% if description %}
+      <meta name="twitter:description" content="{{ description }}">
     {% endif %}
     {% if page.images %}
-      <meta name="twitter:image:src" content="{{ page.images.title }}">
-      <meta name="twitter:image:width" content="400">
+      <meta name="twitter:image:src" content="{{ page.images.title | replace: '/albums/', '/resizes/' }}">
     {% endif %}
-
-
 
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
