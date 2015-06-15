@@ -5,7 +5,7 @@ category : github
 tags : [github, jekyll, pages, domain, dns]
 comments : true
 images:
-  title: http://blog.saltfactory.net/assets/images/cover.jpg
+  title: http://assets.hibrainapps.net/images/rest/data/420?size=full&m=1434356458
 ---
 
 

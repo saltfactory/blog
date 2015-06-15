@@ -1,22 +1,25 @@
+<!--
+<script>
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '271162092926857',
+    xfbml      : true,
+    version    : 'v2.3'
+  });
+};
 
+(function(d, s, id){
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+-->
 
-<!-- // <script>
-// window.fbAsyncInit = function() {
-//   FB.init({
-//     appId      : '271162092926857',
-//     xfbml      : true,
-//     version    : 'v2.3'
-//   });
-// };
-//
-// (function(d, s, id){
-//   var js, fjs = d.getElementsByTagName(s)[0];
-//   if (d.getElementById(id)) {return;}
-//   js = d.createElement(s); js.id = id;
-//   js.src = "//connect.facebook.net/en_US/sdk.js";
-//   fjs.parentNode.insertBefore(js, fjs);
-// }(document, 'script', 'facebook-jssdk'));
-// </script> -->
+<!-- <div class="fb-like" data-share="true" data-width="450" data-show-faces="true"> </div> -->
+
 <!--
 <div class="fb-comments" data-href="http://developers.facebook.com/docs/plugins/comments/" data-width="100%" data-numposts="5" data-colorscheme="light"></div>
 -->
@@ -34,6 +37,6 @@
 {% if page.disqus_identifier %}
 data-href="{{page.identifier}}"
 {% else %}
-data-href="{{page.url}}"
+data-href="{{site.url}}{{page.url}}"
 {% endif %}
 data-version="v2.3" data-numposts="5" data-colorscheme="light" data-width="100%"></div>
