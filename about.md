@@ -101,6 +101,7 @@ permalink: /about/
 * **Objective-C**
   * iOS
   * Cocoa
+* **JavaScript**  
 * **Python**
 * **PHP**
 * **Bash**
@@ -109,23 +110,6 @@ permalink: /about/
 * **Jenkins**
 * **SASS**
 * **CoffessScript**
-
-
-
-
-
-Oracle, MySQL 운영관리 및 응용프로그램 개발
-* Redhat 계열 및 Debian 계열 Linux 서버 운영관리 및 응용프로그램 개발
-* Java, Spring Framework, Android, JSP 응용프로그램 개발
-* Ruby, Ruby On Rails 응용프로그램 개발
-* Node.js, Expressjs 응용프로그램 개발
-* Objective-C, iOS 응용프로그램 개발
-* JavaScript, AngluarJS, Polymer 응용프로그램 개발
-* HTML5, 웹 응용프로그램 개발
-* PHP, 웹 서비스 개발
-* Python, 응용프로글매 개발
-
-
 
 
 ## FOAF
