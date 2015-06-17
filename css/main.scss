@@ -80,3 +80,9 @@ $on-laptop:        800px;
   margin-left: auto;
   margin-right: auto;
 }
+
+@media print {
+  .site-header, .site-footer, .addthis_sharing_toolbox, .site-comments {
+    display: none !important;
+  }
+}
