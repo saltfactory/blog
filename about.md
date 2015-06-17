@@ -7,7 +7,7 @@ permalink: /about/
 
 
 <!-- ![profile]({{site.url}}/assets/images/profile.png) -->
-![profile](https://avatars1.githubusercontent.com/u/84361?v=3&s=460)
+![profile](/assets/images/profile.jpeg)
 
 * [창원대학교 컴퓨터공학과](http://portal.changwon.ac.kr/home/ce) 박사수료
 * [하이브레인넷](http://www.hibrain.net) 부설연구소
