@@ -18,7 +18,7 @@ layout: default
   </article>
 
   {% include share_buttons.html %}
-  
+
   {% if page.comments %}
     <div class="post-comments">
     {% if site.comments.facebook %}
@@ -27,8 +27,7 @@ layout: default
 
     {% if site.comments.disqus %}
       {% include disqus.html %}
-    {% endif %}
-  {% include disqus.html %}
+    {% endif %}  
     </div>
   {% endif %}
 
