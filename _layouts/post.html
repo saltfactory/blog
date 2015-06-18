@@ -8,7 +8,7 @@ layout: default
     <p class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
     {% if page.images %}
     <p class="post-images-title">
-      <img src="{{ page.images.title }}"/>
+      <img src="{{ page.images.title }}" alt="title_image"/>
     <p>
     {% endif %}
   </header>
@@ -27,7 +27,7 @@ layout: default
 
     {% if site.comments.disqus %}
       {% include disqus.html %}
-    {% endif %}  
+    {% endif %}
     </div>
   {% endif %}
 
