@@ -5,7 +5,7 @@ category : android
 tags : [android, gcm, java, push, notification]
 comments : true
 images:
-  title: http://assets.hibrainapps.net/images/rest/data/422?size=full&m=1434356624
+  title: http://assets.hibrainapps.net/images/rest/data/422?size=full
 ---
 
 ## 서론

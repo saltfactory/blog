@@ -5,7 +5,7 @@ category : jekyll
 tags : [jekyll, ruby, github, github pages]
 comments : true
 images:
-  title : http://assets.hibrainapps.net/images/rest/data/421?size=full&m=1434356610
+  title : http://assets.hibrainapps.net/images/rest/data/421?size=full
 ---
 
 ## 서론

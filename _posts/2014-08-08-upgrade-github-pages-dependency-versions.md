@@ -6,6 +6,8 @@ tags : [jekyll, git, ruby]
 comments : true
 redirect_from : /256/
 disqus_identifier : http://blog.saltfactory.net/256
+images:
+  title: http://assets.hibrainapps.net/images/rest/data/421?size=full
 ---
 
 ## 서론
@@ -39,7 +41,7 @@ clone https://github.com/saltfactory/saltfactory.github.io.git
 
 ## Jekyll
 
-![jekyll](http://wolfslittlestore.be/wp-content/uploads/2013/07/jekyll.png)
+![jekyll](http://assets.hibrainapps.net/images/rest/data/455?size=full&m=1434637697)
 
 [Jekyll](http://jekyllrb.com/)은 static websites 생성 프레임워크이다. `Ruby`로 만들어진 이 것은 **Markdown** 파일을 `_posts` 디렉토리에 생성하는 것 만으로 멋진 static website를 만들어준다. Markdown을 사용하는 개발자에게 반가운 이야기일 것이다. 우리도 Markdown을 표준 document format으로 정하고 난 뒤에 Jekyll을 사용해서 Pages를 만들고 기존의 블로그를 이전하고 있다.
 
@@ -128,7 +130,7 @@ bundle install
 ```
 
 기존에는 [nokogiri](http://nokogiri.org/)를 사용하지 않았는데 이번 GitHub pages dependency versions에서는 nokogiri가 의존성이 있는 것으로 확인되었다. 만약 다음과 같이 에러가 발생한다면 nokogiri가 XML 라이브러리가 필요해서 생기는 문제이다.
-![nokogiri install error](http://cfile3.uf.tistory.com/image/22399C4553E4867B2D006F)
+![nokogiri install error](http://assets.hibrainapps.net/images/rest/data/456?size=full&m=1434637770)
 
 이 문제를 만나게 되면 [Homebrew](http://brew.sh/)를 사용해서 XML C 라이브러인 ***libiconv***를 설치한다. homebrew에서 libiconv를 찾아보자.
 
@@ -153,7 +155,7 @@ brew install libiconv
 ```
 
 마지막으로 nokogiri를 다시 설치한다. 다음과 같이 nokogiri가 정상적으로 설치가 되는 것을 확인할 수 있다.
-![nokogiri installed](http://cfile23.uf.tistory.com/image/26306D3353E4867B0506FC)
+![nokogiri installed](http://assets.hibrainapps.net/images/rest/data/457?size=full&m=1434637792)
 
 이제 Jekyll을 사용할 모든 준비가 끝났다.
 
@@ -165,7 +167,7 @@ brew install libiconv
 jekyll new . --force
 ```
 이렇게 jekyll을 새롭게 생성하면 디렉토리 안에 다음과 같은 파일들이 생성이 될 것이다.
-![after jekyll new](http://cfile3.uf.tistory.com/image/232C903C53E4867B151368)
+![after jekyll new](http://assets.hibrainapps.net/images/rest/data/458?size=full&m=1434637827)
 
 만약  다음과 같이 ***LSI***에 대한 경고가 나오면 다음과 같이 [GSL](http://www.gnu.org/software/gsl/)을 설치한다. 이것은 C 연산 라이브리인데 이것을 사용하면 10배 정도 더 빠르게 연산이 가능하다.
 
@@ -197,11 +199,11 @@ gem install rb-gsl
 ```
 jekyll serve --watch
 ```
-![jekyll serve](http://cfile1.uf.tistory.com/image/275ED83A53E4867B1F960C)
+![jekyll serve](http://assets.hibrainapps.net/images/rest/data/459?size=full&m=1434675138)
 
 Jekyll 서버가 정상적으로 시작되면 http://localhost:4000 을 브라우저에서 확인한다.
 
-![preview default](http://cfile6.uf.tistory.com/image/23400A4053E4867B39483B)
+![preview default](http://assets.hibrainapps.net/images/rest/data/460?size=full&m=1434675164)
 
 서버가 실행되면 디렉토리에는 자동적으로 static page 들이 만들어진다. `tree` 명령어를 사용해서 확인해보자
 
@@ -209,7 +211,7 @@ Jekyll 서버가 정상적으로 시작되면 http://localhost:4000 을 브라�
 tree
 ```
 
-![tree after run](http://cfile9.uf.tistory.com/image/2644BA3F53E4867B07D5C0)
+![tree after run](http://assets.hibrainapps.net/images/rest/data/461?size=full&m=1434675181)
 
 `_post` 디렉토리 안에 Markdown 으로 되어 있는 파일을 Jekyll이 자동으로 디렉토리를 만들면서 정적 HTML 파일을 생성한 것을 확인할 수 있다.
 
@@ -243,9 +245,9 @@ gems:
 
 다시 Jekyll 서버 를 실행시켜보자. `_config.yml` 파일은 `--watch` 옵션이 적용되지 않기 때문에 이 파일을 수정하면 Jekyll 서버를 다시 실행시켜야 한다.
 
-![restart jekyll](http://cfile26.uf.tistory.com/image/24172A3C53E4867B30F4B3)
+![restart jekyll](http://assets.hibrainapps.net/images/rest/data/462?size=full&m=1434675201)
 
-![post view](http://cfile22.uf.tistory.com/image/2425854153E4867B061EB3)
+![post view](http://assets.hibrainapps.net/images/rest/data/463?size=full&m=1434675217)
 
 
 ## 블로그 포스트 만들기
@@ -267,9 +269,9 @@ Jekyll은 **Markdown** 파일을 자동으로 정적 페이지로 만들어준�
 
 위와 같이 `_post` 디렉토리에 Markdown을 추가하면 Jekyll은 자동으로 새로운 정적 페이지를 만들고 적용한다.
 
-![new post](http://cfile9.uf.tistory.com/image/242C733553E4867B249A75)
+![new post](http://assets.hibrainapps.net/images/rest/data/464?size=full&m=1434675307)
 
-![example](http://cfile8.uf.tistory.com/image/2605303D53E4867B020FF6)
+![example](http://assets.hibrainapps.net/images/rest/data/465?size=full&m=1434675326)
 
 
 

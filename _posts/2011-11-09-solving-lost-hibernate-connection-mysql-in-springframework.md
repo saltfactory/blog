@@ -17,8 +17,6 @@ Springframework에서 MySQL을 사용할 때 특정 시점이 지나면 자동�
 
 ## Srping에서 MySQL 커넥션 문제
 
-![](http://cfile27.uf.tistory.com/image/14270F4E4EBA1F2F1152A6)
-
 이번 프로젝트에서 **Springframework + Hiberante + MySQL**을 사용하여 프로젝트 개발을 진행하는 도중에 스케줄러가 돌면서 특정 시점이 되어서 아래와 같은 **JDBCConnectionException** 을 자꾸만 발생하였다. apache의 [common-dbcp](http://commons.apache.org/proper/commons-dbcp/)를 사용해서 dataSource를 하다가 [tomcat-jdbc](https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html)로 교체하여 [JNDI(Java Naming and Directory Interface) dataSource](https://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html)로 사용하면서 발생했다. [JNDI](http://www.oracle.com/technetwork/java/jndi/docs/index.html) 방법을 사용하는 것은 이번이 처음이였기 때문에 더구나 지금까지 대부분 Oracle을 사용하다가 Spring framework + MySQL을 처음 다루기에 전에 보지 못한 예외들이 발생하는거라 생각했다. 여러가지 자료를 찾아보다 이 문제는 MySQL이 기본적으로 **8시간**동안 요청이 없으면 커넥션을 해지하고 풀링을 해지 하기 때문이라는 것을 알게 되었다. 프로젝트에서는 Spring framework의 `@Scheduled`를 이용해서 Tomcat 서버에서 스케줄을하는데 웹 요청이 들어오지 않고 JNDI를 이용해서 스케줄에서 Hibernate와 MySQL을 사용해서 생기는 문제로 여겨졌다.
 
 ```
@@ -97,7 +95,7 @@ The last packet successfully received from the server was 35,986,917 millisecond
 show global variables like 'wait%';
 ```
 
-![](http://cfile23.uf.tistory.com/image/113A664A4EBA23890A6C1D)
+![](http://assets.hibrainapps.net/images/rest/data/450?size=full&m=1434637169)
 
 MySQL은 기본적으로 **8시간**동안 요청이 없으면 커넥션을 해지한다.
 방법은 리소스를 설정하는 MySQL url에다가 `autoReconnection=true`로 변경하면 된다. 또는 `valdationQuery="select 1"``을 전처리로 실행하게하면 된다.
