@@ -16,7 +16,7 @@ images:
 
 ## docker-yobi 클론
 
-github에서 docker-yobi를 `**clone** 한다.
+github에서 docker-yobi를 **clone** 한다.
 
 ```
 git clone https://github.com/saltfactory/docker-yobi.git
