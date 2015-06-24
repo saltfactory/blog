@@ -1,6 +1,6 @@
 ---
 layout: post
-title : Yobi를 docker에서 운영하기위한 docker-yobi v0.8.1 업데이트
+title : Yobi를 docker에서 운영하기 위한 docker-yobi v0.8.1 업데이트
 category : docker-yobi
 tags : [yobi, git, docker-yobi, java]
 comments : true
@@ -27,21 +27,21 @@ git clone https://github.com/saltfactory/docker-yobi.git
 ## docker-yobi 파일
 
 docker-yobi는 `Dockerfile`과 쉽고 편리하게 운영할  수 있도록 쉘 파일을 포함하고 있다.
-- `Dockefile` :  docker-yobi 이미지를 정의
-- `config.sh` : docker-yobi에 관한 설정 정의
-- `build.sh` : docker-yobi 이미지를 생성
-- `start.sh` : docker-yobi 컨테이너를 실행
-- `stop.sh` : docker-yobi 컨테이너를 중지
-- `rm.sh` : docker-yobi 컨테이너를 삭제
-- `logs.sh` : docker-yobi의 로그 확인
+- **Dockefile** :  docker-yobi 이미지를 정의
+- **config.sh** : docker-yobi에 관한 설정 정의
+- **build.sh** : docker-yobi 이미지를 생성
+- **start.sh** : docker-yobi 컨테이너를 실행
+- **stop.sh** : docker-yobi 컨테이너를 중지
+- **rm.sh** : docker-yobi 컨테이너를 삭제
+- **logs.sh** : docker-yobi의 로그 확인
 
 ## 설정
 
 `config.sh` 파일을 열어서 필요한 정보를 수정한다.
 
-- `YOBI_HOME` : 내 컴퓨터에 있는 **Yobi 홈 디렉토리**를 경로를 입력(기본 값은 현재 디렉톨리 안에 `yobi` 디렉토리)
-- `DOCKER_YOBI_NAME` : docker-yobi 컨테이너의 **이름**을 지정
-- `DOCKER_YOBI_PORT` : docker-yobi 컨테이너의 외부 **포트번호**
+- **YOBI_HOME** : 내 컴퓨터에 있는 **Yobi 홈 디렉토리**를 경로를 입력(기본 값은 현재 디렉톨리 안에 `yobi` 디렉토리)
+- **DOCKER_YOBI_NAME** : docker-yobi 컨테이너의 **이름**을 지정
+- **DOCKER_YOBI_PORT** : docker-yobi 컨테이너의 외부 **포트번호**
 
 만약 기존의 yobi를 사용하고 있다면 `YOBI_HOME`의 경로를 기존의 프로젝트 경로로 지정한다. **YOBI_HOME**의 `conf/`, `yobi.h2.db`, `repo/`, `uploads/` 를 자동으로 읽어 사용하게 됩니다(yobi-0.8x 기반, [yobi-0.7.x 버전은 yobi.h2.db 파일 마이그레이션](https://github.com/naver/yobi/blob/next/docs/ko/update-next-branch-to-0.8.0.md)이 필요하다.). 만약 새롭게 시작한다면 YOBI_HOME에 지정한 디렉토리 안에 이 디렉토리와 파일들이 생성된다.
 
